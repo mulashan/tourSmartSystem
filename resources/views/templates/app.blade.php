@@ -1,6 +1,10 @@
 @php
     $institutionName = $institutionName ?? session('institution_name', 'ToursCompany');
-    $userName = trim(session('first_name', 'John') . ' ' . session('last_name', 'Doe'));
+    $userName = session('user_name') ?: trim(session('first_name', 'John') . ' ' . session('last_name', 'Doe'));
+    $userEmail = session('user_email', 'john.doe@example.com');
+    $userRole = session('user_role', 'Product Admin');
+    $userInitial = session('user_initial') ?: strtoupper(substr($userName ?: $userEmail, 0, 1));
+    $userPhoto = session('user_photo');
     $menus = $menus ?? [];
 @endphp
 <!doctype html>
@@ -92,14 +96,20 @@
             <button id="theme-toggle" class="icon-btn theme-toggle" type="button"><i class="bi bi-moon-stars"></i></button>
             <div class="top-action user-chip">
                 <button class="user-button js-top-panel" data-panel="profile-panel" type="button">
-                    <span class="avatar-dot">J</span>
+                    <span class="avatar-dot">
+                        @if($userPhoto)
+                            <img src="{{ asset($userPhoto) }}" alt="{{ $userName }}">
+                        @else
+                            {{ $userInitial }}
+                        @endif
+                    </span>
                     <span>
                         <strong>{{ $userName ?: 'John Doe' }}</strong>
-                        <small>Product Admin</small>
+                        <small>{{ strtoupper($userRole) }}</small>
                     </span>
                 </button>
                 <div id="profile-panel" class="top-panel profile-panel">
-                    <div class="profile-panel-head"><span class="big-avatar">J</span><span><strong>John Doe</strong><small>john.doe@example.com</small></span></div>
+                    <div class="profile-panel-head"><span class="big-avatar">{{ $userInitial }}</span><span><strong>{{ $userName ?: 'John Doe' }}</strong><small>{{ $userEmail }}</small></span></div>
                     <a href="{{ url('users/profile') }}"><i class="bi bi-person"></i> My Profile</a>
                     <a href="{{ url('users/settings') }}"><i class="bi bi-sliders"></i> Preferences</a>
                     <a href="{{ url('users/activity') }}"><i class="bi bi-activity"></i> Activity Log</a>
@@ -165,8 +175,14 @@
 
         <div class="sidebar-footer">
             <div class="sidebar-profile">
-                <span class="avatar-dot">J</span>
-                <span><strong>John Doe</strong><small>Product Admin</small></span>
+                <span class="avatar-dot">
+                    @if($userPhoto)
+                        <img src="{{ asset($userPhoto) }}" alt="{{ $userName }}">
+                    @else
+                        {{ $userInitial }}
+                    @endif
+                </span>
+                <span><strong>{{ $userName ?: 'John Doe' }}</strong><small>{{ strtoupper($userRole) }}</small></span>
                 <button class="mini-icon"><i class="bi bi-gear"></i></button>
                 <a href="{{ url('Logout') }}" class="mini-icon"><i class="bi bi-box-arrow-right"></i></a>
             </div>

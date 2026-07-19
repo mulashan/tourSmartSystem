@@ -12,9 +12,9 @@
 </head>
 <body class="nice-auth-body">
     <div class="demo-bar">
-        <div class="demo-brand"><span class="demo-mark">B</span> BOOTSTRAP<span>MADE</span></div>
+        <div class="demo-brand"><span class="demo-mark">l</span> LeopardTours<span>Tours</span></div>
         <div class="demo-title">TourSmart</div>
-        <a href="#" class="demo-download">DOWNLOAD</a>
+        <a href="#" class="demo-download"></a>
     </div>
 
     <main class="nice-auth-main">
@@ -26,7 +26,7 @@
         <section class="nice-login-card">
             <div class="secure-badge"><i class="bi bi-shield-check"></i> Secure Access</div>
             <h1>Welcome back</h1>
-            <p class="login-muted">Sign in to continue to your NiceAdmin workspace.</p>
+            <p class="login-muted">Sign in to continue to your Smart Tour.</p>
 
             @if(session('error'))
                 <div class="alert alert-warning">{{ session('error') }}</div>
@@ -52,26 +52,26 @@
                     </div>
                 </div>
 
-                <div class="login-options">
+                <!-- <div class="login-options">
                     <label class="check-line"><input type="checkbox" name="remember"> <span>Remember me</span></label>
                     <a href="#">Use lock screen</a>
-                </div>
+                </div> -->
 
                 <button type="submit" class="nice-submit">Sign In</button>
             </form>
 
-            <div class="divider"><span>or continue with</span></div>
+            <!-- <div class="divider"><span>or continue with</span></div>
             <div class="social-row">
                 <a href="#" class="social-btn"><i class="bi bi-google"></i> Google</a>
                 <a href="#" class="social-btn"><i class="bi bi-github"></i> GitHub</a>
-            </div>
-            <p class="create-account">Don't have an account? <a href="{{ url('register') }}">Create one</a></p>
+            </div> -->
+            <!-- <p class="create-account">Don't have an account? <a href="{{ url('register') }}">Create one</a></p> -->
         </section>
 
         <footer class="auth-footer">
             <div>&copy; 2026 <strong>TourSmart.</strong> All Rights Reserved.</div>
-            <div>Privacy • Terms • Help</div>
-            <div>Designed by <a href="#">TourSmart</a></div>
+            <!-- <div>Privacy • Terms • Help</div>
+            <div>Designed by <a href="#">TourSmart</a></div> -->
         </footer>
     </main>
 
