@@ -19,6 +19,7 @@ class MenuModule extends Model
         'menu_icon',
         'route_path',
         'parent_id',
+        'parent_id2',
         'is_menu',
         'description',
         'is_dashboard',

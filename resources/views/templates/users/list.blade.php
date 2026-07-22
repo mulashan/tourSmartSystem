@@ -32,7 +32,7 @@
                 <tbody>
                     @foreach($users as $user)
                         @php
-                            $fullName = trim($user->first_name . ' ' . $user->second_name . ' ' . $user->other_names);
+                            $fullName = trim($user->name ?? '');
                             $type = $userTypes->firstWhere('id', $user->privilege_id);
                             $branch = $branches->firstWhere('Branch_ID', $user->branch_id);
                         @endphp
@@ -59,7 +59,7 @@
         <aside class="side-stack">
             <section class="panel"><h2>Directory Snapshot</h2><div class="snapshot-grid"><div><span>Total</span><strong>{{ $totalUsers }}</strong><small>Saved users</small></div><div class="green-bg"><span>Active</span><strong>{{ $totalUsers }}</strong><small>Can login</small></div><div class="amber-bg"><span>User Types</span><strong>{{ $userTypes->count() }}</strong><small>Available roles</small></div><div class="red-bg"><span>Branches</span><strong>{{ $branches->count() }}</strong><small>Available branches</small></div></div></section>
             <section class="panel"><h2>Role Distribution</h2>@foreach($userTypes->take(3) as $type)<div class="target-row {{ $loop->iteration === 1 ? 'redbar' : ($loop->iteration === 2 ? 'amber' : 'violet') }}"><span>{{ $type->privilege_name }}</span><strong>{{ $users->where('privilege_id', $type->id)->count() }}</strong><div><i style="width:{{ $totalUsers ? min(($users->where('privilege_id', $type->id)->count() / $totalUsers) * 100, 100) : 0 }}%"></i></div></div>@endforeach</section>
-            <section class="panel"><div class="panel-head"><h2>Recently Added</h2><a href="#">View all</a></div>@foreach($users->take(3) as $user)<div class="mini-person"><span class="tiny-avatar teal">{{ substr($user->first_name,0,1) }}</span><span><strong>{{ trim($user->first_name . ' ' . $user->second_name) }}</strong><small>{{ optional($user->created_at)->format('M j, Y') }}</small></span></div>@endforeach</section>
+            <section class="panel"><div class="panel-head"><h2>Recently Added</h2><a href="#">View all</a></div>@foreach($users->take(3) as $user)<div class="mini-person"><span class="tiny-avatar teal">{{ substr($user->name ?: $user->email,0,1) }}</span><span><strong>{{ $user->name ?: $user->email }}</strong><small>{{ optional($user->created_at)->format('M j, Y') }}</small></span></div>@endforeach</section>
         </aside>
     </div>
 
@@ -74,27 +74,8 @@
                     @csrf
                     <div class="modal-body">
                         <div class="add-user-grid">
-                            <label>First Name
-                                <input type="text" name="first_name" value="{{ old('first_name') }}" placeholder="Enter first name" required>
-                            </label>
-                            <label>Second Name
-                                <input type="text" name="second_name" value="{{ old('second_name') }}" placeholder="Enter second name" required>
-                            </label>
-                            <label>Other Names
-                                <input type="text" name="other_names" value="{{ old('other_names') }}" placeholder="Enter other names" required>
-                            </label>
-                            <label>Date of Birth
-                                <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
-                            </label>
-                            <label>Gender
-                                <select name="gender" required>
-                                    <option selected disabled value="">Select gender...</option>
-                                    <option value="Male" @selected(old('gender') === 'Male')>Male</option>
-                                    <option value="Female" @selected(old('gender') === 'Female')>Female</option>
-                                </select>
-                            </label>
-                            <label>National ID
-                                <input type="text" name="national_id" value="{{ old('national_id') }}" placeholder="Enter national ID">
+                            <label class="wide">Full Name
+                                <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter full name" required>
                             </label>
                             <label class="wide">Role
                                 <select name="privilege_id" required>
@@ -112,11 +93,8 @@
                                     @endforeach
                                 </select>
                             </label>
-                            <label class="wide">Email Address
-                                <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter email address" required>
-                            </label>
-                            <label class="wide">Physical Address
-                                <input type="text" name="physical_address" value="{{ old('physical_address') }}" placeholder="Enter physical address">
+                            <label class="wide">Username
+                                <input type="text" name="email" value="{{ old('email') }}" placeholder="Enter email or phone number" required>
                             </label>
                             <label>Password
                                 <input type="password" name="password" placeholder="Enter password" required>

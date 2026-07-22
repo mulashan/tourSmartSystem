@@ -25,11 +25,11 @@ class RolesPermissionController extends Controller
                 ->pluck('menu_key');
         }
 
-        return nicePage('templates.users.roles', 'users.roles', [
+        return $this->nicePage('templates.users.roles', 'users.roles', [
             'userTypes' => $userTypes,
             'selectedType' => $selectedType,
             'selectedKeys' => $selectedKeys,
-            'permissionMenus' => nicePermissionMenus(),
+            'permissionMenus' => $this->permissionMenus(),
             'userCounts' => User::query()
                 ->selectRaw('privilege_id, COUNT(*) as total')
                 ->groupBy('privilege_id')
@@ -45,7 +45,7 @@ class RolesPermissionController extends Controller
             'permissions.*' => ['string', 'max:100'],
         ]);
 
-        $allowedKeys = collect(nicePermissionMenus())
+        $allowedKeys = collect($this->permissionMenus())
             ->pluck('items')
             ->flatten(1)
             ->pluck('key')

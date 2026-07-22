@@ -37,8 +37,8 @@
                 <input type="hidden" id="redirect" name="redirect" value="{{ request('redirect') }}">
 
                 <div class="nice-field">
-                    <label for="username">Email address</label>
-                    <input type="email" id="username" name="username" value="demo@example.com" placeholder="name@example.com" autocomplete="off" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="" placeholder="Enter username" autocomplete="off" required>
                 </div>
 
                 <div class="nice-field">

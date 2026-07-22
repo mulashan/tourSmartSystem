@@ -28,12 +28,8 @@
 
                 <div class="register-name-grid">
                     <div class="nice-field">
-                        <label for="first_name">First name</label>
-                        <input type="text" id="first_name" name="first_name" placeholder="John" required>
-                    </div>
-                    <div class="nice-field">
-                        <label for="last_name">Last name</label>
-                        <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                        <label for="name">Full name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
                     </div>
                 </div>
 

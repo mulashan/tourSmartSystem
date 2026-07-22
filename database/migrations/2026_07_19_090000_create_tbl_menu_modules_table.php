@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('menu_icon', 80)->nullable();
             $table->string('route_path', 100)->nullable();
             $table->integer('parent_id')->nullable();
+            $table->integer('parent_id2')->nullable();
             $table->boolean('is_menu')->default(true);
             $table->string('description', 400)->nullable();
             $table->integer('is_dashboard')->default(0);
@@ -27,6 +28,7 @@ return new class extends Migration
 
             $table->unique('name');
             $table->index('parent_id');
+            $table->index('parent_id2');
             $table->index('is_menu');
         });
     }

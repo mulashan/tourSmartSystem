@@ -52,7 +52,8 @@ class LoginController extends Controller
         $roleName = $role?->privilege_name ?? 'User';
         $isAdmin = in_array(strtolower($roleName), ['admin', 'administrator', 'product admin'], true)
             || (int) ($role?->access_level_id ?? 0) >= 9;
-        $fullName = trim($user->first_name . ' ' . $user->second_name . ' ' . $user->other_names);
+        $fullName = trim($user->name ?? '');
+        [$firstName, $lastName] = array_pad(explode(' ', $fullName, 2), 2, '');
         $hasAnyMenuPermissions = UserTypeMenuPermission::query()->exists();
         $allowedMenuKeys = UserTypeMenuPermission::query()
             ->where('privilege_id', $user->privilege_id)
@@ -68,8 +69,8 @@ class LoginController extends Controller
             'user_id'          => $user->id,
             'db_id'            => $user->branch_id,
             'institution_name' => 'NiceAdmin',
-            'first_name'       => $user->first_name,
-            'last_name'        => trim($user->second_name . ' ' . $user->other_names),
+            'first_name'       => $firstName,
+            'last_name'        => $lastName,
             'user_name'        => $fullName ?: $user->email,
             'user_email'       => $user->email,
             'user_role'        => $roleName,

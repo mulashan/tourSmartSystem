@@ -17,7 +17,7 @@ class BranchController extends Controller
             ->get()
             ->map(fn (Branch $branch): array => $this->branchRow($branch));
 
-        return nicePage('templates.settings.branch', 'settings.branch', [
+        return $this->nicePage('templates.settings.branch', 'settings.branch', [
             'branches' => $branches,
         ]);
     }

@@ -16,7 +16,7 @@ class UserTypeController extends Controller
             ->latest()
             ->get();
 
-        return nicePage('templates.users.types', 'users.types', [
+        return $this->nicePage('templates.users.types', 'users.types', [
             'userTypes' => $userTypes,
         ]);
     }

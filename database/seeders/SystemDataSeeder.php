@@ -110,12 +110,20 @@ class SystemDataSeeder extends Seeder
             ['key' => 'users.edit', 'label' => 'User Edit', 'icon' => null, 'url' => 'users/edit', 'parent' => 'users.setup'],
             ['key' => 'users.profile', 'label' => 'Profile', 'icon' => null, 'url' => 'users/profile', 'parent' => 'users.setup'],
             ['key' => 'users.settings.group', 'label' => 'Settings', 'icon' => null, 'url' => null, 'parent' => 'users.setup', 'collapse' => 1],
-            ['key' => 'users.settings', 'label' => 'Account', 'icon' => null, 'url' => 'users/settings', 'parent' => 'users.settings.group'],
-            ['key' => 'users.notifications', 'label' => 'Notifications', 'icon' => null, 'url' => 'users/notifications', 'parent' => 'users.settings.group'],
-            ['key' => 'users.activity', 'label' => 'Activity', 'icon' => null, 'url' => 'users/activity', 'parent' => 'users.settings.group'],
+            ['key' => 'users.settings', 'label' => 'Account', 'icon' => null, 'url' => 'users/settings', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
+            ['key' => 'users.notifications', 'label' => 'Notifications', 'icon' => null, 'url' => 'users/notifications', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
+            ['key' => 'users.activity', 'label' => 'Activity', 'icon' => null, 'url' => 'users/activity', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
             ['key' => 'users.roles', 'label' => 'Roles & Permissions', 'icon' => null, 'url' => 'users/roles-permissions', 'parent' => 'users.setup'],
             ['key' => 'settings.setup', 'label' => 'Setting', 'icon' => 'bi-gear', 'url' => null, 'parent' => null, 'collapse' => 1],
             ['key' => 'settings.branch', 'label' => 'Branch', 'icon' => null, 'url' => 'settings/branch', 'parent' => 'settings.setup'],
+            ['key' => 'settings.employee-job-codes', 'label' => 'Employee Job Codes', 'icon' => null, 'url' => 'settings/employee-job-codes', 'parent' => 'settings.setup'],
+            ['key' => 'settings.hr-employment-types', 'label' => 'HR Employment Type', 'icon' => null, 'url' => 'settings/hr-employment-types', 'parent' => 'settings.setup'],
+            ['key' => 'settings.job-titles', 'label' => 'Job Titles', 'icon' => null, 'url' => 'settings/job-titles', 'parent' => 'settings.setup'],
+            ['key' => 'settings.department-natures', 'label' => 'Department Nature', 'icon' => null, 'url' => 'settings/department-natures', 'parent' => 'settings.setup'],
+            ['key' => 'settings.designations', 'label' => 'Designation', 'icon' => null, 'url' => 'settings/designations', 'parent' => 'settings.setup'],
+            ['key' => 'settings.employee-units', 'label' => 'Employee Units', 'icon' => null, 'url' => 'settings/employee-units', 'parent' => 'settings.setup'],
+            ['key' => 'departments.list', 'label' => 'Department', 'icon' => 'bi-diagram-3', 'url' => 'departments', 'parent' => null],
+            ['key' => 'employees.list', 'label' => 'Employee', 'icon' => 'bi-person-badge', 'url' => 'employees', 'parent' => null],
             ['key' => 'authentication', 'label' => 'Authentication', 'icon' => 'bi-shield-check', 'url' => null, 'parent' => null, 'new_message' => 7],
             ['key' => 'apps.calendar', 'label' => 'Calendar', 'icon' => 'bi-calendar4-week', 'url' => 'apps/calendar', 'parent' => null],
             ['key' => 'apps.kanban', 'label' => 'Kanban Board', 'icon' => 'bi-kanban', 'url' => 'apps/kanban-board', 'parent' => null],
@@ -132,6 +140,7 @@ class SystemDataSeeder extends Seeder
 
         foreach ($menus as $menu) {
             $parentId = $menu['parent'] ? ($ids[$menu['parent']] ?? null) : null;
+            $parentId2 = !empty($menu['parent2']) ? ($ids[$menu['parent2']] ?? null) : null;
 
             $data = [
                 'name' => $menu['key'],
@@ -145,6 +154,10 @@ class SystemDataSeeder extends Seeder
                 'collapse' => $menu['collapse'] ?? 0,
                 'new_message' => $menu['new_message'] ?? 0,
             ];
+
+            if (Schema::hasColumn('tbl_menus', 'parent_id2')) {
+                $data['parent_id2'] = $parentId2;
+            }
 
             $existingId = DB::table('tbl_menus')->where('name', $menu['key'])->value('module_id');
 
@@ -175,15 +188,9 @@ class SystemDataSeeder extends Seeder
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@example.com'],
             [
-                'first_name' => 'System',
-                'second_name' => 'Admin',
-                'other_names' => 'User',
-                'date_of_birth' => '1990-01-01',
-                'gender' => 'Male',
+                'name' => 'System Admin',
                 'branch_id' => $branchId,
-                'national_id' => null,
                 'privilege_id' => $adminPrivilegeId,
-                'physical_address' => 'Head Office',
                 'photo' => null,
                 'password' => Hash::make('password'),
                 'created_at' => now(),
