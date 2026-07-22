@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\MenuModule;
+use App\Models\UserTypeMenuPermission;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
@@ -62,7 +63,7 @@ class MenuService
             return true;
         }
 
-        return collect(session('allowed_menu_keys', []))->contains($active);
+        return $this->allowedMenuKeys()->contains($active);
     }
 
     public function catalog(string $active = 'dashboard'): array
@@ -72,11 +73,10 @@ class MenuService
                 return $this->fallbackCatalog($active);
             }
 
-            $this->seedMenuTable();
-
             $modules = MenuModule::query()
                 ->where('is_menu', true)
                 ->orderBy('parent_id')
+                ->orderBy('parent_id2')
                 ->orderBy('module_id')
                 ->get();
 
@@ -303,17 +303,18 @@ class MenuService
             ->all();
 
         $key = $module->name;
+        $url = $module->route_path ?: '#';
         $item = [
             'key' => $key,
             'label' => $module->label ?: $module->name,
-            'icon' => $module->menu_icon ?: $this->menuIcon($key),
-            'url' => $module->route_path ?: '#',
-            'active' => $active === $key,
+            'icon' => $module->menu_icon ?: 'bi-circle',
+            'url' => $url,
+            'active' => $this->isActiveModule($key, $url, $active),
         ];
 
-        if (!empty($children)) {
+        if (!empty($children) || (int) $module->collapse === 1) {
             $item['children'] = $children;
-            $item['open'] = str_starts_with($active, strtok($key, '.') . '.')
+            $item['open'] = $item['active']
                 || collect($children)->contains(fn (array $child): bool => !empty($child['active']) || !empty($child['open']));
             $item['chevron'] = true;
         }
@@ -327,6 +328,19 @@ class MenuService
         }
 
         return $item;
+    }
+
+    private function isActiveModule(string $key, string $url, string $active): bool
+    {
+        if ($active === $key || $active === $url) {
+            return true;
+        }
+
+        if ($url === '#') {
+            return false;
+        }
+
+        return request()->is(trim($url, '/'));
     }
 
     private function menuIcon(string $key): string
@@ -360,11 +374,11 @@ class MenuService
 
     private function filterMenus(array $menus): array
     {
-        $allowed = collect(session('allowed_menu_keys', []))->push('dashboard')->unique();
-
         if (session('permission_bypass', false)) {
             return $menus;
         }
+
+        $allowed = $this->allowedMenuKeys();
 
         return collect($menus)->map(function (array $group) use ($allowed): array {
             $group['items'] = collect($group['items'])->map(function (array $item) use ($allowed): ?array {
@@ -390,5 +404,22 @@ class MenuService
 
             return $group;
         })->filter(fn (array $group): bool => !empty($group['items']))->values()->all();
+    }
+
+    private function allowedMenuKeys()
+    {
+        $allowed = collect(session('allowed_menu_keys', []))->push('dashboard');
+        $privilegeId = session('privilege_id');
+
+        if ($privilegeId && Schema::hasTable('user_type_menu_permissions')) {
+            $allowed = $allowed->merge(
+                UserTypeMenuPermission::query()
+                    ->where('privilege_id', $privilegeId)
+                    ->where('can_access', true)
+                    ->pluck('menu_key')
+            );
+        }
+
+        return $allowed->unique()->values();
     }
 }

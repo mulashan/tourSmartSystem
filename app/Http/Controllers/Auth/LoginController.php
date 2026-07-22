@@ -37,6 +37,7 @@ class LoginController extends Controller
                 'user_role'        => 'Product Admin',
                 'user_initial'     => 'J',
                 'user_photo'       => '',
+                'privilege_id'      => null,
                 'allowed_menu_keys' => [],
                 'permission_bypass' => true,
             ]);
@@ -76,6 +77,7 @@ class LoginController extends Controller
             'user_role'        => $roleName,
             'user_initial'     => strtoupper(substr($fullName ?: $user->email, 0, 1)),
             'user_photo'       => $user->photo ?? '',
+            'privilege_id'      => $user->privilege_id,
             'allowed_menu_keys' => $allowedMenuKeys,
             'permission_bypass' => $isAdmin || ! $hasAnyMenuPermissions,
         ]);
