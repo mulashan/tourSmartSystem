@@ -14,10 +14,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $institutionName }} - Dashboard</title>
+    
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/niceadmin-local.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
 </head>
 <body class="nice-dashboard-body">
@@ -38,11 +40,18 @@
             </a>
         </div>
         <div class="header-center">
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" placeholder="Search projects, invoices, users...">
-                <kbd>/</kbd>
-            </div>
+            @if(session('active_branch_name'))
+                <div class="branch-indicator">
+                    <div class="branch-indicator-icon"><i class="bi bi-building"></i></div>
+                    <div class="branch-indicator-text">
+                        <small>Currently working in</small>
+                        <strong>{{ session('active_branch_name') }}</strong>
+                    </div>
+                    <a href="{{ route('branch.change') }}" class="branch-indicator-change">
+                        <i class="bi bi-arrow-left-right"></i> Change Branch
+                    </a>
+                </div>
+            @endif
         </div>
         <div class="header-actions">
             <div class="top-action">
@@ -127,40 +136,60 @@
                     @if(!empty($group['title']))
                         <div class="menu-title">{{ $group['title'] }}</div>
                     @endif
+
                     @foreach($group['items'] as $item)
                         @php
                             $hasChildren = !empty($item['children']);
-                            $isOpen = !empty($item['open']) || collect($item['children'] ?? [])->contains(fn ($child) => !empty($child['active']));
+                            $isOpen = !empty($item['open']) || collect($item['children'] ?? [])->contains(fn ($child) => !empty($child['active']) || !empty($child['open']));
                         @endphp
-                        <a href="{{ ($item['url'] ?? '#') === '#' ? '#' : url($item['url']) }}" class="menu-link {{ !empty($item['active']) || $isOpen ? 'active' : '' }} {{ $hasChildren ? 'js-submenu-toggle' : '' }}">
+
+                        <a href="{{ ($item['url'] ?? '#') === '#' ? '#' : url($item['url']) }}"
+                        class="menu-link {{ !empty($item['active']) || $isOpen ? 'active' : '' }} {{ $hasChildren ? 'js-submenu-toggle' : '' }}">
                             <i class="bi {{ $item['icon'] }}"></i>
                             <span>{{ $item['label'] }}</span>
+
                             @if(!empty($item['badge']))
-                                <em>{{ $item['badge'] }}</em>
-                            @elseif($hasChildren || !empty($item['chevron']))
+                                <em class="menu-badge">{{ $item['badge'] }}</em>
+                            @endif
+
+                            @if($hasChildren || !empty($item['chevron']))
                                 <i class="bi bi-chevron-{{ $isOpen ? 'down' : 'right' }} chevron"></i>
                             @endif
                         </a>
+
                         @if($hasChildren)
                             <div class="submenu {{ $isOpen ? 'open' : '' }}">
                                 @foreach($item['children'] as $child)
                                     @php
                                         $childHasChildren = !empty($child['children']);
-                                        $childIsOpen = $childHasChildren && collect($child['children'])->contains(fn ($nested) => !empty($nested['active']));
+                                        $childIsOpen = !empty($child['open']) || ($childHasChildren && collect($child['children'])->contains(fn ($nested) => !empty($nested['active'])));
                                     @endphp
-                                    <a href="{{ ($child['url'] ?? '#') === '#' ? '#' : url($child['url']) }}" class="submenu-link {{ !empty($child['active']) ? 'active' : '' }} {{ $childHasChildren ? 'has-children js-submenu-toggle' : '' }}">
+
+                                    <a href="{{ ($child['url'] ?? '#') === '#' ? '#' : url($child['url']) }}"
+                                    class="submenu-link {{ !empty($child['active']) || $childIsOpen ? 'active' : '' }} {{ $childHasChildren ? 'has-children js-submenu-toggle' : '' }}">
                                         <span class="submenu-dot"></span>
                                         <span>{{ $child['label'] }}</span>
+
+                                        @if(!empty($child['badge']))
+                                            <em class="menu-badge">{{ $child['badge'] }}</em>
+                                        @endif
+
                                         @if(!empty($child['chevron']) || $childHasChildren)
                                             <i class="bi bi-chevron-{{ $childIsOpen ? 'down' : 'right' }} chevron"></i>
                                         @endif
                                     </a>
+
                                     @if($childHasChildren)
                                         <div class="submenu nested {{ $childIsOpen ? 'open' : '' }}">
                                             @foreach($child['children'] as $nested)
-                                                <a href="{{ ($nested['url'] ?? '#') === '#' ? '#' : url($nested['url']) }}" class="submenu-link {{ !empty($nested['active']) ? 'active' : '' }}">
+                                                <a href="{{ ($nested['url'] ?? '#') === '#' ? '#' : url($nested['url']) }}"
+                                                class="submenu-link {{ !empty($nested['active']) ? 'active' : '' }}">
                                                     <span class="submenu-dot"></span>
                                                     <span>{{ $nested['label'] }}</span>
+
+                                                    @if(!empty($nested['badge']))
+                                                        <em class="menu-badge">{{ $nested['badge'] }}</em>
+                                                    @endif
                                                 </a>
                                             @endforeach
                                         </div>

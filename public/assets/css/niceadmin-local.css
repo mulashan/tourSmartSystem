@@ -2756,3 +2756,128 @@ body.dark-theme .theme-toggle {
     .header-actions .icon-btn:nth-of-type(2),
     .header-actions .icon-btn:nth-of-type(3) { display: none; }
 }
+
+/* Added for grouped settings */
+.settings-shell { display: flex; gap: 1rem; }
+.settings-sidebar { width: 220px; flex-shrink: 0; border-right: 1px solid #e3e6ea; }
+.settings-nav-link { display: block; padding: .6rem .9rem; border-radius: .375rem; color: #444; text-decoration: none; }
+.settings-nav-link:hover { background: #f4f6f8; }
+.settings-nav-link.active { background: #012970; color: #fff; }
+.settings-nav-link.disabled { color: #aaa; cursor: not-allowed; }
+.settings-panel { flex: 1; min-width: 0; }
+.settings-panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+
+.menu-link em,
+.submenu-link em.menu-badge {
+    background: #dc3545;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-left: auto;
+    font-style: normal;
+    line-height: 1.6;
+}
+
+.submenu-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.submenu-link .chevron {
+    margin-left: auto;
+}
+
+.header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.branch-indicator {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #f5f8ff;
+    border: 1px solid #dde6ff;
+    border-radius: 12px;
+    padding: 8px 20px;
+    min-width: 340px;
+}
+
+.branch-indicator-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #012970;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.branch-indicator-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.branch-indicator-text small {
+    color: #7c8aa5;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.branch-indicator-text strong {
+    color: #012970;
+    font-size: 15px;
+}
+
+.branch-indicator-change {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: #fff;
+    border: 1px solid #c7d4ff;
+    border-radius: 8px;
+    color: #012970;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .15s ease;
+}
+
+.branch-indicator-change:hover {
+    background: #012970;
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+    .branch-indicator {
+        min-width: 0;
+        width: 100%;
+    }
+    .branch-indicator-text small {
+        display: none;
+    }
+}
+
+.active-branch-change {
+    margin-left: 6px;
+    padding-left: 8px;
+    border-left: 1px solid #d6e0ff;
+    color: #012970;
+    font-weight: 700;
+    text-decoration: none;
+}
+.active-branch-change:hover {
+    text-decoration: underline;
+}

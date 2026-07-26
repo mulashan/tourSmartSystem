@@ -1,115 +1,270 @@
 @extends('templates.app')
 
-@php
-    $users = collect($users ?? []);
-    $branches = collect($branches ?? []);
-    $userTypes = collect($userTypes ?? []);
-    $totalUsers = $users->count();
-@endphp
-
 @section('content')
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
 
-    @if($errors->any())
-        <div class="alert alert-danger">{{ $errors->first() }}</div>
-    @endif
-
-    <section class="page-hero">
-        <div><h1>People Directory</h1><p>Manage member access, lifecycle status, and team distribution from one control surface.</p></div>
-        <div class="hero-actions"><button class="outline-btn"><i class="bi bi-download"></i> Export</button><button type="button" class="nice-action" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="bi bi-plus"></i> Add User</button></div>
-    </section>
-
-    <div class="content-split">
-        <section class="panel table-panel">
-            <div class="tabs-toolbar">
-                <div class="soft-tabs"><button class="active">All <span>{{ $totalUsers }}</span></button><button>Active <span>{{ $totalUsers }}</span></button><button>Pending <span>0</span></button><button>Inactive <span>0</span></button></div>
-                <div class="toolbar-search"><i class="bi bi-search"></i><input placeholder="Search users, email, role..."><button><i class="bi bi-sliders"></i> Role</button></div>
-            </div>
-            <table class="nice-table directory-table">
-                <thead><tr><th><input type="checkbox"></th><th>User</th><th>Role</th><th>Status</th><th>Branch</th><th>Joined</th><th>Actions</th></tr></thead>
-                <tbody>
-                    @foreach($users as $user)
-                        @php
-                            $fullName = trim($user->name ?? '');
-                            $type = $userTypes->firstWhere('id', $user->privilege_id);
-                            $branch = $branches->firstWhere('Branch_ID', $user->branch_id);
-                        @endphp
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td><span class="tiny-avatar {{ $loop->iteration % 2 ? 'teal' : 'indigo' }}">{{ substr($fullName ?: $user->email, 0, 1) }}</span><strong>{{ $fullName ?: $user->email }}</strong><small>{{ $user->email }}</small></td>
-                            <td><span class="role-pill user"><i class="bi bi-person"></i> {{ $type->privilege_name ?? 'Not assigned' }}</span></td>
-                            <td><span class="state-dot active"></span>Active</td>
-                            <td>{{ $branch->Branch_Name ?? 'Not assigned' }}</td>
-                            <td>{{ optional($user->created_at)->format('M j, Y') }}</td>
-                            <td class="row-actions"><i class="bi bi-eye"></i><i class="bi bi-pencil"></i><i class="bi bi-three-dots"></i></td>
-                        </tr>
-                    @endforeach
-                    @if($users->isEmpty())
-                        <tr>
-                            <td colspan="7">No users added yet.</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-            <div class="table-footer"><span>Showing {{ $totalUsers }} of {{ $totalUsers }} users</span><div class="pager"><button disabled><i class="bi bi-chevron-left"></i></button><button class="active">1</button><button><i class="bi bi-chevron-right"></i></button></div></div>
-        </section>
-
-        <aside class="side-stack">
-            <section class="panel"><h2>Directory Snapshot</h2><div class="snapshot-grid"><div><span>Total</span><strong>{{ $totalUsers }}</strong><small>Saved users</small></div><div class="green-bg"><span>Active</span><strong>{{ $totalUsers }}</strong><small>Can login</small></div><div class="amber-bg"><span>User Types</span><strong>{{ $userTypes->count() }}</strong><small>Available roles</small></div><div class="red-bg"><span>Branches</span><strong>{{ $branches->count() }}</strong><small>Available branches</small></div></div></section>
-            <section class="panel"><h2>Role Distribution</h2>@foreach($userTypes->take(3) as $type)<div class="target-row {{ $loop->iteration === 1 ? 'redbar' : ($loop->iteration === 2 ? 'amber' : 'violet') }}"><span>{{ $type->privilege_name }}</span><strong>{{ $users->where('privilege_id', $type->id)->count() }}</strong><div><i style="width:{{ $totalUsers ? min(($users->where('privilege_id', $type->id)->count() / $totalUsers) * 100, 100) : 0 }}%"></i></div></div>@endforeach</section>
-            <section class="panel"><div class="panel-head"><h2>Recently Added</h2><a href="#">View all</a></div>@foreach($users->take(3) as $user)<div class="mini-person"><span class="tiny-avatar teal">{{ substr($user->name ?: $user->email,0,1) }}</span><span><strong>{{ $user->name ?: $user->email }}</strong><small>{{ optional($user->created_at)->format('M j, Y') }}</small></span></div>@endforeach</section>
-        </aside>
+<div class="pagetitle d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Users</h1>
+        <p class="text-muted mb-0">
+            Manage system users, roles and branch assignments.
+        </p>
     </div>
 
-    <div class="modal fade add-user-modal" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="addUserModalLabel">Add New User</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#addUserModal">
+        <i class="bi bi-plus-circle"></i> New User
+    </button>
+</div>
+
+<section class="section">
+
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Filters -->
+            <div class="row mt-3 mb-4">
+
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Search users...">
+                    </div>
                 </div>
-                <form action="{{ route('users.store') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="add-user-grid">
-                            <label class="wide">Full Name
-                                <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter full name" required>
-                            </label>
-                            <label class="wide">Role
-                                <select name="privilege_id" required>
-                                    <option selected disabled value="">Select role...</option>
-                                    @foreach($userTypes as $type)
-                                        <option value="{{ $type->id }}" @selected((string) old('privilege_id') === (string) $type->id)>{{ $type->privilege_name }}</option>
-                                    @endforeach
-                                </select>
-                            </label>
-                            <label class="wide">Branch
-                                <select name="branch_id" required>
-                                    <option selected disabled value="">Select branch...</option>
-                                    @foreach($branches as $branch)
-                                        <option value="{{ $branch->Branch_ID }}" @selected((string) old('branch_id') === (string) $branch->Branch_ID)>{{ $branch->Branch_Name }}</option>
-                                    @endforeach
-                                </select>
-                            </label>
-                            <label class="wide">Username
-                                <input type="text" name="email" value="{{ old('email') }}" placeholder="Enter email or phone number" required>
-                            </label>
-                            <label>Password
-                                <input type="password" name="password" placeholder="Enter password" required>
-                            </label>
-                            <label>Confirm Password
-                                <input type="password" name="password_confirmation" placeholder="Confirm password" required>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="modal-cancel" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="modal-submit">Add User</button>
-                    </div>
-                </form>
+
+                <div class="col-lg-2">
+                    <select class="form-select">
+                        <option>All Roles</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <select class="form-select">
+                        <option>All Branches</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-4 text-end">
+                    <button class="btn btn-outline-success">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox">
+                            </th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Branch</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($users as $user)
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td>
+                                    <strong>{{ $user->name }}</strong>
+                                </td>
+                                <td>
+                                    {{ $user->email }}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ optional($userTypes->firstWhere('id', $user->privilege_id))->privilege_name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ optional($branches->firstWhere('Branch_ID', $user->branch_id))->Branch_Name }}
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('users.show', $user) }}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Manage User">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    No users found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="text-muted">
+                    Showing {{ $users->count() }} users
+                </span>
             </div>
         </div>
     </div>
+</section>
+<!-- Add User Modal -->
+<div
+    class="modal fade"
+    id="addUserModal"
+    tabindex="-1"
+    aria-labelledby="addUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('users.store') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">
+                        Add New User
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Full Name
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="name"
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Username / Email
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="email"
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Role
+                            </label>
+                            <select
+                                class="form-select"
+                                name="privilege_id"
+                                required>
+                                <option value="">Select Role</option>
+                                @foreach($userTypes as $type)
+                                    <option value="{{ $type->id }}">
+                                        {{ $type->privilege_name }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Branch
+                            </label>
+
+                            <select
+                                class="form-select"
+                                name="branch_id"
+                                required>
+
+                                <option value="">Select Branch</option>
+
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->Branch_ID }}">
+                                        {{ $branch->Branch_Name }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                name="password"
+                                required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                name="password_confirmation"
+                                required>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i>
+                        Save User
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
 @endsection

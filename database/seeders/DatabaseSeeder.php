@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SystemDataSeeder::class,
+            DepartmentNatureSeeder::class,
+            ApprovalPermissionSeeder::class,
         ]);
     }
 }

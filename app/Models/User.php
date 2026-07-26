@@ -38,4 +38,40 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function subdepartments()
+    {
+        return $this->belongsToMany(Subdepartment::class, 'tbl_user_subdepartments', 'user_id', 'subdepartment_id', 'id', 'Subdepartment_ID');
+    }
+
+    public function approvalPermissions()
+    {
+        return $this->belongsToMany(ApprovalPermission::class, 'user_approval_permissions', 'user_id', 'approval_permission_id');
+    }
+
+    public function hasApprovalPermission(string $key): bool
+    {
+        return $this->approvalPermissions()->where('key', $key)->exists();
+    }
+
+    /* addition */
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'Branch_ID');
+    }
+
+    public function privilege()
+    {
+        return $this->belongsTo(UserPrivilege::class, 'privilege_id');
+    }
+
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'user_branches', 'user_id', 'branch_id', 'id', 'Branch_ID');
+    }
+
+    public function menuPermissions()
+    {
+        return $this->hasMany(UserMenuPermission::class);
+    }
 }

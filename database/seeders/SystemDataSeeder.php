@@ -107,13 +107,15 @@ class SystemDataSeeder extends Seeder
             ['key' => 'users.list', 'label' => 'Users List', 'icon' => null, 'url' => 'users', 'parent' => 'users.setup'],
             ['key' => 'users.types', 'label' => 'User Types', 'icon' => null, 'url' => 'users/types', 'parent' => 'users.setup'],
             ['key' => 'users.view', 'label' => 'User View', 'icon' => null, 'url' => 'users/view', 'parent' => 'users.setup'],
-            ['key' => 'users.edit', 'label' => 'User Edit', 'icon' => null, 'url' => 'users/edit', 'parent' => 'users.setup'],
+            //['key' => 'users.edit', 'label' => 'User Edit', 'icon' => null, 'url' => 'users/edit', 'parent' => 'users.setup'],
             ['key' => 'users.profile', 'label' => 'Profile', 'icon' => null, 'url' => 'users/profile', 'parent' => 'users.setup'],
+
             ['key' => 'users.settings.group', 'label' => 'Settings', 'icon' => null, 'url' => null, 'parent' => 'users.setup', 'collapse' => 1],
             ['key' => 'users.settings', 'label' => 'Account', 'icon' => null, 'url' => 'users/settings', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
             ['key' => 'users.notifications', 'label' => 'Notifications', 'icon' => null, 'url' => 'users/notifications', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
             ['key' => 'users.activity', 'label' => 'Activity', 'icon' => null, 'url' => 'users/activity', 'parent' => 'users.setup', 'parent2' => 'users.settings.group'],
             ['key' => 'users.roles', 'label' => 'Roles & Permissions', 'icon' => null, 'url' => 'users/roles-permissions', 'parent' => 'users.setup'],
+
             ['key' => 'settings.setup', 'label' => 'Setting', 'icon' => 'bi-gear', 'url' => null, 'parent' => null, 'collapse' => 1],
             ['key' => 'settings.branch', 'label' => 'Branch', 'icon' => null, 'url' => 'settings/branch', 'parent' => 'settings.setup'],
             ['key' => 'settings.employee-job-codes', 'label' => 'Employee Job Codes', 'icon' => null, 'url' => 'settings/employee-job-codes', 'parent' => 'settings.setup'],
@@ -133,6 +135,28 @@ class SystemDataSeeder extends Seeder
             ['key' => 'apps.email', 'label' => 'Email', 'icon' => 'bi-envelope', 'url' => 'apps/email', 'parent' => null],
             ['key' => 'apps.todo', 'label' => 'Todo List', 'icon' => 'bi-check2-all', 'url' => 'apps/todo-list', 'parent' => null],
             ['key' => 'apps.support', 'label' => 'Support Center', 'icon' => 'bi-headset', 'url' => 'apps/support-center', 'parent' => null],
+
+            //storage and supplies
+            ['key' => 'storage-supplies.setup', 'label' => 'Storage and Supplies', 'icon' => 'bi bi-cart-check-fill', 'url' => null, 'parent' => null, 'collapse' => 1],
+            ['key' => 'storage-supplies.items', 'label' => 'Item Manager', 'icon' => null, 'url' => 'storage-supplies/items', 'parent' => 'storage-supplies.setup'],
+            ['key' => 'storage-supplies.ordering.group', 'label' => 'Store Ordering', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.ordering.new', 'label' => 'New Order', 'icon' => null, 'url' => 'storage-supplies/store-ordering/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.ordering.group'],
+            ['key' => 'storage-supplies.ordering.pending', 'label' => 'Pending Orders', 'icon' => null, 'url' => 'storage-supplies/store-ordering/pending', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.ordering.group'],
+            ['key' => 'storage-supplies.ordering.previous', 'label' => 'Previous Orders', 'icon' => null, 'url' => 'storage-supplies/store-ordering/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.ordering.group'],
+            //GRN Against Purchasing order
+            ['key' => 'storage-supplies.grn-against-order', 'label' => 'GRN Agaist Purchase Order', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.grn-against-order.new', 'label' => 'New GRN', 'icon' => null, 'url' => 'storage-supplies/grn/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-against-order'],
+            ['key' => 'storage-supplies.grn-against-order.approve', 'label' => 'Approve GRN', 'icon' => null, 'url' => 'storage-supplies/grn/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-against-order'],
+            ['key' => 'storage-supplies.grn.previous', 'label' => 'Previous GRN List', 'icon' => null, 'url' => 'storage-supplies/grn/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-against-order'],
+
+            //procuremet
+            ['key' => 'Procurement.setup', 'label' => 'Procurements', 'icon' => 'bi-cart-check', 'url' => null, 'parent' => null, 'collapse' => 1],
+            ['key' => 'Procurement.store-order-requisition', 'label' => 'Store Order Requisitions', 'icon' => null, 'url' => 'procurement/store-requisitions', 'parent' => 'Procurement.setup'],
+            ['key' => 'procurement.purchase-requisition', 'label' => 'Purchase Requisition', 'icon' => null, 'url' => 'procurement/purchase-requisition', 'parent' => 'Procurement.setup'],
+            ['key' => 'procurement.approve-lpo', 'label' => 'Approve Local Purchase Order', 'icon' => null, 'url' => 'procurement/approve-lpo', 'parent' => 'Procurement.setup'],
+            ['key' => 'procurement.local-purchase-order', 'label' => 'Local Purchase Order', 'icon' => null, 'url' => 'procurement/local-purchase-order', 'parent' => 'Procurement.setup'],
+            ['key' => 'procurement.reports', 'label' => 'Reports', 'icon' => null, 'url' => '#', 'parent' => 'Procurement.setup'],
+
         ];
 
         $ids = [];
@@ -197,5 +221,73 @@ class SystemDataSeeder extends Seeder
                 'updated_at' => now(),
             ]
         );
+    }
+
+    public function menus(string $active = 'dashboard'): array
+    {
+        return $this->applyNotificationBadges($this->filterMenus($this->catalog($active)));
+    }
+
+    private function notificationCounts(): array
+    {
+        $subdepartmentId = session('active_subdepartment_id');
+        $module = session('active_subdepartment_module');
+
+        if (! $subdepartmentId || ! $module) {
+            return [];
+        }
+
+        $counts = [];
+
+        if ($module === 'storage-supplies') {
+            $counts['storage-supplies.store-ordering.pending-order'] = \App\Models\StoreRequisition::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending')->count();
+
+            $counts['storage-supplies.store-ordering'] = $counts['storage-supplies.store-ordering.pending-order'];
+        }
+
+        if ($module === 'procurement') {
+            $counts['procurement.store-requisitions'] = \App\Models\StoreRequisition::where('status', 'approved')
+                ->where('procurement_status', 'pending')
+                ->whereDoesntHave('localPurchaseOrder')
+                ->count();
+
+            $counts['procurement.purchase-requisition'] = \App\Models\LocalPurchaseOrder::where('procurement_subdepartment_id', $subdepartmentId)
+                ->where('status', 'draft')->count();
+
+            $counts['procurement.approve-lpo'] = \App\Models\LocalPurchaseOrder::where('procurement_subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+
+            $counts['procurement.setup'] = $counts['procurement.store-requisitions'] + $counts['procurement.purchase-requisition'] + $counts['procurement.approve-lpo'];
+        }
+
+        return $counts;
+    }
+
+    private function applyNotificationBadges(array $menus): array
+    {
+        $counts = $this->notificationCounts();
+
+        if (empty($counts)) {
+            return $menus;
+        }
+
+        $walk = function (array $item) use (&$walk, $counts): array {
+            if (! empty($counts[$item['key']])) {
+                $item['badge'] = (string) $counts[$item['key']];
+            }
+
+            if (! empty($item['children'])) {
+                $item['children'] = array_map($walk, $item['children']);
+            }
+
+            return $item;
+        };
+
+        return collect($menus)->map(function (array $group) use ($walk): array {
+            $group['items'] = array_map($walk, $group['items']);
+
+            return $group;
+        })->all();
     }
 }

@@ -26,4 +26,14 @@ class Branch extends Model
     protected $casts = [
         'token_date' => 'datetime',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'Company_ID', 'Company_ID');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_branches', 'branch_id', 'user_id', 'Branch_ID', 'id');
+    }
 }

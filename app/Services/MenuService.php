@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MenuModule;
 use App\Models\UserTypeMenuPermission;
+use App\Models\UserMenuPermission;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
@@ -28,7 +29,7 @@ class MenuService
 
     public function menus(string $active = 'dashboard'): array
     {
-        return $this->filterMenus($this->catalog($active));
+        return $this->applyNotificationBadges($this->filterMenus($this->catalog($active)));
     }
 
     public function permissionMenus(): array
@@ -410,6 +411,7 @@ class MenuService
     {
         $allowed = collect(session('allowed_menu_keys', []))->push('dashboard');
         $privilegeId = session('privilege_id');
+        $userId = session('user_id');
 
         if ($privilegeId && Schema::hasTable('user_type_menu_permissions')) {
             $allowed = $allowed->merge(
@@ -420,6 +422,90 @@ class MenuService
             );
         }
 
+        if ($userId && Schema::hasTable('user_menu_permissions')) {
+            $allowed = $allowed->merge(
+                UserMenuPermission::query()
+                    ->where('user_id', $userId)
+                    ->where('can_access', true)
+                    ->pluck('menu_key')
+            );
+        }
+
         return $allowed->unique()->values();
+    }
+
+    private function notificationCounts(): array
+    {
+        $subdepartmentId = session('active_subdepartment_id');
+        $module = session('active_subdepartment_module');
+
+        if (! $subdepartmentId || ! $module) {
+            return [];
+        }
+
+        $counts = [];
+
+        if ($module === 'storage-supplies') {
+            $pending = \App\Models\StoreRequisition::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending')->count();
+
+            $counts['storage-supplies.ordering.pending'] = $pending;
+            $counts['storage-supplies.ordering.group'] = $pending;
+            $counts['storage-supplies.setup'] = $pending;
+
+            $pendingGrnApproval = \App\Models\GrnPurchaseOrder::where('Sub_Department_ID', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+
+            $counts['storage-supplies.grn.approve'] = $pendingGrnApproval;
+            $counts['storage-supplies.grn.group'] = $pendingGrnApproval;
+            $counts['storage-supplies.setup'] = ($counts['storage-supplies.setup'] ?? 0) + $pendingGrnApproval;
+        }
+
+        if ($module === 'procurement') {
+            $storeRequisitions = \App\Models\StoreRequisition::where('status', 'approved')
+                ->where('procurement_status', 'pending')
+                ->whereDoesntHave('localPurchaseOrder')
+                ->count();
+
+            $drafts = \App\Models\LocalPurchaseOrder::where('procurement_subdepartment_id', $subdepartmentId)
+                ->where('status', 'draft')->count();
+
+            $pendingApproval = \App\Models\LocalPurchaseOrder::where('procurement_subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+
+            $counts['Procurement.store-order-requisition'] = $storeRequisitions;
+            $counts['procurement.purchase-requisition'] = $drafts;
+            $counts['procurement.approve-lpo'] = $pendingApproval;
+            $counts['Procurement.setup'] = $storeRequisitions + $drafts + $pendingApproval;
+        }
+
+        return $counts;
+    }
+
+    private function applyNotificationBadges(array $menus): array
+    {
+        $counts = $this->notificationCounts();
+
+        if (empty($counts)) {
+            return $menus;
+        }
+
+        $walk = function (array $item) use (&$walk, $counts): array {
+            if (! empty($counts[$item['key']])) {
+                $item['badge'] = (string) $counts[$item['key']];
+            }
+
+            if (! empty($item['children'])) {
+                $item['children'] = array_map($walk, $item['children']);
+            }
+
+            return $item;
+        };
+
+        return collect($menus)->map(function (array $group) use ($walk): array {
+            $group['items'] = array_map($walk, $group['items']);
+
+            return $group;
+        })->all();
     }
 }

@@ -52,11 +52,6 @@ class PageController extends Controller
         return $this->userPage('view', 'users.view');
     }
 
-    public function userEdit()
-    {
-        return $this->userPage('edit', 'users.edit');
-    }
-
     public function userProfile()
     {
         return $this->userPage('profile', 'users.profile');
