@@ -27,6 +27,15 @@ use App\Http\Controllers\Procurement\ProcurementController;
 use App\Http\Controllers\Users\UserWorkspaceController;
 use App\Http\Controllers\Auth\BranchSessionController;
 use App\Http\Controllers\StorageSupplies\GrnController;
+use App\Http\Controllers\StorageSupplies\GrnWithoutPoController;
+use App\Http\Controllers\StorageSupplies\GrnOpenBalanceController;
+use App\Http\Controllers\StorageSupplies\RequisitionController;
+use App\Http\Controllers\StorageSupplies\IssueNoteController;
+use App\Http\Controllers\StorageSupplies\GrnAgainstIssueNoteController;
+use App\Http\Controllers\StorageSupplies\ReturnController;
+use App\Http\Controllers\StorageSupplies\StoreTransferController;
+use App\Http\Controllers\StorageSupplies\ReturnOutwardController;
+use App\Http\Controllers\StorageSupplies\StockAdjustmentController;
 
 Route::get('/', [PageController::class, 'home']);
 
@@ -172,6 +181,138 @@ Route::middleware('active.subdepartment:procurement')->prefix('procurement')->na
         Route::get('/', [ProcurementController::class, 'finalList'])->name('index');
         Route::get('/{localPurchaseOrder}/print', [ProcurementController::class, 'printLpo'])->name('print');
     });
+});
+
+//GRN without purchasing order
+
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/grn-without-po')->name('storage_supplies.grn_without_po.')->group(function () {
+    Route::get('/new', [GrnWithoutPoController::class, 'create'])->name('new');
+    Route::get('/items-picker', [GrnWithoutPoController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [GrnWithoutPoController::class, 'store'])->name('store');
+    Route::get('/pending', [GrnWithoutPoController::class, 'pendingList'])->name('pending');
+    Route::get('/{grn}/edit', [GrnWithoutPoController::class, 'edit'])->name('edit');
+    Route::post('/{grn}', [GrnWithoutPoController::class, 'update'])->name('update');
+    Route::post('/{grn}/approve', [GrnWithoutPoController::class, 'approve'])->name('approve');
+    Route::get('/previous', [GrnWithoutPoController::class, 'previousList'])->name('previous');
+    Route::get('/{grn}/preview', [GrnWithoutPoController::class, 'preview'])->name('preview');
+});
+
+//GRN as open balance 
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/grn-open-balance')->name('storage_supplies.grn_open_balance.')->group(function () {
+    Route::get('/new', [GrnOpenBalanceController::class, 'newList'])->name('new');
+    Route::get('/create', [GrnOpenBalanceController::class, 'create'])->name('create');
+    Route::get('/items-picker', [GrnOpenBalanceController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [GrnOpenBalanceController::class, 'store'])->name('store');
+    Route::get('/{grn}/edit', [GrnOpenBalanceController::class, 'edit'])->name('edit');
+    Route::post('/{grn}', [GrnOpenBalanceController::class, 'update'])->name('update');
+    Route::post('/{grn}/submit', [GrnOpenBalanceController::class, 'submit'])->name('submit');
+    Route::get('/approve', [GrnOpenBalanceController::class, 'approveList'])->name('approve');
+    Route::post('/{grn}/approve', [GrnOpenBalanceController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [GrnOpenBalanceController::class, 'previousList'])->name('previous');
+    Route::get('/{grn}/preview', [GrnOpenBalanceController::class, 'preview'])->name('preview');
+});
+
+//Requisition 
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/requisition')->name('storage_supplies.requisition.')->group(function () {
+    Route::get('/pending', [RequisitionController::class, 'pendingList'])->name('pending');
+    Route::get('/create', [RequisitionController::class, 'create'])->name('create');
+    Route::get('/items-picker', [RequisitionController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [RequisitionController::class, 'store'])->name('store');
+    Route::get('/{requisition}/edit', [RequisitionController::class, 'edit'])->name('edit');
+    Route::post('/{requisition}', [RequisitionController::class, 'update'])->name('update');
+    Route::post('/{requisition}/submit', [RequisitionController::class, 'submit'])->name('submit');
+    Route::get('/approve', [RequisitionController::class, 'approveList'])->name('approve');
+    Route::post('/{requisition}/approve', [RequisitionController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [RequisitionController::class, 'previousList'])->name('previous');
+    Route::get('/{requisition}/preview', [RequisitionController::class, 'preview'])->name('preview');
+});
+
+//issue note
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/issue-note')->name('storage_supplies.issue_note.')->group(function () {
+    Route::get('/new', [IssueNoteController::class, 'newList'])->name('new');
+    Route::get('/{requisition}/create', [IssueNoteController::class, 'create'])->name('create');
+    Route::post('/{requisition}', [IssueNoteController::class, 'store'])->name('store');
+    Route::get('/approve', [IssueNoteController::class, 'approveList'])->name('approve');
+    Route::post('/{issueNote}/approve', [IssueNoteController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [IssueNoteController::class, 'previousList'])->name('previous');
+    Route::get('/{issueNote}/preview', [IssueNoteController::class, 'preview'])->name('preview');
+});
+
+//receieve issue not
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/grn-against-issue-note')->name('storage_supplies.grn_against_issue_note.')->group(function () {
+    Route::get('/new', [GrnAgainstIssueNoteController::class, 'newList'])->name('new');
+    Route::get('/{issueNote}/create', [GrnAgainstIssueNoteController::class, 'create'])->name('create');
+    Route::post('/{issueNote}', [GrnAgainstIssueNoteController::class, 'store'])->name('store');
+    Route::get('/approve', [GrnAgainstIssueNoteController::class, 'approveList'])->name('approve');
+    Route::post('/{grn}/approve', [GrnAgainstIssueNoteController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [GrnAgainstIssueNoteController::class, 'previousList'])->name('previous');
+    Route::get('/{grn}/preview', [GrnAgainstIssueNoteController::class, 'preview'])->name('preview');
+});
+
+//return inwards
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/return')->name('storage_supplies.return.')->group(function () {
+    Route::get('/new', [ReturnController::class, 'draftList'])->name('new');
+    Route::get('/create', [ReturnController::class, 'create'])->name('create');
+    Route::get('/items-picker', [ReturnController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [ReturnController::class, 'store'])->name('store');
+    Route::get('/{return}/edit', [ReturnController::class, 'edit'])->name('edit');
+    Route::post('/{return}', [ReturnController::class, 'update'])->name('update');
+    Route::post('/{return}/submit', [ReturnController::class, 'submit'])->name('submit');
+    Route::get('/approve', [ReturnController::class, 'approveList'])->name('approve');
+    Route::post('/{return}/approve', [ReturnController::class, 'approve'])->name('approve_submit');
+    Route::get('/list', [ReturnController::class, 'returnList'])->name('return_list');
+    Route::post('/{return}/receive', [ReturnController::class, 'receive'])->name('receive');
+    Route::get('/previous', [ReturnController::class, 'previousList'])->name('previous');
+    Route::get('/{return}/preview', [ReturnController::class, 'preview'])->name('preview');
+});
+
+//Stock transfer
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/store-transfer')->name('storage_supplies.store_transfer.')->group(function () {
+    Route::get('/draft', [StoreTransferController::class, 'draftList'])->name('draft');
+    Route::get('/create', [StoreTransferController::class, 'create'])->name('create');
+    Route::get('/items-picker', [StoreTransferController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [StoreTransferController::class, 'store'])->name('store');
+    Route::get('/{transfer}/edit', [StoreTransferController::class, 'edit'])->name('edit');
+    Route::post('/{transfer}', [StoreTransferController::class, 'update'])->name('update');
+    Route::post('/{transfer}/submit', [StoreTransferController::class, 'submit'])->name('submit');
+    Route::post('/{transfer}/cancel', [StoreTransferController::class, 'cancel'])->name('cancel');
+    Route::get('/approve', [StoreTransferController::class, 'approveList'])->name('approve');
+    Route::post('/{transfer}/approve', [StoreTransferController::class, 'approve'])->name('approve_submit');
+    Route::get('/pending-receipt', [StoreTransferController::class, 'pendingReceiptList'])->name('pending_receipt');
+    Route::post('/{transfer}/receive', [StoreTransferController::class, 'receive'])->name('receive');
+    Route::get('/completed', [StoreTransferController::class, 'completedList'])->name('completed');
+    Route::get('/cancelled', [StoreTransferController::class, 'cancelledList'])->name('cancelled');
+    Route::get('/{transfer}/preview', [StoreTransferController::class, 'preview'])->name('preview');
+});
+
+//Return Outward
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/return-outward')->name('storage_supplies.return_outward.')->group(function () {
+    Route::get('/new', [ReturnOutwardController::class, 'draftList'])->name('new');
+    Route::get('/create', [ReturnOutwardController::class, 'create'])->name('create');
+    Route::get('/items-picker', [ReturnOutwardController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [ReturnOutwardController::class, 'store'])->name('store');
+    Route::get('/{return}/edit', [ReturnOutwardController::class, 'edit'])->name('edit');
+    Route::post('/{return}', [ReturnOutwardController::class, 'update'])->name('update');
+    Route::post('/{return}/submit', [ReturnOutwardController::class, 'submit'])->name('submit');
+    Route::get('/approve', [ReturnOutwardController::class, 'approveList'])->name('approve');
+    Route::post('/{return}/approve', [ReturnOutwardController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [ReturnOutwardController::class, 'previousList'])->name('previous');
+    Route::get('/{return}/preview', [ReturnOutwardController::class, 'preview'])->name('preview');
+});
+
+//Stock adjustment 
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/stock-adjustment')->name('storage_supplies.stock_adjustment.')->group(function () {
+    Route::get('/new', [StockAdjustmentController::class, 'draftList'])->name('new');
+    Route::get('/create', [StockAdjustmentController::class, 'create'])->name('create');
+    Route::get('/items-picker', [StockAdjustmentController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [StockAdjustmentController::class, 'store'])->name('store');
+    Route::get('/{adjustment}/edit', [StockAdjustmentController::class, 'edit'])->name('edit');
+    Route::post('/{adjustment}', [StockAdjustmentController::class, 'update'])->name('update');
+    Route::post('/{adjustment}/submit', [StockAdjustmentController::class, 'submit'])->name('submit');
+    Route::get('/approve', [StockAdjustmentController::class, 'approveList'])->name('approve');
+    Route::post('/{adjustment}/approve', [StockAdjustmentController::class, 'approve'])->name('approve_submit');
+    Route::get('/previous', [StockAdjustmentController::class, 'previousList'])->name('previous');
+    Route::get('/{adjustment}/preview', [StockAdjustmentController::class, 'preview'])->name('preview');
 });
 
 //user management 

@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('tbl_grn_without_po_edit_history', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('grn_id');
+            $table->unsignedBigInteger('edited_by_user_id');
+            $table->json('previous_header'); // supplier, description, delivery note/invoice, dates, costs at time of edit
+            $table->json('previous_items');  // full item + batch snapshot before this edit overwrote it
+            $table->timestamp('edited_at');
+            $table->timestamps();
+
+            $table->foreign('grn_id')->references('id')->on('tbl_grn_without_po')->cascadeOnDelete();
+            $table->foreign('edited_by_user_id')->references('id')->on('users');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('tbl_grn_without_po_edit_history');
+    }
+};

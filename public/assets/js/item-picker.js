@@ -23,11 +23,11 @@ $(function () {
 
                 items.forEach(item => {
                     $tbody.append(`
-                        <tr class="js-picker-row" style="cursor:pointer" data-id="${item.id}" data-name="${item.name}" data-uom="${item.uom}">
+                        <tr class="js-picker-row" style="cursor:pointer" data-id="${item.id}" data-name="${item.name}" data-uom="${item.uom}" data-balance="${item.balance}">
                             <td><span class="form-check-input-visual"><input type="radio" name="picker-item-${$picker.index()}" style="pointer-events:none"></span> ${item.name}</td>
                             <td>${item.balance}</td>
                         </tr>
-                    `);
+                    `); //dited above added balance
                 });
             });
         }
@@ -44,7 +44,7 @@ $(function () {
             $(this).find('input[type=radio]').prop('checked', true);
 
             $picker[0].dispatchEvent(new CustomEvent('item-picker:add', {
-                detail: { id: $(this).data('id'), name: $(this).data('name'), uom: $(this).data('uom') },
+                detail: { id: $(this).data('id'), name: $(this).data('name'), uom: $(this).data('uom'), balance: $(this).data('balance') }, //edited added balance
                 bubbles: true,
             }));
         });
