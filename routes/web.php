@@ -77,8 +77,8 @@ Route::get('/users/view', [PageController::class, 'userView']);
 // Route::get('/users/edit', [PageController::class, 'userEdit']);
 
 //changes here 
-Route::get('/users/view', [PageController::class, 'userView']);
-Route::get('/users/profile', [PageController::class, 'userProfile']);
+//Route::get('/users/view', [PageController::class, 'userView']);
+//Route::get('/users/profile', [PageController::class, 'userProfile']);
 
 //end of changes 
 Route::get('/users/profile', [PageController::class, 'userProfile']);

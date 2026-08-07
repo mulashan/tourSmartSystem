@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Item;
 use App\Models\ItemStockBalance;
+use App\Models\StockBatch;
 use App\Models\StockLedger;
 use App\Models\Subdepartment;
 use App\Models\Workshop\Customer;
@@ -149,6 +150,7 @@ class WorkshopController extends Controller
         return $this->nicePage('templates.workshop.job_cards.show', 'workshop.job-cards', [
             'jobCard' => $jobCard,
             'workflowCards' => $this->workshopFlowCards(),
+            'workflowAccess' => $this->workflowAccess($jobCard),
             'mechanics' => Mechanic::with('employee')->where('status', 'active')->orderBy('name')->get(),
             'employees' => Employee::orderBy('Employee_Name')->get(),
             'parts' => Item::orderBy('product_name')->get(),
@@ -174,6 +176,8 @@ class WorkshopController extends Controller
 
     public function storeDiagnosis(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 3);
+
         $data = $request->validate([
             'mechanic_id' => ['nullable', 'exists:mechanics,id'],
             'symptoms' => ['nullable', 'string'],
@@ -194,6 +198,8 @@ class WorkshopController extends Controller
 
     public function storeMechanic(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 4);
+
         $data = $request->validate([
             'mechanic_id' => ['nullable', 'exists:mechanics,id'],
             'employee_id' => ['nullable', 'required_without:mechanic_id', 'exists:tbl_employee,Employee_ID'],
@@ -236,6 +242,8 @@ class WorkshopController extends Controller
 
     public function storeLabour(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 5);
+
         $data = $request->validate([
             'mechanic_id' => ['required', 'exists:mechanics,id'],
             'work_done' => ['required', 'string'],
@@ -253,6 +261,8 @@ class WorkshopController extends Controller
 
     public function storePart(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 6);
+
         $data = $request->validate([
             'part_id' => ['required', 'exists:tbl_items,id'],
             'quantity' => ['required', 'integer', 'min:1'],
@@ -271,9 +281,6 @@ class WorkshopController extends Controller
                 abort(422, 'Insufficient stock balance for the selected part.');
             }
 
-            $newBalance = $balance->quantity_balance - $data['quantity'];
-            $balance->update(['quantity_balance' => $newBalance]);
-
             $partUsed = PartUsed::create([
                 'job_card_id' => $jobCard->id,
                 'part_id' => $data['part_id'],
@@ -285,19 +292,74 @@ class WorkshopController extends Controller
                 'subdepartment_id' => $data['subdepartment_id'],
             ]);
 
-            StockLedger::create([
-                'item_id' => $data['part_id'],
-                'subdepartment_id' => $data['subdepartment_id'],
-                'movement_type' => 'issue',
-                'reference_type' => 'workshop_parts_used',
-                'reference_id' => $partUsed->id,
-                'quantity_in' => 0,
-                'quantity_out' => $data['quantity'],
-                'balance_after' => $newBalance,
-                'grn_batch_id' => null,
-                'created_by_user_id' => session('user_id') ?: 1,
-                'moved_at' => now(),
-            ]);
+            $batches = StockBatch::availableFefo($data['part_id'], $data['subdepartment_id'])
+                ->lockForUpdate()
+                ->get();
+
+            if ($batches->isEmpty()) {
+                $newBalance = $balance->quantity_balance - $data['quantity'];
+                $balance->update(['quantity_balance' => $newBalance]);
+
+                StockLedger::create([
+                    'item_id' => $data['part_id'],
+                    'subdepartment_id' => $data['subdepartment_id'],
+                    'movement_type' => 'service_use',
+                    'reference_type' => 'workshop_parts_used',
+                    'reference_id' => $partUsed->id,
+                    'quantity_in' => 0,
+                    'quantity_out' => $data['quantity'],
+                    'balance_after' => $newBalance,
+                    'grn_batch_id' => null,
+                    'stock_batch_id' => null,
+                    'created_by_user_id' => session('user_id') ?: 1,
+                    'moved_at' => now(),
+                ]);
+
+                return;
+            }
+
+            $remaining = $data['quantity'];
+            $allocations = [];
+
+            foreach ($batches as $batch) {
+                if ($remaining <= 0) {
+                    break;
+                }
+
+                $quantityIssued = min($remaining, $batch->quantity_remaining);
+                $allocations[] = ['batch' => $batch, 'quantity' => $quantityIssued];
+                $remaining -= $quantityIssued;
+            }
+
+            if ($remaining > 0) {
+                abort(422, "Insufficient batch stock for the selected part. {$remaining} unit(s) short.");
+            }
+
+            foreach ($allocations as $allocation) {
+                $batch = $allocation['batch'];
+                $quantityIssued = $allocation['quantity'];
+
+                $batch->decrement('quantity_remaining', $quantityIssued);
+
+                $newBalance = $balance->quantity_balance - $quantityIssued;
+                $balance->update(['quantity_balance' => $newBalance]);
+                $balance->quantity_balance = $newBalance;
+
+                StockLedger::create([
+                    'item_id' => $data['part_id'],
+                    'subdepartment_id' => $data['subdepartment_id'],
+                    'movement_type' => 'service_use',
+                    'reference_type' => 'workshop_parts_used',
+                    'reference_id' => $partUsed->id,
+                    'quantity_in' => 0,
+                    'quantity_out' => $quantityIssued,
+                    'balance_after' => $newBalance,
+                    'grn_batch_id' => null,
+                    'stock_batch_id' => $batch->id,
+                    'created_by_user_id' => session('user_id') ?: 1,
+                    'moved_at' => now(),
+                ]);
+            }
         });
 
         $this->advanceStatus($jobCard, 'waiting_parts');
@@ -307,6 +369,8 @@ class WorkshopController extends Controller
 
     public function complete(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 7);
+
         $data = $request->validate([
             'completion_notes' => ['nullable', 'string'],
             'completed_date' => ['required', 'date'],
@@ -332,6 +396,8 @@ class WorkshopController extends Controller
 
     public function inspect(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 8);
+
         $data = $request->validate([
             'inspection_date' => ['required', 'date'],
             'remarks' => ['nullable', 'string'],
@@ -354,6 +420,8 @@ class WorkshopController extends Controller
 
     public function generateInvoice(Request $request, JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 9);
+
         if ($jobCard->invoice()->exists()) {
             return back()->withErrors('Invoice already generated for this job card.');
         }
@@ -390,6 +458,8 @@ class WorkshopController extends Controller
 
     public function close(JobCard $jobCard): RedirectResponse
     {
+        $this->requireWorkflowStep($jobCard, 10);
+
         abort_unless($jobCard->invoice, 422, 'Generate an invoice before closing the job card.');
 
         $jobCard->update(['status' => 'closed']);
@@ -409,6 +479,38 @@ class WorkshopController extends Controller
         $next = ((int) Invoice::max('id')) + 1;
 
         return 'INV' . str_pad((string) $next, 5, '0', STR_PAD_LEFT);
+    }
+
+    private function requireWorkflowStep(JobCard $jobCard, int $step): void
+    {
+        $access = $this->workflowAccess($jobCard);
+
+        abort_unless($access[$step]['unlocked'] ?? false, 422, $access[$step]['message'] ?? 'Complete the previous step first.');
+    }
+
+    private function workflowAccess(JobCard $jobCard): array
+    {
+        $hasRepairOrder = $jobCard->repairOrders()->exists();
+        $hasDiagnosis = $jobCard->diagnosis()->exists();
+        $hasMechanic = $jobCard->mechanicAssignments()->exists();
+        $hasLabour = $jobCard->labourEntries()->exists();
+        $hasParts = $jobCard->partsUsed()->exists();
+        $hasCompletion = $jobCard->completion()->exists();
+        $hasInspection = $jobCard->qualityCheck()->exists();
+        $hasInvoice = $jobCard->invoice()->exists();
+
+        return [
+            1 => ['unlocked' => true, 'message' => null],
+            2 => ['unlocked' => true, 'message' => null],
+            3 => ['unlocked' => $hasRepairOrder, 'message' => 'Add a repair order before diagnosis.'],
+            4 => ['unlocked' => $hasDiagnosis, 'message' => 'Save diagnosis before assigning mechanics.'],
+            5 => ['unlocked' => $hasMechanic, 'message' => 'Assign a mechanic before recording labour.'],
+            6 => ['unlocked' => $hasLabour, 'message' => 'Record labour before issuing spare parts.'],
+            7 => ['unlocked' => $hasParts, 'message' => 'Issue spare parts before completing repair.'],
+            8 => ['unlocked' => $hasCompletion, 'message' => 'Complete repair before quality inspection.'],
+            9 => ['unlocked' => $hasInspection, 'message' => 'Save quality inspection before generating invoice.'],
+            10 => ['unlocked' => $hasInvoice, 'message' => 'Generate invoice before closing the job card.'],
+        ];
     }
 
     private function workshopFlowCards()

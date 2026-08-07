@@ -32,14 +32,22 @@
     <div class="settings-shell workshop-job-shell">
         <aside class="settings-sidebar workshop-flow-sidebar">
             @foreach($workflowCards as $index => $step)
-                <a href="#workshop-step-{{ $index + 1 }}" class="settings-nav-link {{ $loop->first ? 'active' : '' }}">
+                @php
+                    $stepNumber = $index + 1;
+                    $stepAccess = $workflowAccess[$stepNumber] ?? ['unlocked' => true, 'message' => null];
+                @endphp
+                <a href="#workshop-step-{{ $stepNumber }}"
+                   class="settings-nav-link {{ $loop->first ? 'active' : '' }} {{ $stepAccess['unlocked'] ? '' : 'disabled' }}"
+                   data-workshop-tab="{{ $stepNumber }}"
+                   data-workshop-locked="{{ $stepAccess['unlocked'] ? 'false' : 'true' }}"
+                   @if(! $stepAccess['unlocked']) aria-disabled="true" tabindex="-1" title="{{ $stepAccess['message'] }}" @endif>
                     {{ $step->name }}
                 </a>
             @endforeach
         </aside>
 
         <section class="settings-panel">
-    <div class="row g-3 mb-4" id="workshop-step-1">
+    <div class="row g-3 mb-4" id="workshop-step-1" data-workshop-panel="1">
         <div class="col-lg-8">
             <div class="card h-100">
                 <div class="card-body">
@@ -77,7 +85,7 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-6" id="workshop-step-2">
+        <div class="col-lg-12" id="workshop-step-2" data-workshop-panel="2">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -100,7 +108,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6" id="workshop-step-3">
+        <div class="col-lg-12" id="workshop-step-3" data-workshop-panel="3">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -122,7 +130,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6" id="workshop-step-4">
+        <div class="col-lg-12" id="workshop-step-4" data-workshop-panel="4">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -145,7 +153,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6" id="workshop-step-5">
+        <div class="col-lg-12" id="workshop-step-5" data-workshop-panel="5">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -168,7 +176,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6" id="workshop-step-6">
+        <div class="col-lg-12" id="workshop-step-6" data-workshop-panel="6">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -191,48 +199,99 @@
             </div>
         </div>
 
-        <div class="col-lg-6" id="workshop-step-7">
+        <div class="col-lg-12" id="workshop-step-7" data-workshop-panel="7">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-                        <h5 class="card-title mb-0">Completion & Inspection</h5>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completionModal"><i class="bi bi-check2-circle"></i> Complete</button>
-                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inspectionModal"><i class="bi bi-clipboard-check"></i> Inspect</button>
-                        </div>
+                        <h5 class="card-title mb-0">Complete Repair</h5>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#completionModal"><i class="bi bi-check2-circle"></i> Complete</button>
                     </div>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <span class="text-muted small">Completion</span>
                             <div>{{ $jobCard->completion ? optional($jobCard->completion->completed_date)->format('d M Y') : 'Pending' }}</div>
                         </div>
-                        <span class="workshop-anchor" id="workshop-step-8"></span>
                         <div class="col-md-6">
-                            <span class="text-muted small">Inspection</span>
-                            <div>{{ $jobCard->qualityCheck ? ucfirst(str_replace('_', ' ', $jobCard->qualityCheck->status)) : 'Pending' }}</div>
+                            <span class="text-muted small">Vehicle Tested</span>
+                            <div>{{ $jobCard->completion?->vehicle_tested ? 'Yes' : 'No' }}</div>
                         </div>
                         <div class="col-12">
                             <span class="text-muted small">Notes</span>
                             <div>{{ $jobCard->completion->completion_notes ?? '-' }}</div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="d-flex gap-2">
-                        <span class="workshop-anchor" id="workshop-step-9"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12" id="workshop-step-8" data-workshop-panel="8">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                        <h5 class="card-title mb-0">Quality Inspection</h5>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#inspectionModal"><i class="bi bi-clipboard-check"></i> Inspect</button>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <span class="text-muted small">Inspection Date</span>
+                            <div>{{ $jobCard->qualityCheck ? optional($jobCard->qualityCheck->inspection_date)->format('d M Y') : 'Pending' }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="text-muted small">Decision</span>
+                            <div>{{ $jobCard->qualityCheck ? ucfirst(str_replace('_', ' ', $jobCard->qualityCheck->status)) : 'Pending' }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="text-muted small">Inspector</span>
+                            <div>{{ $jobCard->qualityCheck->inspector_id ?? '-' }}</div>
+                        </div>
+                        <div class="col-12">
+                            <span class="text-muted small">Remarks</span>
+                            <div>{{ $jobCard->qualityCheck->remarks ?? '-' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12" id="workshop-step-9" data-workshop-panel="9">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                        <h5 class="card-title mb-0">Generate Invoice</h5>
                         @if($jobCard->invoice)
-                            <button class="btn btn-success" disabled title="Invoice already generated">
+                            <button class="btn btn-sm btn-success" disabled title="Invoice already generated">
                                 <i class="bi bi-receipt"></i> Invoice Generated
                             </button>
                         @else
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#invoiceModal">
-                                <i class="bi bi-receipt"></i> Generate Invoice
+                            <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                                <i class="bi bi-receipt"></i> Generate
                             </button>
                         @endif
-                        <span class="workshop-anchor" id="workshop-step-10"></span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-3"><span class="text-muted small">Labour Total</span><div>{{ number_format($labourTotal, 2) }}</div></div>
+                        <div class="col-md-3"><span class="text-muted small">Parts Total</span><div>{{ number_format($partsTotal, 2) }}</div></div>
+                        <div class="col-md-3"><span class="text-muted small">Invoice</span><div>{{ $jobCard->invoice->invoice_no ?? 'Not generated' }}</div></div>
+                        <div class="col-md-3"><span class="text-muted small">Grand Total</span><div>{{ $jobCard->invoice ? number_format($jobCard->invoice->grand_total, 2) : '-' }}</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12" id="workshop-step-10" data-workshop-panel="10">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                        <h5 class="card-title mb-0">Close Job Card</h5>
                         <form method="POST" action="{{ route('workshop.job-cards.close', $jobCard) }}">
                             @csrf
-                            <button type="submit" class="btn btn-outline-dark"><i class="bi bi-lock"></i> Close Job Card</button>
+                            <button type="submit" class="btn btn-sm btn-outline-dark"><i class="bi bi-lock"></i> Close</button>
                         </form>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4"><span class="text-muted small">Current Status</span><div>{{ ucfirst(str_replace('_', ' ', $jobCard->status)) }}</div></div>
+                        <div class="col-md-4"><span class="text-muted small">Invoice Required</span><div>{{ $jobCard->invoice ? 'Ready to close' : 'Generate invoice first' }}</div></div>
+                        <div class="col-md-4"><span class="text-muted small">Job No</span><div>{{ $jobCard->job_no }}</div></div>
                     </div>
                 </div>
             </div>
@@ -383,4 +442,52 @@
         </form>
     </div></div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = Array.from(document.querySelectorAll('[data-workshop-tab]'));
+        const panels = Array.from(document.querySelectorAll('[data-workshop-panel]'));
+        const storageKey = 'workshop-job-card-active-tab-{{ $jobCard->id }}';
+        const firstUnlockedStep = tabs.find((tab) => tab.dataset.workshopLocked !== 'true')?.dataset.workshopTab || '1';
+        const isUnlocked = (step) => tabs.some((tab) => tab.dataset.workshopTab === String(step) && tab.dataset.workshopLocked !== 'true');
+
+        const showPanel = (step) => {
+            const selectedStep = isUnlocked(step) ? String(step) : firstUnlockedStep;
+
+            tabs.forEach((tab) => {
+                const isActive = tab.dataset.workshopTab === selectedStep;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-current', isActive ? 'page' : 'false');
+            });
+
+            panels.forEach((panel) => {
+                panel.classList.toggle('d-none', panel.dataset.workshopPanel !== selectedStep);
+            });
+
+            localStorage.setItem(storageKey, selectedStep);
+        };
+
+        const stepFromHash = () => {
+            const match = window.location.hash.match(/^#workshop-step-(\d+)$/);
+            return match ? match[1] : null;
+        };
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (tab.dataset.workshopLocked === 'true') {
+                    return;
+                }
+
+                const step = tab.dataset.workshopTab;
+                history.replaceState(null, '', `#workshop-step-${step}`);
+                showPanel(step);
+            });
+        });
+
+        showPanel(stepFromHash() || localStorage.getItem(storageKey) || '1');
+    });
+</script>
 @endsection
