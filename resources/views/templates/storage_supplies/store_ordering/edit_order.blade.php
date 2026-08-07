@@ -95,15 +95,8 @@ $existingItems = $storeRequisition->items->map(function ($line) {
 @endphp
 
 <script>
-//window.storeOrderingExistingItems = @json($existingItems);
-window.storeOrderingExistingItems = @json($storeRequisition->items->map(fn ($line) => [
-    'id' => $line->item_id,
-    'name' => $line->item->product_name ?? 'Unknown item',
-    'uom' => $line->item->unitOfMeasure->name ?? '—',
-    'units' => $line->units,
-    'itemsPerUnit' => $line->items_per_unit,
-    'details' => $line->item_details,
-]));
+window.storeOrderingExistingItems = @json($existingItems);
+
 </script>
 @section('scripts')
 <script>

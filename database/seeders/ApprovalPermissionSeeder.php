@@ -40,6 +40,31 @@ class ApprovalPermissionSeeder extends Seeder
                 'label' => 'Purchase Order Approval',
                 'description' => 'Approve Local Purchase Orders before they are finalized and sent to the supplier.',
             ],
+            [
+                'key' => 'grn_open_balance_approval',
+                'label' => 'GRN Open Balance / Physical Count Approval',
+                'description' => 'Approve opening balance or physical count stock entries.',
+            ],
+            [
+                'key' => 'issue_note_approval',
+                'label' => 'Issue Note Approval',
+                'description' => 'Approve electronic issue notes committing stock to be transferred.',
+            ],
+            [
+                'key' => 'return_inward_approval', 
+                'label' => 'Return Inward Approval', 
+                'description' => 'Approve items returned into the store.'
+            ],
+            [
+                'key' => 'store_transfer_approval', 
+                'label' => 'Store Transfer Approval', 
+                'description' => 'Approve stock transfers between stores before dispatch.'
+            ],
+            [
+                'key' => 'return_outward_approval', 
+                'label' => 'Return Outward Approval', 
+                'description' => 'Approve items returned to suppliers, deducting them from store stock.'
+            ],
         ];
 
         foreach ($permissions as $permission) {

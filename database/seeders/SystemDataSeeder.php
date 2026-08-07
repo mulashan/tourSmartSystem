@@ -140,6 +140,65 @@ class SystemDataSeeder extends Seeder
             ['key' => 'storage-supplies.grn-against-order.approve', 'label' => 'Approve GRN', 'icon' => null, 'url' => 'storage-supplies/grn/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-against-order'],
             ['key' => 'storage-supplies.grn.previous', 'label' => 'Previous GRN List', 'icon' => null, 'url' => 'storage-supplies/grn/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-against-order'],
 
+            //GRN Without Purchasing Order
+            ['key' => 'storage-supplies.grn-without-order', 'label' => 'GRN Without Purchase Order', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.grn-without-order.new', 'label' => 'New GRN', 'icon' => null, 'url' => 'storage-supplies/grn-without-po/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-without-order'],
+            ['key' => 'storage-supplies.grn-without-order.approve', 'label' => 'Approve GRN', 'icon' => null, 'url' => 'storage-supplies/grn-without-po/pending', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-without-order'],
+            ['key' => 'storage-supplies.grn-without-order.previous', 'label' => 'Previous GRN List', 'icon' => null, 'url' => 'storage-supplies/grn-without-po/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-without-order'],
+
+            //GRN as Open balance 
+            ['key' => 'storage-supplies.grn-open-balance.group', 'label' => 'GRN Open Balance / Physical Count', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.grn-open-balance.new', 'label' => 'New GRN', 'icon' => null, 'url' => 'storage-supplies/grn-open-balance/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-open-balance.group'],
+            ['key' => 'storage-supplies.grn-open-balance.approve', 'label' => 'Approve GRN', 'icon' => null, 'url' => 'storage-supplies/grn-open-balance/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-open-balance.group'],
+            ['key' => 'storage-supplies.grn-open-balance.previous', 'label' => 'Previous GRN List', 'icon' => null, 'url' => 'storage-supplies/grn-open-balance/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-open-balance.group'],
+
+            //GRN ISSUE
+            ['key' => 'storage-supplies.grn-issue.group', 'label' => 'GRN Against Issue Note', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.grn-issue.new', 'label' => 'New GRN', 'icon' => null, 'url' => 'storage-supplies/grn-against-issue-note/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-issue.group'],
+            ['key' => 'storage-supplies.grn-issue.approve', 'label' => 'Approve GRN', 'icon' => null, 'url' => 'storage-supplies/grn-against-issue-note/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-issue.group'],
+            ['key' => 'storage-supplies.grn-issue.previous', 'label' => 'Previous GRN List', 'icon' => null, 'url' => 'storage-supplies/grn-against-issue-note/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.grn-issue.group'],
+
+            //Store requisitions
+            ['key' => 'storage-supplies.requisition.group', 'label' => 'Requisition', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.requisition.new', 'label' => 'New Requisition', 'icon' => null, 'url' => 'storage-supplies/requisition/create', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.requisition.group'],
+            ['key' => 'storage-supplies.requisition.pending', 'label' => 'Pending Requisition', 'icon' => null, 'url' => 'storage-supplies/requisition/pending', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.requisition.group'],
+            ['key' => 'storage-supplies.requisition.approve', 'label' => 'Approve Requisition', 'icon' => null, 'url' => 'storage-supplies/requisition/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.requisition.group'],
+            ['key' => 'storage-supplies.requisition.previous', 'label' => 'Previous Requisition', 'icon' => null, 'url' => 'storage-supplies/requisition/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.requisition.group'],
+
+            //Issue Note Electronic
+            ['key' => 'storage-supplies.issue-note.group', 'label' => 'Issue Note - Electronic', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.issue-note.new', 'label' => 'New Issue Note', 'icon' => null, 'url' => 'storage-supplies/issue-note/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.issue-note.group'],
+            ['key' => 'storage-supplies.issue-note.approve', 'label' => 'Approve Issues', 'icon' => null, 'url' => 'storage-supplies/issue-note/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.issue-note.group'],
+            ['key' => 'storage-supplies.issue-note.previous', 'label' => 'Previous Issues', 'icon' => null, 'url' => 'storage-supplies/issue-note/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.issue-note.group'],
+
+            //Return inward
+            ['key' => 'storage-supplies.return-inward.group', 'label' => 'Return Inward', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.return-inward.new', 'label' => 'New Return', 'icon' => null, 'url' => 'storage-supplies/return/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-inward.group'],
+            ['key' => 'storage-supplies.return-inward.approve', 'label' => 'Approve Return', 'icon' => null, 'url' => 'storage-supplies/return/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-inward.group'],
+            ['key' => 'storage-supplies.return.return-list', 'label' => 'Return List', 'icon' => null, 'url' => 'storage-supplies/return/list', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-inward.group'],
+            ['key' => 'storage-supplies.return-inward.previous', 'label' => 'Previous Return', 'icon' => null, 'url' => 'storage-supplies/return/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-inward.group'],
+
+            //Transfer
+            ['key' => 'storage-supplies.store-transfer.group', 'label' => 'Store Transfer', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.store-transfer.draft', 'label' => 'Draft (New Transfer)', 'icon' => null, 'url' => 'storage-supplies/store-transfer/draft', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.store-transfer.group'],
+            ['key' => 'storage-supplies.store-transfer.approve', 'label' => 'Pending Approval', 'icon' => null, 'url' => 'storage-supplies/store-transfer/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.store-transfer.group'],
+            ['key' => 'storage-supplies.store-transfer.pending-receipt', 'label' => 'Pending Receipt', 'icon' => null, 'url' => 'storage-supplies/store-transfer/pending-receipt', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.store-transfer.group'],
+            ['key' => 'storage-supplies.store-transfer.completed', 'label' => 'Completed Transfers', 'icon' => null, 'url' => 'storage-supplies/store-transfer/completed', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.store-transfer.group'],
+            ['key' => 'storage-supplies.store-transfer.cancelled', 'label' => 'Cancelled Transfers', 'icon' => null, 'url' => 'storage-supplies/store-transfer/cancelled', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.store-transfer.group'],
+
+            //Return outward to supplier
+            ['key' => 'storage-supplies.return-outward.group', 'label' => 'Return Outward', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.return-outward.new', 'label' => 'New Return', 'icon' => null, 'url' => 'storage-supplies/return-outward/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-outward.group'],
+            ['key' => 'storage-supplies.return-outward.approve', 'label' => 'Approve Return', 'icon' => null, 'url' => 'storage-supplies/return-outward/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-outward.group'],
+            ['key' => 'storage-supplies.return-outward.previous', 'label' => 'Previous Return', 'icon' => null, 'url' => 'storage-supplies/return-outward/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.return-outward.group'],
+
+            //Stock Adjustment
+            ['key' => 'storage-supplies.stock-adjustment.group', 'label' => 'Adjustment', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.stock-adjustment.new', 'label' => 'New Adjustment', 'icon' => null, 'url' => 'storage-supplies/stock-adjustment/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.stock-adjustment.group'],
+            ['key' => 'storage-supplies.stock-adjustment.approve', 'label' => 'Approve Adjustments', 'icon' => null, 'url' => 'storage-supplies/stock-adjustment/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.stock-adjustment.group'],
+            ['key' => 'storage-supplies.stock-adjustment.previous', 'label' => 'Previous Adjustments', 'icon' => null, 'url' => 'storage-supplies/stock-adjustment/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.stock-adjustment.group'],
+
+
             //procuremet
             ['key' => 'Procurement.setup', 'label' => 'Procurements', 'icon' => 'bi-cart-check', 'url' => null, 'parent' => null, 'collapse' => 1],
             ['key' => 'Procurement.store-order-requisition', 'label' => 'Store Order Requisitions', 'icon' => null, 'url' => 'procurement/store-requisitions', 'parent' => 'Procurement.setup'],

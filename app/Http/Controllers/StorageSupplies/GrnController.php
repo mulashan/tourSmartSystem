@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\GrnBatch;
 use App\Models\GrnItem;
 use App\Models\GrnPurchaseOrder;
+use App\Models\ItemStockBalance;
 use App\Models\LocalPurchaseOrder;
+use App\Models\StockBatch;
+use App\Models\StockLedger;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use App\Models\ItemStockBalance;
-use App\Models\StockLedger;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class GrnController extends Controller
 {
@@ -216,6 +217,20 @@ class GrnController extends Controller
                         'grn_batch_id' => $batch->id,
                         'created_by_user_id' => $approver->id,
                         'moved_at' => now(),
+                    ]);
+
+                    StockBatch::create([
+                        'item_id' => $grnItem->item_id,
+                        'subdepartment_id' => $grn->Sub_Department_ID,
+                        'batch_number' => $batch->batch_number,
+                        'manufacture_date' => $batch->manufacture_date,
+                        'expiry_date' => $batch->expiry_date,
+                        'buying_price' => $batch->buying_price,
+                        'quantity_received' => $batch->quantity,
+                        'quantity_remaining' => $batch->quantity,
+                        'source_type' => 'grn_against_po',
+                        'source_id' => $grn->Grn_Purchase_Order_ID,
+                        'received_date' => $batch->received_date,
                     ]);
                 }
             }
