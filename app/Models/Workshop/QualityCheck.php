@@ -2,10 +2,13 @@
 
 namespace App\Models\Workshop;
 
+use App\Models\Workshop\Concerns\TracksWorkshopUsers;
 use Illuminate\Database\Eloquent\Model;
 
 class QualityCheck extends Model
 {
+    use TracksWorkshopUsers;
+
     protected $fillable = [
         'job_card_id',
         'inspector_id',

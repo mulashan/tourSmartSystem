@@ -2,10 +2,13 @@
 
 namespace App\Models\Workshop;
 
+use App\Models\Workshop\Concerns\TracksWorkshopUsers;
 use Illuminate\Database\Eloquent\Model;
 
 class Diagnosis extends Model
 {
+    use TracksWorkshopUsers;
+
     protected $table = 'diagnosis';
 
     protected $fillable = [

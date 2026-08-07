@@ -3,10 +3,13 @@
 namespace App\Models\Workshop;
 
 use App\Models\User;
+use App\Models\Workshop\Concerns\TracksWorkshopUsers;
 use Illuminate\Database\Eloquent\Model;
 
 class JobCard extends Model
 {
+    use TracksWorkshopUsers;
+
     public const STATUSES = ['new', 'assigned', 'in_progress', 'waiting_parts', 'completed', 'invoiced', 'closed', 'cancelled'];
 
     protected $fillable = [
