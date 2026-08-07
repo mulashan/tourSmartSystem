@@ -4,25 +4,49 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Approve Local Purchase Orders</h2></div>
 
-<table class="table table-hover">
-    <thead><tr><th>LPO #</th><th>Store Requisition</th><th>Supplier</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
-    <tbody>
-        @forelse($items as $lpo)
-            <tr>
-                <td>{{ $lpo->local_purchase_order_id }}</td>
-                <td>{{ $lpo->storeRequisition->subdepartment->Subdepartment_Name ?? '—' }} (#{{ $lpo->store_requisition_id }})</td>
-                <td>{{ $lpo->supplier->supplier_name ?? '—' }}</td>
-                <td>{{ $lpo->createdBy->name ?? '—' }}</td>
-                <td class="text-end"><button class="btn btn-sm btn-warning js-approve" data-id="{{ $lpo->local_purchase_order_id }}">Approve</button></td>
-            </tr>
-        @empty
-            <tr><td colspan="5" class="text-center text-muted">No Purchase Orders pending approval.</td></tr>
-        @endforelse
-    </tbody>
-</table>
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <div class="row mt-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Search approvals...">
+                    </div>
+                </div>
+                <div class="col-lg-8 text-end">
+                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light"><tr><th>LPO #</th><th>Store Requisition</th><th>Supplier</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
+                    <tbody>
+                        @forelse($items as $lpo)
+                            <tr>
+                                <td><strong>{{ $lpo->local_purchase_order_id }}</strong></td>
+                                <td>{{ $lpo->storeRequisition->subdepartment->Subdepartment_Name ?? '—' }} (#{{ $lpo->store_requisition_id }})</td>
+                                <td>{{ $lpo->supplier->supplier_name ?? '—' }}</td>
+                                <td>{{ $lpo->createdBy->name ?? '—' }}</td>
+                                <td class="text-end"><button class="btn btn-sm btn-warning js-approve" data-id="{{ $lpo->local_purchase_order_id }}">Approve</button></td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" class="text-center text-muted py-4">No Purchase Orders pending approval.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="text-muted">Showing {{ $items->count() }} records</span>
+            </div>
+        </div>
+    </div>
+</section>
 
 <div class="modal fade" id="approveLpoModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="approveLpoForm">
                 <div class="modal-header"><h5 class="modal-title">Approve Purchase Order</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>

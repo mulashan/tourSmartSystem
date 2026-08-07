@@ -126,15 +126,6 @@ class SystemDataSeeder extends Seeder
             ['key' => 'settings.employee-units', 'label' => 'Employee Units', 'icon' => null, 'url' => 'settings/employee-units', 'parent' => 'settings.setup'],
             ['key' => 'departments.list', 'label' => 'Department', 'icon' => 'bi-diagram-3', 'url' => 'departments', 'parent' => null],
             ['key' => 'employees.list', 'label' => 'Employee', 'icon' => 'bi-person-badge', 'url' => 'employees', 'parent' => null],
-            ['key' => 'authentication', 'label' => 'Authentication', 'icon' => 'bi-shield-check', 'url' => null, 'parent' => null, 'new_message' => 7],
-            ['key' => 'apps.calendar', 'label' => 'Calendar', 'icon' => 'bi-calendar4-week', 'url' => 'apps/calendar', 'parent' => null],
-            ['key' => 'apps.kanban', 'label' => 'Kanban Board', 'icon' => 'bi-kanban', 'url' => 'apps/kanban-board', 'parent' => null],
-            ['key' => 'apps.chat', 'label' => 'Chat', 'icon' => 'bi-chat-left-dots', 'url' => 'apps/chat', 'parent' => null],
-            ['key' => 'apps.contacts', 'label' => 'Contacts', 'icon' => 'bi-person-lines-fill', 'url' => 'apps/contacts', 'parent' => null],
-            ['key' => 'apps.files', 'label' => 'File Manager', 'icon' => 'bi-folder2-open', 'url' => 'apps/file-manager', 'parent' => null],
-            ['key' => 'apps.email', 'label' => 'Email', 'icon' => 'bi-envelope', 'url' => 'apps/email', 'parent' => null],
-            ['key' => 'apps.todo', 'label' => 'Todo List', 'icon' => 'bi-check2-all', 'url' => 'apps/todo-list', 'parent' => null],
-            ['key' => 'apps.support', 'label' => 'Support Center', 'icon' => 'bi-headset', 'url' => 'apps/support-center', 'parent' => null],
 
             //storage and supplies
             ['key' => 'storage-supplies.setup', 'label' => 'Storage and Supplies', 'icon' => 'bi bi-cart-check-fill', 'url' => null, 'parent' => null, 'collapse' => 1],

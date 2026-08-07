@@ -21,7 +21,7 @@
 </div>
 
 <div class="modal fade" id="lookupModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="lookupForm">
                 <div class="modal-header">
@@ -55,7 +55,7 @@
 </div>
 
 <div class="modal fade" id="departmentModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="departmentForm">
                 <div class="modal-header">
@@ -98,7 +98,7 @@
 </div>
 
 <div class="modal fade" id="subdepartmentModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="subdepartmentForm">
                 <div class="modal-header">
@@ -138,7 +138,7 @@
 </div>
 
 <div class="modal fade" id="supplierModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <form id="supplierForm">
                 <div class="modal-header">

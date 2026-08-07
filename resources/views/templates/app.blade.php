@@ -69,14 +69,6 @@
                 <div id="quick-panel" class="top-panel quick-panel">
                     <h3>Quick Access</h3>
                     <a class="quick-primary" href="#"><i class="bi bi-lightning-charge"></i><span><strong>Create New Workspace</strong><small>Launch projects, assign team, set timeline</small></span></a>
-                    <div class="quick-grid">
-                        <a href="{{ url('apps/calendar') }}"><i class="bi bi-calendar3"></i><strong>Calendar</strong><small>Events</small></a>
-                        <a href="{{ url('apps/kanban-board') }}"><i class="bi bi-kanban"></i><strong>Kanban</strong><small>Boards</small></a>
-                        <a href="{{ url('apps/chat') }}"><i class="bi bi-chat-dots"></i><strong>Chat</strong><small>Inbox</small></a>
-                        <a href="{{ url('apps/email') }}"><i class="bi bi-envelope"></i><strong>Email</strong><small>Campaigns</small></a>
-                        <a href="{{ url('apps/file-manager') }}"><i class="bi bi-folder2-open"></i><strong>Files</strong><small>Assets</small></a>
-                        <a href="{{ url('apps/support-center') }}"><i class="bi bi-headset"></i><strong>Support</strong><small>Tickets</small></a>
-                    </div>
                 </div>
             </div>
             <div class="top-action">
@@ -94,7 +86,7 @@
             <div class="top-action">
                 <button class="icon-btn has-badge js-top-panel" data-panel="messages-panel" type="button"><i class="bi bi-chat-left-text"></i><span>5</span></button>
                 <div id="messages-panel" class="top-panel feed-panel messages-panel">
-                    <div class="panel-title"><div><h3>Messages</h3><p>5 unread</p></div><a href="{{ url('apps/chat') }}">Open chat</a></div>
+                    <div class="panel-title"><div><h3>Messages</h3><p>5 unread</p></div><a href="#">Open chat</a></div>
                     <div class="message-tabs"><button class="active">Direct</button><button>Team</button><button>Clients</button></div>
                     <a class="feed-item unread" href="#"><span class="tiny-avatar tan">M</span><span><strong>Mia Rodriguez</strong><small>Can you review the analytics wireframe today?</small><em>2m ago</em></span></a>
                     <a class="feed-item unread" href="#"><span class="tiny-avatar teal">D</span><span><strong>Dev Channel</strong><small>Build passed. Ready for production deploy.</small><em>12m ago</em></span></a>
