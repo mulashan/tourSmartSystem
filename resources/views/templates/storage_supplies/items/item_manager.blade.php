@@ -23,7 +23,7 @@
 </div>
 
 <div class="modal fade" id="itemModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <form id="itemForm">
                 <div class="modal-header">
@@ -95,7 +95,7 @@
 </div>
 
 <div class="modal fade" id="categoryQuickAddModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="categoryQuickAddForm">
                 <div class="modal-header">

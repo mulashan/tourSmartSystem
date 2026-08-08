@@ -27,6 +27,9 @@ use App\Http\Controllers\Procurement\ProcurementController;
 use App\Http\Controllers\Users\UserWorkspaceController;
 use App\Http\Controllers\Auth\BranchSessionController;
 use App\Http\Controllers\StorageSupplies\GrnController;
+
+use App\Http\Controllers\Workshop\WorkshopController;
+
 use App\Http\Controllers\StorageSupplies\GrnWithoutPoController;
 use App\Http\Controllers\StorageSupplies\GrnOpenBalanceController;
 use App\Http\Controllers\StorageSupplies\RequisitionController;
@@ -53,6 +56,22 @@ Route::post('/branch/change', [BranchSessionController::class, 'update'])->name(
 
 Route::get('/dashboard', [PageController::class, 'dashboard']);
 
+Route::prefix('workshop')->name('workshop.')->group(function () {
+    Route::get('/dashboard', [WorkshopController::class, 'dashboard'])->name('dashboard');
+    Route::get('/job-cards', [WorkshopController::class, 'index'])->name('job-cards.index');
+    Route::post('/job-cards', [WorkshopController::class, 'storeJobCard'])->name('job-cards.store');
+    Route::get('/job-cards/{jobCard}', [WorkshopController::class, 'show'])->name('job-cards.show');
+    Route::post('/job-cards/{jobCard}/repair-orders', [WorkshopController::class, 'storeRepairOrder'])->name('job-cards.repair-orders.store');
+    Route::post('/job-cards/{jobCard}/diagnosis', [WorkshopController::class, 'storeDiagnosis'])->name('job-cards.diagnosis.store');
+    Route::post('/job-cards/{jobCard}/mechanics', [WorkshopController::class, 'storeMechanic'])->name('job-cards.mechanics.store');
+    Route::post('/job-cards/{jobCard}/labour', [WorkshopController::class, 'storeLabour'])->name('job-cards.labour.store');
+    Route::post('/job-cards/{jobCard}/parts', [WorkshopController::class, 'storePart'])->name('job-cards.parts.store');
+    Route::post('/job-cards/{jobCard}/complete', [WorkshopController::class, 'complete'])->name('job-cards.complete');
+    Route::post('/job-cards/{jobCard}/inspect', [WorkshopController::class, 'inspect'])->name('job-cards.inspect');
+    Route::post('/job-cards/{jobCard}/invoice', [WorkshopController::class, 'generateInvoice'])->name('job-cards.invoice');
+    Route::post('/job-cards/{jobCard}/close', [WorkshopController::class, 'close'])->name('job-cards.close');
+});
+
 Route::get('/users', [UserController::class, 'index'])->name('users.list');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/types', [UserTypeController::class, 'index'])->name('users.types');
@@ -61,8 +80,8 @@ Route::get('/users/view', [PageController::class, 'userView']);
 // Route::get('/users/edit', [PageController::class, 'userEdit']);
 
 //changes here 
-Route::get('/users/view', [PageController::class, 'userView']);
-Route::get('/users/profile', [PageController::class, 'userProfile']);
+//Route::get('/users/view', [PageController::class, 'userView']);
+//Route::get('/users/profile', [PageController::class, 'userProfile']);
 
 //end of changes 
 Route::get('/users/profile', [PageController::class, 'userProfile']);
@@ -433,25 +452,6 @@ Route::post('/departments', [DepartmentController::class, 'store'])->name('depar
 
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.list');
 Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-
-Route::get('/apps/calendar', [PageController::class, 'appCalendar']);
-Route::get('/apps/chat', [PageController::class, 'appChat']);
-Route::get('/apps/file-manager', [PageController::class, 'appFileManager']);
-Route::get('/apps/kanban-board', [PageController::class, 'appKanban']);
-Route::get('/apps/contacts', [PageController::class, 'appContacts']);
-Route::get('/apps/email', [PageController::class, 'appEmail']);
-Route::get('/apps/todo-list', [PageController::class, 'appTodo']);
-Route::get('/apps/support-center', [PageController::class, 'appSupport']);
-
-Route::get('/utility/invoices', [PageController::class, 'utilityInvoiceList']);
-Route::get('/utility/invoices/view', [PageController::class, 'utilityInvoiceView']);
-Route::get('/utility/pricing', [PageController::class, 'utilityPricing']);
-Route::get('/utility/contact', [PageController::class, 'utilityContact']);
-Route::get('/utility/faq', [PageController::class, 'utilityFaq']);
-Route::get('/utility/error-pages', [PageController::class, 'utilityErrorPages']);
-Route::get('/utility/timeline', [PageController::class, 'utilityTimeline']);
-Route::get('/utility/search-results', [PageController::class, 'utilitySearchResults']);
-Route::get('/utility/blank-page', [PageController::class, 'utilityBlankPage']);
 
 Route::get('/Logout', [PageController::class, 'logout']);
 Route::get('/Logout2', [PageController::class, 'logoutRedirect']);

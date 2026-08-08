@@ -2766,6 +2766,481 @@ body.dark-theme .theme-toggle {
 .settings-nav-link.disabled { color: #aaa; cursor: not-allowed; }
 .settings-panel { flex: 1; min-width: 0; }
 .settings-panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.workshop-job-shell { align-items: flex-start; }
+.workshop-flow-sidebar {
+    position: sticky;
+    top: 92px;
+    width: 260px;
+    padding-right: 14px;
+}
+.workshop-flow-sidebar .settings-nav-link {
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.workshop-anchor {
+    display: block;
+    width: 0;
+    height: 0;
+    scroll-margin-top: 96px;
+}
+
+@media (max-width: 991px) {
+    .workshop-job-shell {
+        flex-direction: column;
+    }
+    .workshop-flow-sidebar {
+        position: static;
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid #e3e6ea;
+        padding: 0 0 12px;
+    }
+}
+
+/* Unified Users List styling for all module pages */
+.nice-main .page-hero,
+.nice-main .settings-panel-head,
+.nice-main .pagetitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    min-height: auto;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.nice-main .page-hero h1,
+.nice-main .settings-panel-head h1,
+.nice-main .settings-panel-head h2,
+.nice-main .pagetitle h1 {
+    margin: 0;
+    color: var(--nice-blue-dark);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.nice-main .page-hero p,
+.nice-main .pagetitle p {
+    margin: 6px 0 0;
+    color: var(--nice-muted);
+    font-size: 15px;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nice-main .content-split {
+    display: block;
+}
+
+.nice-main .content-split > .side-stack {
+    display: none;
+}
+
+.nice-main .panel,
+.nice-main .card,
+.nice-main > .table-responsive,
+.nice-main > table.table {
+    background: #fff;
+    border: 1px solid var(--nice-border);
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.nice-main .panel,
+.nice-main > .table-responsive {
+    padding: 18px;
+}
+
+.nice-main .table-panel {
+    padding: 0;
+    overflow: hidden;
+}
+
+.nice-main .card {
+    overflow: hidden;
+}
+
+.nice-main .card-header {
+    background: #fff;
+    border-bottom: 1px solid #e8edf8;
+    color: var(--nice-blue-dark);
+    font-weight: 700;
+}
+
+.nice-main .card-body,
+.nice-main .modal-body {
+    color: #59667e;
+}
+
+.nice-main .tabs-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 1rem;
+    border-bottom: 0;
+    flex-wrap: wrap;
+}
+
+.nice-main .soft-tabs {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.nice-main .soft-tabs button {
+    min-height: 38px;
+    padding: 7px 14px;
+    background: #fff;
+    color: #6c757d;
+    border-right: 1px solid #dee2e6;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: none;
+}
+
+.nice-main .soft-tabs button:last-child {
+    border-right: 0;
+}
+
+.nice-main .soft-tabs .active {
+    background: #f8f9fa;
+    color: var(--nice-blue-dark);
+}
+
+.nice-main .toolbar-search {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: min(100%, 360px);
+}
+
+.nice-main .toolbar-search i {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.nice-main .toolbar-search input {
+    height: 38px;
+    min-width: 190px;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+    padding: 0 12px;
+    outline: 0;
+}
+
+.nice-main .toolbar-search input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .12);
+}
+
+.nice-main .toolbar-search button {
+    min-height: 38px;
+    border: 1px solid #ced4da;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    padding: 0 12px;
+    background: #fff;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.nice-main .table,
+.nice-main .nice-table {
+    width: 100%;
+    margin-bottom: 0;
+    color: #59667e;
+    vertical-align: middle;
+    border-collapse: collapse;
+}
+
+.nice-main .table thead,
+.nice-main .nice-table thead {
+    background: #f8f9fa;
+}
+
+.nice-main .table th,
+.nice-main .nice-table th {
+    background: #f8f9fa;
+    color: #4f5d75;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: none;
+    border-bottom: 1px solid #dee2e6;
+    padding: 12px;
+}
+
+.nice-main .table td,
+.nice-main .nice-table td {
+    padding: 12px;
+    border-bottom: 1px solid #edf1f7;
+}
+
+.nice-main .table tbody tr:hover,
+.nice-main .nice-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.nice-main .table tbody tr:last-child td,
+.nice-main .nice-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.nice-main .directory-table td:first-child,
+.nice-main .directory-table th:first-child {
+    width: 50px;
+}
+
+.nice-main .directory-table strong {
+    color: #25375f;
+}
+
+.nice-main .directory-table small {
+    display: block;
+    color: var(--nice-muted);
+}
+
+.nice-main .row-actions {
+    white-space: nowrap;
+}
+
+.nice-main .row-actions i,
+.nice-main .btn-group-sm .btn,
+.nice-main .btn-sm {
+    vertical-align: middle;
+}
+
+.nice-action,
+.modal-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+    border: 1px solid #0d6efd;
+    border-radius: 6px;
+    padding: 7px 14px;
+    background: #0d6efd;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.outline-btn,
+.modal-cancel,
+.danger-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 7px 14px;
+    background: #fff;
+    color: #59667e;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.danger-outline {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.nice-action:hover,
+.modal-submit:hover {
+    background: #0b5ed7;
+    border-color: #0a58ca;
+    color: #fff;
+}
+
+.outline-btn:hover,
+.modal-cancel:hover {
+    background: #f8f9fa;
+    color: #25375f;
+}
+
+.nice-main .modal-dialog {
+    max-width: min(900px, calc(100vw - 32px));
+}
+
+.nice-main .modal-content {
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 18px 50px rgba(37, 55, 95, .18);
+    overflow: hidden;
+}
+
+.nice-main .modal-header {
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nice-main .modal-title,
+.nice-main .modal-header h2,
+.nice-main .modal-header h5 {
+    margin: 0;
+    color: var(--nice-blue-dark);
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.nice-main .modal-body {
+    padding: 1.25rem;
+}
+
+.nice-main .modal-footer {
+    gap: 8px;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.nice-main .add-user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.nice-main .add-user-grid label {
+    display: block;
+    color: #25375f;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.nice-main .add-user-grid .wide {
+    grid-column: 1 / -1;
+}
+
+.nice-main .add-user-grid input,
+.nice-main .add-user-grid select,
+.nice-main .add-user-grid textarea,
+.nice-main .form-control,
+.nice-main .form-select {
+    min-height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: .375rem .75rem;
+    background-color: #fff;
+    color: #212529;
+    font-size: 14px;
+}
+
+.nice-main .add-user-grid input,
+.nice-main .add-user-grid select,
+.nice-main .add-user-grid textarea {
+    display: block;
+    width: 100%;
+    margin-top: .35rem;
+}
+
+.nice-main .add-user-grid input:focus,
+.nice-main .add-user-grid select:focus,
+.nice-main .add-user-grid textarea:focus,
+.nice-main .form-control:focus,
+.nice-main .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .12);
+    outline: 0;
+}
+
+.nice-main .modal-check {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+}
+
+.nice-main .modal-check input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.nice-main .table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 1rem;
+    color: var(--nice-muted);
+    font-size: 14px;
+}
+
+.nice-main .pager {
+    display: flex;
+    gap: 4px;
+}
+
+.nice-main .pager button {
+    min-width: 34px;
+    height: 34px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: #fff;
+    color: #59667e;
+}
+
+.nice-main .pager .active {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.nice-main .state-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #198754;
+}
+
+.nice-main .state-dot.inactive,
+.nice-main .state-dot.cancelled {
+    background: #dc3545;
+}
+
+.nice-main .state-dot.pending {
+    background: #ffc107;
+}
+
+@media (max-width: 768px) {
+    .nice-main .page-hero,
+    .nice-main .settings-panel-head,
+    .nice-main .pagetitle,
+    .nice-main .tabs-toolbar,
+    .nice-main .table-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .nice-main .add-user-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nice-main .toolbar-search {
+        width: 100%;
+    }
+}
 
 .menu-link em,
 .submenu-link em.menu-badge {

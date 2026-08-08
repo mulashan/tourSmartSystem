@@ -30,6 +30,8 @@ class StockBatch extends Model
         return $query->where('item_id', $itemId)
             ->where('subdepartment_id', $subdepartmentId)
             ->where('quantity_remaining', '>', 0)
-            ->orderBy('expiry_date');
+            ->orderBy('expiry_date')
+            ->orderBy('received_date')
+            ->orderBy('id');
     }
 }
