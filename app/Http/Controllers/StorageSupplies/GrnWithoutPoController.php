@@ -37,7 +37,7 @@ class GrnWithoutPoController extends Controller
             ->with('unitOfMeasure')
             ->where('status', 'active')
             ->when($request->query('category_id'), fn ($q, $categoryId) => $q->where('item_category_id', $categoryId))
-            ->when($request->query('search'), fn ($q, $search) => $q->where('product_name', 'like', "%{$search}%"))
+            ->when($request->query('search'), fn ($q, $search) => $q->where('product_name', 'ilike', "%{$search}%"))
             ->orderBy('product_name')
             ->limit(100)
             ->get(['id', 'product_name', 'unit_of_measure_id']);

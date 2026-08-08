@@ -64,6 +64,7 @@ class ProcurementController extends Controller
             'rejected_item_ids.*' => 'integer|exists:tbl_store_requisition_items,id',
         ]);
 
+        //we need to update store requisition procurement status to ordered storeRequisition
         if (empty($data['items'])) {
             return response()->json(['message' => 'Select at least one item to include in the Purchase Order.'], 422);
         }
@@ -106,6 +107,8 @@ class ProcurementController extends Controller
                 $storeRequisition->items()->where('id', $itemId)->update(['procurement_status' => 'rejected']);
             }
 
+            $storeRequisition->update([ 'procurement_status' => 'ordered', ]); //added this line 
+
             $lpo->logStatusChange('draft', session('user_id'), 'Purchase Order created from Store Requisition #' . $storeRequisition->id);
 
             return $lpo;
@@ -114,26 +117,26 @@ class ProcurementController extends Controller
         return response()->json(['success' => true, 'id' => $lpo->local_purchase_order_id]);
     }
 
-    public function rejectRequisition(Request $request, StoreRequisition $storeRequisition): JsonResponse
-    {
-        abort_if($storeRequisition->localPurchaseOrder, 409, 'Cannot reject — a Purchase Order already exists for this requisition.');
+    // public function rejectRequisition(Request $request, StoreRequisition $storeRequisition): JsonResponse
+    // {
+    //     abort_if($storeRequisition->localPurchaseOrder, 409, 'Cannot reject — a Purchase Order already exists for this requisition.');
 
-        $data = $request->validate(['reason' => 'required|string|max:255']);
+    //     $data = $request->validate(['reason' => 'required|string|max:255']);
 
-        DB::transaction(function () use ($storeRequisition, $data) {
-            $storeRequisition->items()->update([
-                'procurement_status' => 'rejected',
-                'rejection_reason' => $data['reason'],
-            ]);
+    //     DB::transaction(function () use ($storeRequisition, $data) {
+    //         $storeRequisition->items()->update([
+    //             'procurement_status' => 'rejected',
+    //             'rejection_reason' => $data['reason'],
+    //         ]);
 
-            $storeRequisition->update([
-                'procurement_status' => 'rejected',
-                'rejection_reason' => $data['reason'],
-            ]);
-        });
+    //         $storeRequisition->update([
+    //             'procurement_status' => 'rejected',
+    //             'rejection_reason' => $data['reason'],
+    //         ]);
+    //     });
 
-        return response()->json(['success' => true]);
-    }
+    //     return response()->json(['success' => true]);
+    // }
 
     public function previewForSupplier(Request $request, StoreRequisition $storeRequisition): View
     {
@@ -293,5 +296,29 @@ class ProcurementController extends Controller
             'itemsTotal' => $itemsTotal,
             'grandTotal' => $itemsTotal + $otherSum,
         ]);
+    }
+
+    public function rejectRequisition(Request $request, StoreRequisition $storeRequisition): JsonResponse
+    {
+        abort_if($storeRequisition->localPurchaseOrder, 409, 'Cannot reject — a Purchase Order already exists for this requisition.');
+
+        $data = $request->validate(['reason' => 'required|string|max:255']);
+
+        DB::transaction(function () use ($storeRequisition, $data) {
+            $storeRequisition->items()->update([
+                'procurement_status' => 'rejected',
+                'rejection_reason' => $data['reason'],
+            ]);
+
+            $storeRequisition->update([
+                'procurement_status' => 'rejected',
+                'rejection_reason' => $data['reason'],
+                'procurement_subdepartment_id' => session('active_subdepartment_id'),
+                'cancelled_by_user_id' => session('user_id'),
+                'cancelled_at' => now(),
+            ]);
+        });
+
+        return response()->json(['success' => true]);
     }
 }

@@ -36,6 +36,9 @@ use App\Http\Controllers\StorageSupplies\ReturnController;
 use App\Http\Controllers\StorageSupplies\StoreTransferController;
 use App\Http\Controllers\StorageSupplies\ReturnOutwardController;
 use App\Http\Controllers\StorageSupplies\StockAdjustmentController;
+use App\Http\Controllers\StorageSupplies\ReportController;
+use App\Http\Controllers\StorageSupplies\ServiceUseController;
+use App\Http\Controllers\Procurement\ProcurementReportController;
 
 Route::get('/', [PageController::class, 'home']);
 
@@ -183,6 +186,41 @@ Route::middleware('active.subdepartment:procurement')->prefix('procurement')->na
     });
 });
 
+//Procurement Reports
+
+Route::middleware('active.subdepartment:procurement')->prefix('procurement/reports')->name('procurement.reports.')->group(function () {
+    Route::get('/purchasing-history', [ProcurementReportController::class, 'purchasingHistory'])->name('purchasing_history');
+    Route::get('/purchasing-history/data', [ProcurementReportController::class, 'purchasingHistoryData'])->name('purchasing_history_data');
+
+    Route::get('/previous-purchase-requisition', [ProcurementReportController::class, 'previousPurchaseRequisition'])->name('previous_purchase_requisition');
+    Route::get('/previous-purchase-requisition/data', [ProcurementReportController::class, 'previousPurchaseRequisitionData'])->name('previous_purchase_requisition_data');
+
+    Route::get('/received-grn', [ProcurementReportController::class, 'receivedGrn'])->name('received_grn');
+    Route::get('/received-grn/data', [ProcurementReportController::class, 'receivedGrnData'])->name('received_grn_data');
+
+    Route::get('/procurement-report', [ProcurementReportController::class, 'procurementReport'])->name('procurement_report');
+    Route::get('/procurement-report/data', [ProcurementReportController::class, 'procurementReportData'])->name('procurement_report_data');
+
+    Route::get('/cancelled-purchase-requisition', [ProcurementReportController::class, 'cancelledPurchaseRequisition'])->name('cancelled_purchase_requisition');
+    Route::get('/cancelled-purchase-requisition/data', [ProcurementReportController::class, 'cancelledPurchaseRequisitionData'])->name('cancelled_purchase_requisition_data');
+
+    Route::get('/last-buying-price', [ProcurementReportController::class, 'lastBuyingPrice'])->name('last_buying_price');
+    Route::get('/last-buying-price/data', [ProcurementReportController::class, 'lastBuyingPriceData'])->name('last_buying_price_data');
+
+    Route::get('/pending-po-aging', [ProcurementReportController::class, 'pendingPoAging'])->name('pending_po_aging');
+    Route::get('/pending-po-aging/data', [ProcurementReportController::class, 'pendingPoAgingData'])->name('pending_po_aging_data');
+
+    Route::get('/supplier-price-trend', [ProcurementReportController::class, 'supplierPriceTrend'])->name('supplier_price_trend');
+    Route::get('/supplier-price-trend/items-picker', [ProcurementReportController::class, 'supplierPriceTrendItemsPicker'])->name('supplier_price_trend_items_picker');
+    Route::get('/supplier-price-trend/data', [ProcurementReportController::class, 'supplierPriceTrendData'])->name('supplier_price_trend_data');
+
+    Route::get('/requisition-rejection-rate', [ProcurementReportController::class, 'requisitionRejectionRate'])->name('requisition_rejection_rate');
+    Route::get('/requisition-rejection-rate/data', [ProcurementReportController::class, 'requisitionRejectionRateData'])->name('requisition_rejection_rate_data');
+
+    Route::get('/top-suppliers-by-spend', [ProcurementReportController::class, 'topSuppliersBySpend'])->name('top_suppliers_by_spend');
+    Route::get('/top-suppliers-by-spend/data', [ProcurementReportController::class, 'topSuppliersBySpendData'])->name('top_suppliers_by_spend_data');
+});
+
 //GRN without purchasing order
 
 Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/grn-without-po')->name('storage_supplies.grn_without_po.')->group(function () {
@@ -313,6 +351,62 @@ Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supp
     Route::post('/{adjustment}/approve', [StockAdjustmentController::class, 'approve'])->name('approve_submit');
     Route::get('/previous', [StockAdjustmentController::class, 'previousList'])->name('previous');
     Route::get('/{adjustment}/preview', [StockAdjustmentController::class, 'preview'])->name('preview');
+});
+
+//service use 
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/service-use')->name('storage_supplies.service_use.')->group(function () {
+    Route::get('/new', [ServiceUseController::class, 'create'])->name('new');
+    Route::get('/items-picker', [ServiceUseController::class, 'itemsPicker'])->name('items_picker');
+    Route::post('/', [ServiceUseController::class, 'store'])->name('store');
+    Route::get('/previous', [ServiceUseController::class, 'previousList'])->name('previous');
+    Route::get('/{serviceUse}/preview', [ServiceUseController::class, 'preview'])->name('preview');
+});
+
+//Store management Reports
+Route::middleware('active.subdepartment:storage-supplies')->prefix('storage-supplies/reports')->name('storage_supplies.reports.')->group(function () {
+    Route::get('/stock-summary', [ReportController::class, 'stockSummary'])->name('stock_summary');
+    Route::get('/stock-summary/data', [ReportController::class, 'stockSummaryData'])->name('stock_summary_data');
+
+    Route::get('/stock-ledger', [ReportController::class, 'stockLedger'])->name('stock_ledger');
+    Route::get('/stock-ledger/items-picker', [ReportController::class, 'stockLedgerItemsPicker'])->name('stock_ledger_items_picker');
+    Route::get('/stock-ledger/data', [ReportController::class, 'stockLedgerData'])->name('stock_ledger_data');
+
+    Route::get('/expiring-items', [ReportController::class, 'expiringItems'])->name('expiring_items');
+    Route::get('/expiring-items/data', [ReportController::class, 'expiringItemsData'])->name('expiring_items_data');
+
+    Route::get('/purchase-report', [ReportController::class, 'purchaseReport'])->name('purchase_report');
+    Route::get('/purchase-report/data', [ReportController::class, 'purchaseReportData'])->name('purchase_report_data');
+
+    Route::get('/grn-report', [ReportController::class, 'grnReport'])->name('grn_report');
+    Route::get('/grn-report/data', [ReportController::class, 'grnReportData'])->name('grn_report_data');
+
+    Route::get('/batch-management', [ReportController::class, 'batchManagement'])->name('batch_management');
+    Route::get('/batch-management/items-picker', [ReportController::class, 'batchManagementItemsPicker'])->name('batch_management_items_picker');
+    Route::get('/batch-management/data', [ReportController::class, 'batchManagementData'])->name('batch_management_data');
+
+    Route::get('/store-issuing', [ReportController::class, 'storeIssuing'])->name('store_issuing');
+    Route::get('/store-issuing/data', [ReportController::class, 'storeIssuingData'])->name('store_issuing_data');
+
+    Route::get('/quantity-issuing', [ReportController::class, 'quantityIssuing'])->name('quantity_issuing');
+    Route::get('/quantity-issuing/data', [ReportController::class, 'quantityIssuingData'])->name('quantity_issuing_data');
+
+    Route::get('/store-balance', [ReportController::class, 'storeBalance'])->name('store_balance');
+    Route::get('/store-balance/data', [ReportController::class, 'storeBalanceData'])->name('store_balance_data');
+
+    Route::get('/dormant-items', [ReportController::class, 'dormantItems'])->name('dormant_items');
+    Route::get('/dormant-items/data', [ReportController::class, 'dormantItemsData'])->name('dormant_items_data');
+
+    Route::get('/requisition-fulfillment', [ReportController::class, 'requisitionFulfillment'])->name('requisition_fulfillment');
+    Route::get('/requisition-fulfillment/data', [ReportController::class, 'requisitionFulfillmentData'])->name('requisition_fulfillment_data');
+
+    Route::get('/approval-turnaround', [ReportController::class, 'approvalTurnaround'])->name('approval_turnaround');
+    Route::get('/approval-turnaround/data', [ReportController::class, 'approvalTurnaroundData'])->name('approval_turnaround_data');
+
+    Route::get('/consumption-trend', [ReportController::class, 'consumptionTrend'])->name('consumption_trend');
+    Route::get('/consumption-trend/data', [ReportController::class, 'consumptionTrendData'])->name('consumption_trend_data');
+
+    Route::get('/wastage-loss', [ReportController::class, 'wastageLoss'])->name('wastage_loss');
+    Route::get('/wastage-loss/data', [ReportController::class, 'wastageLossData'])->name('wastage_loss_data');
 });
 
 //user management 

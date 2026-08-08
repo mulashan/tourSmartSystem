@@ -12,7 +12,8 @@ class StoreRequisition extends Model
         'order_date', 'subdepartment_id', 'prepared_by_user_id',
         'priority_status', 'emergency_reason', 'order_description',
         'is_user_store_order', 'status', 'approved_by_user_id', 'approved_at',
-        'procurement_status','rejection_reason',
+        'procurement_status','rejection_reason','procurement_subdepartment_id', 
+        'cancelled_by_user_id', 'cancelled_at',
     ];
 
     protected $casts = [
@@ -64,4 +65,7 @@ class StoreRequisition extends Model
             default => ucfirst($lpo->status),
         };
     }
+
+    public function cancelledBy() { return $this->belongsTo(User::class, 'cancelled_by_user_id'); }
+    public function procurementSubdepartment() { return $this->belongsTo(Subdepartment::class, 'procurement_subdepartment_id', 'Subdepartment_ID'); }
 }

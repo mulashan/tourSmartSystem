@@ -10,6 +10,11 @@ class GrnItem extends Model
 
     protected $fillable = ['grn_id', 'lpo_item_id', 'item_id', 'remarks'];
 
+    public function grn()
+    {
+        return $this->belongsTo(GrnPurchaseOrder::class, 'grn_id', 'Grn_Purchase_Order_ID');
+    }
+
     public function lpoItem()
     {
         return $this->belongsTo(LocalPurchaseOrderItem::class, 'lpo_item_id');

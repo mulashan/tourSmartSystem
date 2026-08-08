@@ -25,8 +25,8 @@ class ItemController extends Controller
         $items = Item::with(['itemCategory', 'unitOfMeasure'])
             ->when($request->query('search'), function ($q, $search) {
                 $q->where(function ($q2) use ($search) {
-                    $q2->where('product_name', 'like', "%{$search}%")
-                        ->orWhere('product_code', 'like', "%{$search}%");
+                    $q2->where('product_name', 'ilike', "%{$search}%")
+                        ->orWhere('product_code', 'ilike', "%{$search}%");
                 });
             })
             ->orderBy('product_name')

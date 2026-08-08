@@ -44,7 +44,7 @@ class StoreTransferController extends Controller
 
         $items = Item::query()->with('unitOfMeasure')->where('status', 'active')
             ->when($request->query('category_id'), fn ($q, $c) => $q->where('item_category_id', $c))
-            ->when($request->query('search'), fn ($q, $s) => $q->where('product_name', 'like', "%{$s}%"))
+            ->when($request->query('search'), fn ($q, $s) => $q->where('product_name', 'ilike', "%{$s}%"))
             ->orderBy('product_name')->limit(100)->get(['id', 'product_name', 'unit_of_measure_id']);
 
         $balances = ItemStockBalance::where('subdepartment_id', $subdepartmentId)

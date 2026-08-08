@@ -19,4 +19,6 @@ class LocalPurchaseOrderItem extends Model
     {
         return $this->belongsTo(Item::class, 'Item_ID');
     }
+
+    public function lpo() { return $this->belongsTo(LocalPurchaseOrder::class, 'local_purchase_order_id'); }
 }

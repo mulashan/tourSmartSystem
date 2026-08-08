@@ -14,4 +14,9 @@ class IssueNoteItem extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function issueNote()
+    {
+        return $this->belongsTo(IssueNote::class);
+    }
 }

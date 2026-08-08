@@ -207,6 +207,28 @@ class SystemDataSeeder extends Seeder
             ['key' => 'storage-supplies.stock-adjustment.approve', 'label' => 'Approve Adjustments', 'icon' => null, 'url' => 'storage-supplies/stock-adjustment/approve', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.stock-adjustment.group'],
             ['key' => 'storage-supplies.stock-adjustment.previous', 'label' => 'Previous Adjustments', 'icon' => null, 'url' => 'storage-supplies/stock-adjustment/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.stock-adjustment.group'],
 
+            ['key' => 'storage-supplies.service-use.group', 'label' => 'Service Use', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.service-use.new', 'label' => 'New Service Use', 'icon' => null, 'url' => 'storage-supplies/service-use/new', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.service-use.group'],
+            ['key' => 'storage-supplies.service-use.previous', 'label' => 'Previous Service Use', 'icon' => null, 'url' => 'storage-supplies/service-use/previous', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.service-use.group'],
+
+
+            //Storage and Supplies Reports
+            ['key' => 'storage-supplies.reports.group', 'label' => 'Reports', 'icon' => null, 'url' => null, 'parent' => 'storage-supplies.setup', 'collapse' => 1],
+            ['key' => 'storage-supplies.reports.stock-summary', 'label' => 'Stock Summary', 'icon' => null, 'url' => 'storage-supplies/reports/stock-summary', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.stock-ledger', 'label' => 'Stock Ledger', 'icon' => null, 'url' => 'storage-supplies/reports/stock-ledger', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.expiring-items', 'label' => 'Expiring Items', 'icon' => null, 'url' => 'storage-supplies/reports/expiring-items', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.purchase', 'label' => 'Purchase Report', 'icon' => null, 'url' => 'storage-supplies/reports/purchase-report', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.grn', 'label' => 'GRN Report', 'icon' => null, 'url' => 'storage-supplies/reports/grn-report', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.batch-management', 'label' => 'Batch Management', 'icon' => null, 'url' => 'storage-supplies/reports/batch-management', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.store-issuing', 'label' => 'Store Issuing Report', 'icon' => null, 'url' => 'storage-supplies/reports/store-issuing', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.quantity-issuing', 'label' => 'Quantity Issuing Report', 'icon' => null, 'url' => 'storage-supplies/reports/quantity-issuing', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.store-balance', 'label' => 'Store Balance Report', 'icon' => null, 'url' => 'storage-supplies/reports/store-balance', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.dormant-items', 'label' => 'Dormant / Slow-Moving Items', 'icon' => null, 'url' => 'storage-supplies/reports/dormant-items', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.requisition-fulfillment', 'label' => 'Requisition Fulfillment', 'icon' => null, 'url' => 'storage-supplies/reports/requisition-fulfillment', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.approval-turnaround', 'label' => 'Approval Turnaround', 'icon' => null, 'url' => 'storage-supplies/reports/approval-turnaround', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.consumption-trend', 'label' => 'Consumption Trend', 'icon' => null, 'url' => 'storage-supplies/reports/consumption-trend', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+            ['key' => 'storage-supplies.reports.wastage-loss', 'label' => 'Wastage / Loss', 'icon' => null, 'url' => 'storage-supplies/reports/wastage-loss', 'parent' => 'storage-supplies.setup', 'parent2' => 'storage-supplies.reports.group'],
+
 
             //procuremet
             ['key' => 'Procurement.setup', 'label' => 'Procurements', 'icon' => 'bi-cart-check', 'url' => null, 'parent' => null, 'collapse' => 1],
@@ -214,7 +236,20 @@ class SystemDataSeeder extends Seeder
             ['key' => 'procurement.purchase-requisition', 'label' => 'Purchase Requisition', 'icon' => null, 'url' => 'procurement/purchase-requisition', 'parent' => 'Procurement.setup'],
             ['key' => 'procurement.approve-lpo', 'label' => 'Approve Local Purchase Order', 'icon' => null, 'url' => 'procurement/approve-lpo', 'parent' => 'Procurement.setup'],
             ['key' => 'procurement.local-purchase-order', 'label' => 'Local Purchase Order', 'icon' => null, 'url' => 'procurement/local-purchase-order', 'parent' => 'Procurement.setup'],
-            ['key' => 'procurement.reports', 'label' => 'Reports', 'icon' => null, 'url' => '#', 'parent' => 'Procurement.setup'],
+
+            //procurement reports
+            ['key' => 'procurement.reports.group', 'label' => 'Reports', 'icon' => null, 'url' => null, 'parent' => 'Procurement.setup', 'collapse' => 1],
+            ['key' => 'procurement.reports.purchasing-history', 'label' => 'Purchasing History', 'icon' => null, 'url' => 'procurement/reports/purchasing-history', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.previous-purchase-requisition', 'label' => 'Previous Purchase Requisition', 'icon' => null, 'url' => 'procurement/reports/previous-purchase-requisition', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.received-grn', 'label' => 'Received GRN', 'icon' => null, 'url' => 'procurement/reports/received-grn', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.procurement-report', 'label' => 'Procurement Report', 'icon' => null, 'url' => 'procurement/reports/procurement-report', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.cancelled-purchase-requisition', 'label' => 'Cancelled Purchase Requisition', 'icon' => null, 'url' => 'procurement/reports/cancelled-purchase-requisition', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.last-buying-price', 'label' => 'Last Buying Price', 'icon' => null, 'url' => 'procurement/reports/last-buying-price', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.pending-po-aging', 'label' => 'Pending PO Aging', 'icon' => null, 'url' => 'procurement/reports/pending-po-aging', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.supplier-price-trend', 'label' => 'Supplier Price Trend', 'icon' => null, 'url' => 'procurement/reports/supplier-price-trend', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.requisition-rejection-rate', 'label' => 'Requisition Rejection Rate', 'icon' => null, 'url' => 'procurement/reports/requisition-rejection-rate', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+            ['key' => 'procurement.reports.top-suppliers-by-spend', 'label' => 'Top Suppliers by Spend', 'icon' => null, 'url' => 'procurement/reports/top-suppliers-by-spend', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
+
 
         ];
 
