@@ -244,6 +244,70 @@ class MenuService
             $counts['storage-supplies.grn.approve'] = $pendingGrnApproval;
             $counts['storage-supplies.grn.group'] = $pendingGrnApproval;
             $counts['storage-supplies.setup'] = ($counts['storage-supplies.setup'] ?? 0) + $pendingGrnApproval;
+
+            $requisitionPendingApproval = \App\Models\Requisition::where('requesting_subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.requisition.approve'] = $requisitionPendingApproval;
+            $counts['storage-supplies.requisition.group'] = ($counts['storage-supplies.requisition.group'] ?? 0) + $requisitionPendingApproval;
+
+            $issueNoteAwaiting = \App\Models\Requisition::where('issuing_subdepartment_id', $subdepartmentId)
+                ->where('status', 'approved')->whereDoesntHave('issueNote')->count();
+            $issueNotePendingApproval = \App\Models\IssueNote::whereHas('requisition', fn ($q) => $q->where('issuing_subdepartment_id', $subdepartmentId))
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.issue-note.new'] = $issueNoteAwaiting;
+            $counts['storage-supplies.issue-note.approve'] = $issueNotePendingApproval;
+            $counts['storage-supplies.issue-note.group'] = $issueNoteAwaiting + $issueNotePendingApproval;
+
+            $grnIssueAwaiting = \App\Models\IssueNote::whereHas('requisition', fn ($q) => $q->where('requesting_subdepartment_id', $subdepartmentId))
+                ->where('status', 'approved')->whereDoesntHave('grnAgainstIssueNote')->count();
+            $grnIssuePendingApproval = \App\Models\GrnAgainstIssueNote::whereHas('issueNote.requisition', fn ($q) => $q->where('requesting_subdepartment_id', $subdepartmentId))
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.grn-issue.new'] = $grnIssueAwaiting;
+            $counts['storage-supplies.grn-issue.approve'] = $grnIssuePendingApproval;
+            $counts['storage-supplies.grn-issue.group'] = $grnIssueAwaiting + $grnIssuePendingApproval;
+
+            $grnWithoutPoPending = \App\Models\GrnWithoutPo::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.grn-without-po.approve'] = $grnWithoutPoPending;
+            $counts['storage-supplies.grn-without-po.group'] = ($counts['storage-supplies.grn-without-po.group'] ?? 0) + $grnWithoutPoPending;
+
+            $grnOpenBalancePending = \App\Models\GrnOpenBalance::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.grn-open-balance.approve'] = $grnOpenBalancePending;
+            $counts['storage-supplies.grn-open-balance.group'] = ($counts['storage-supplies.grn-open-balance.group'] ?? 0) + $grnOpenBalancePending;
+
+            $returnInwardPending = \App\Models\Return_::where('from_subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $returnListAwaiting = \App\Models\Return_::where('status', 'pending_receipt')
+                ->where('to_subdepartment_id', $subdepartmentId)->count();
+            $counts['storage-supplies.return.approve'] = $returnInwardPending;
+            $counts['storage-supplies.return.return-list'] = $returnListAwaiting;
+            $counts['storage-supplies.return.group'] = $returnInwardPending + $returnListAwaiting;
+
+            $returnOutwardPending = \App\Models\ReturnOutward::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.return-outward.approve'] = $returnOutwardPending;
+            $counts['storage-supplies.return-outward.group'] = ($counts['storage-supplies.return-outward.group'] ?? 0) + $returnOutwardPending;
+
+            $transferPendingApproval = \App\Models\StoreTransfer::where('from_subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $transferPendingReceipt = \App\Models\StoreTransfer::where('status', 'pending_receipt')
+                ->where('to_subdepartment_id', $subdepartmentId)->count();
+            $counts['storage-supplies.store-transfer.approve'] = $transferPendingApproval;
+            $counts['storage-supplies.store-transfer.pending-receipt'] = $transferPendingReceipt;
+            $counts['storage-supplies.store-transfer.group'] = $transferPendingApproval + $transferPendingReceipt;
+
+            $adjustmentPending = \App\Models\StockAdjustment::where('subdepartment_id', $subdepartmentId)
+                ->where('status', 'pending_approval')->count();
+            $counts['storage-supplies.stock-adjustment.approve'] = $adjustmentPending;
+            $counts['storage-supplies.stock-adjustment.group'] = ($counts['storage-supplies.stock-adjustment.group'] ?? 0) + $adjustmentPending;
+
+            // Roll every new pending count up into the top-level Storage and Supplies badge too.
+            $counts['storage-supplies.setup'] = ($counts['storage-supplies.setup'] ?? 0)
+                + $requisitionPendingApproval + $issueNoteAwaiting + $issueNotePendingApproval
+                + $grnIssueAwaiting + $grnIssuePendingApproval + $grnWithoutPoPending + $grnOpenBalancePending
+                + $returnInwardPending + $returnListAwaiting + $returnOutwardPending
+                + $transferPendingApproval + $transferPendingReceipt + $adjustmentPending;
         }
 
         if ($module === 'procurement') {

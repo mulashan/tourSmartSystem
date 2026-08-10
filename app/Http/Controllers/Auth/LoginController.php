@@ -155,6 +155,8 @@ class LoginController extends Controller
             'db_id'            => $branch->Branch_ID,
             'active_branch_id' => $branch->Branch_ID,
             'active_branch_name' => $branch->Branch_Name,
+            'active_branch_session_timeout' => $branch->session_timeout_minutes,
+            'last_activity' => now()->timestamp,
             'institution_name' => 'NiceAdmin',
             'first_name'       => $firstName,
             'last_name'        => $lastName,

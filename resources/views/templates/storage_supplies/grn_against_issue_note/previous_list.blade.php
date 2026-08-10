@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Previous GRN List — Against Issue Note</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="previous-GRN-against-issue-note" data-fixed-columns>
     <thead>
         <tr>
             <th>S/N</th><th>GRN #</th><th>Issue Note #</th><th>Store Issuing</th>
@@ -26,8 +27,8 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="8" class="text-center text-muted">No approved GRNs yet.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection

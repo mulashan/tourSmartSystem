@@ -1,6 +1,6 @@
 {{-- partials/pending_po_aging_table.blade.php --}}
 <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover" data-datatable data-export-name="pending-purchase-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>LPO No.</th><th>Store Requesting</th><th>Supplier</th><th>Status</th><th>Started</th><th>Days Pending</th><th>Created By</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -15,7 +15,6 @@
                     <td>{{ $r['lpo']->createdBy->name ?? '—' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-muted">No Purchase Orders currently pending.</td></tr>
             @endforelse
         </tbody>
     </table>

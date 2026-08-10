@@ -4,8 +4,10 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+
 use App\Http\Middleware\EnsureActiveSubdepartment;
 use App\Http\Middleware\ClearSubdepartmentOnModuleExit;
+use App\Http\Middleware\EnsureSessionNotExpired;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        
+        $middleware->web(append: [
+            EnsureSessionNotExpired::class,
+        ]);
+
         $middleware->alias([
             'active.subdepartment' => ClearSubdepartmentOnModuleExit::class,
             'active.subdepartment' => EnsureActiveSubdepartment::class,

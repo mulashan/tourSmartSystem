@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="GRN-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Created Date</th><th>GRN No.</th><th>GRN Type</th><th>Supplier</th><th>Delivery Note No.</th><th>Delivery Date</th><th>Amount</th><th>Action</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -15,7 +15,6 @@
                     <td><a href="{{ $r['preview_url'] }}" target="_blank" class="btn btn-sm btn-outline-primary">Preview</a></td>
                 </tr>
             @empty
-                <tr><td colspan="9" class="text-center text-muted">No GRNs in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

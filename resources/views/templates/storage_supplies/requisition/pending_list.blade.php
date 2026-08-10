@@ -7,8 +7,8 @@
     <h2>Pending Requisition</h2>
     <a href="{{ route('storage_supplies.requisition.create') }}" class="btn btn-info text-white"><i class="bi bi-plus-lg"></i> New Requisition</a>
 </div>
-
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="pending-requisitions" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Store Issuing</th><th>Officer</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $req)
@@ -23,10 +23,10 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="4" class="text-center text-muted">No draft requisitions.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection
 
 @section('scripts')

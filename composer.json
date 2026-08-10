@@ -7,9 +7,17 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "bpampuch/pdfmake": "^0.2.23",
+        "datatables.net/datatables.net-autofill-bs5": "^3.0",
+        "datatables.net/datatables.net-bs5": "^3.0",
+        "datatables.net/datatables.net-buttons-bs5": "^4.0",
+        "datatables.net/datatables.net-fixedcolumns-bs5": "^6.0",
+        "datatables.net/datatables.net-keytable-bs5": "^3.0",
+        "datatables.net/datatables.net-responsive-bs5": "^4.0",
         "doctrine/dbal": "^4.4",
         "laravel/framework": "^13.8",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "stuk/jszip": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

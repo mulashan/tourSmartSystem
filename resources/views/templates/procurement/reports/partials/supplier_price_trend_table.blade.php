@@ -10,7 +10,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover">
+    <table class="table table-hover" data-datatable data-export-name="supplier-price-trend-report" data-fixed-columns>
             <thead><tr><th>S/N</th><th>Date</th><th>Supplier</th><th>LPO No.</th><th>Price</th><th>Change from Previous</th></tr></thead>
             <tbody>
                 @forelse($rows as $i => $r)
@@ -30,7 +30,6 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="text-center text-muted">No purchase history found for this item.</td></tr>
                 @endforelse
             </tbody>
         </table>

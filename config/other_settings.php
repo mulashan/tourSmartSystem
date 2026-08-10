@@ -32,6 +32,7 @@ return [
         'branch-departments' => ['label' => 'Branch Departments', 'route' => true],
         'subdepartments'     => ['label' => 'Subdepartments', 'route' => true],
         'suppliers'          => ['label' => 'Suppliers', 'route' => true],
+        'session-timeout' => ['label' => 'Session Timeout', 'route' => true],
     ],
 
 ];

@@ -42,9 +42,9 @@ use App\Http\Controllers\StorageSupplies\StockAdjustmentController;
 use App\Http\Controllers\StorageSupplies\ReportController;
 use App\Http\Controllers\StorageSupplies\ServiceUseController;
 use App\Http\Controllers\Procurement\ProcurementReportController;
+use App\Http\Controllers\Settings\SessionTimeoutController;
 
 Route::get('/', [PageController::class, 'home']);
-
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::post('/validate', [LoginController::class, 'validateLogin']);
@@ -53,6 +53,12 @@ Route::get('/login/select-branch', [LoginController::class, 'selectBranchForm'])
 Route::post('/login/select-branch', [LoginController::class, 'selectBranchSubmit'])->name('login.select-branch.submit');
 Route::get('/branch/change', [BranchSessionController::class, 'form'])->name('branch.change');
 Route::post('/branch/change', [BranchSessionController::class, 'update'])->name('branch.change.submit');
+
+//Session controller
+Route::post('/session/heartbeat', function () {
+    session(['last_activity' => now()->timestamp]);
+    return response()->json(['success' => true]);
+})->middleware('web');
 
 Route::get('/dashboard', [PageController::class, 'dashboard']);
 
@@ -107,6 +113,11 @@ Route::get('/settings/employee-units', [EmployeeUnitController::class, 'index'])
 Route::post('/settings/employee-units', [EmployeeUnitController::class, 'store'])->name('settings.employee-units.store');
 
 /* Start of Syliverius */
+
+Route::prefix('settings/other_settings/session-timeout')->name('settings.other_settings.session_timeout.')->group(function () {
+    Route::get('/list', [SessionTimeoutController::class, 'list'])->name('list');
+    Route::put('/{branch}', [SessionTimeoutController::class, 'update'])->name('update');
+});
 
 Route::prefix('settings/other_settings/branch-departments')->name('settings.other_settings.branch_departments.')->group(function () {
     Route::get('/list', [BranchDepartmentController::class, 'list'])->name('list');
@@ -192,6 +203,7 @@ Route::middleware('active.subdepartment:procurement')->prefix('procurement')->na
         Route::get('/{localPurchaseOrder}/edit', [ProcurementController::class, 'editDraft'])->name('edit');
         Route::post('/{localPurchaseOrder}', [ProcurementController::class, 'updateDraft'])->name('update');
         Route::post('/{localPurchaseOrder}/submit', [ProcurementController::class, 'submitForApproval'])->name('submit');
+        Route::post('/{localPurchaseOrder}/cancel', [ProcurementController::class, 'cancelDraft'])->name('cancel');
     });
 
     Route::prefix('approve-lpo')->name('approve_lpo.')->group(function () {

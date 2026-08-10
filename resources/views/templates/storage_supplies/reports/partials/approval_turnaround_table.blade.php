@@ -12,7 +12,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="batch-management-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Document Type</th><th>Doc No.</th><th>Submitted/Created</th><th>Approved At</th><th>Approver</th><th>Turnaround (hrs)</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -26,7 +26,6 @@
                     <td>{{ $r['hours'] ?? '—' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="text-center text-muted">No approved documents in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Approve GRN — Open Balance / Physical Count</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="approve-GRN-open-balance" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Creation Date</th><th>Description</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $grn)
@@ -19,11 +20,10 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="5" class="text-center text-muted">No entries pending approval.</td></tr>
         @endforelse
     </tbody>
 </table>
-
+</div>
 <div class="modal fade" id="approveGrnModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -41,8 +41,8 @@
     </div>
 </div>
 @endsection
-
 @section('scripts')
+
 <script>
 (function whenJQueryReady(fn) {
     if (typeof $ !== 'undefined') { fn(); } else { setTimeout(function () { whenJQueryReady(fn); }, 30); }

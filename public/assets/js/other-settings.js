@@ -28,6 +28,8 @@ $(function () {
             loadSubdepartments();
         } else if (key === 'suppliers') {
             loadSuppliers();
+        } else if(key === 'session-timeout'){
+            loadBranchSessions();
         } else {
             panel.html('<div class="text-muted p-4">This section is coming soon.</div>');
         }
@@ -100,6 +102,7 @@ $(function () {
             .done(html => panel.html(html))
             .fail(() => panel.html('<div class="text-danger p-4">Failed to load departments.</div>'));
     }
+
 
     panel.on('input', '.js-department-search', function () {
         const term = $(this).val();
@@ -281,4 +284,16 @@ $(function () {
             .done(() => loadSuppliers())
             .fail(() => alert('Failed to delete supplier.'));
     });
+
+    function loadBranchSessions() {
+    $.get('/settings/other_settings/session-timeout/list')
+        .done(function (html) {
+            panel.html(html);
+        })
+        .fail(function () {
+            panel.html(
+                '<div class="text-danger p-4">Failed to load branches.</div>'
+            );
+        });
+}
 });

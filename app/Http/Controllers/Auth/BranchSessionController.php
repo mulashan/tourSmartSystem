@@ -49,6 +49,8 @@ class BranchSessionController extends Controller
             'db_id'              => $branch->Branch_ID,
             'active_branch_id'   => $branch->Branch_ID,
             'active_branch_name' => $branch->Branch_Name,
+            'active_branch_session_timeout' => $branch->session_timeout_minutes,
+            'last_activity'      => now()->timestamp,
         ]);
 
         return redirect('/dashboard')->with('success', 'Switched to ' . $branch->Branch_Name . '.');

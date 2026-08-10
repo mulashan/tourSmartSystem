@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Previous GRN List — Open Balance / Physical Count</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="Previous-GRN-open-balance" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Creation Date</th><th>Description</th><th>Created By</th><th>Amount</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $grn)
@@ -20,8 +21,8 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="6" class="text-center text-muted">No approved entries yet.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection

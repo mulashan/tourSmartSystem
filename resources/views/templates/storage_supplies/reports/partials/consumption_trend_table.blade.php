@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="consumption-trend-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Item Name</th>
@@ -16,7 +16,6 @@
                     <td><strong>{{ $r['total'] }}</strong></td>
                 </tr>
             @empty
-                <tr><td colspan="{{ 3 + $months->count() }}" class="text-center text-muted">No consumption in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

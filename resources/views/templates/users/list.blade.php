@@ -23,47 +23,10 @@
 
     <div class="card">
         <div class="card-body">
-
-            <!-- Filters -->
-            <div class="row mt-3 mb-4">
-
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-search"></i>
-                        </span>
-
-                        <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Search users...">
-                    </div>
-                </div>
-
-                <div class="col-lg-2">
-                    <select class="form-select">
-                        <option>All Roles</option>
-                    </select>
-                </div>
-
-                <div class="col-lg-2">
-                    <select class="form-select">
-                        <option>All Branches</option>
-                    </select>
-                </div>
-
-                <div class="col-lg-4 text-end">
-                    <button class="btn btn-outline-success">
-                        <i class="bi bi-download"></i> Export
-                    </button>
-                </div>
-
-            </div>
-
             <!-- Table -->
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle">
+                <table id="dataTableTest" class="table table-hover align-middle">
 
                     <thead class="table-light">
                         <tr>
@@ -122,11 +85,6 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">
-                    Showing {{ $users->count() }} users
-                </span>
             </div>
         </div>
     </div>
@@ -268,3 +226,17 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    $(function () {
+        $('#dataTableTest').DataTable({
+            pageLength: 10,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ]
+        });
+    });
+</script>
+@endpush

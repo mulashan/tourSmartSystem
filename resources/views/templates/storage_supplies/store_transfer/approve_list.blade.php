@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Pending Approval</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="pending-approval-transfer-list" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Transfer To</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $t)
@@ -23,6 +24,7 @@
         @endforelse
     </tbody>
 </table>
+</div>
 
 <div class="modal fade" id="approveTransferModal" tabindex="-1">
     <div class="modal-dialog">

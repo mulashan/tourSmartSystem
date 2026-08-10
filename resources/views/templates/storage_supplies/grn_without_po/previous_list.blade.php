@@ -5,7 +5,7 @@
 <div class="settings-panel-head"><h2>Previous GRN List — Without Purchase Order</h2></div>
 
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1100px;">
+    <table class="table table-hover" style="min-width:1100px;" data-datatable data-export-name="Previous-orders-without-PO" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Delivery Date</th><th>Store Requesting</th><th>Delivery Note Number</th>
@@ -28,7 +28,6 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-muted">No approved GRNs yet.</td></tr>
             @endforelse
         </tbody>
     </table>

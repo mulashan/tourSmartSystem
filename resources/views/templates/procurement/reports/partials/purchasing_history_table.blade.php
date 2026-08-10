@@ -1,6 +1,6 @@
 {{-- resources/views/templates/procurement/reports/partials/purchasing_history_table.blade.php --}}
 <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover" data-datatable data-export-name="purchase-history-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Item Name</th><th>Supplier Name</th><th>Purchase Date</th><th>Buying Price</th><th>Quantity</th><th>GRN</th><th>Document Type</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -15,7 +15,6 @@
                     <td>{{ $r['document_type'] }}</td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-muted">No purchases in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

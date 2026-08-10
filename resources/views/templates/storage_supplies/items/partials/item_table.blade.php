@@ -1,4 +1,5 @@
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="Items-List" data-fixed-columns>
     <thead>
         <tr>
             <th>S/N</th>
@@ -45,3 +46,5 @@
         @endforelse
     </tbody>
 </table>
+</div>
+

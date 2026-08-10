@@ -8,7 +8,8 @@
     <a href="{{ route('storage_supplies.return_outward.create') }}" class="btn btn-info text-white"><i class="bi bi-plus-lg"></i> New Return</a>
 </div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="Draft-return-out-list" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Document No.</th><th>Description</th><th>Supplier</th><th>Posted By</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $r)
@@ -25,10 +26,10 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="6" class="text-center text-muted">No draft returns.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection
 
 @section('scripts')

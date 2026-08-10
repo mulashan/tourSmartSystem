@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="requisition-fulfillment-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Requisition No.</th><th>Item Name</th><th>UoM</th><th>Requested</th><th>Issued</th><th>Received</th><th>Shortfall %</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -14,7 +14,6 @@
                     <td>{{ $r['shortfall_pct'] }}%</td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-muted">No requisitions in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

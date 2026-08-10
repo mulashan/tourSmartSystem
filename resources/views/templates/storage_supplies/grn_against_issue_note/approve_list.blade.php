@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Approve GRN — Against Issue Note</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="approve-grn-against-issue-list" data-fixed-columns>
     <thead>
         <tr>
             <th>S/N</th><th>GRN #</th><th>Issue Note #</th><th>Store Issuing</th><th>Created By</th><th class="text-end">Action</th>
@@ -24,10 +25,10 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="6" class="text-center text-muted">No GRNs pending approval.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 
 <div class="modal fade" id="approveGrnModal" tabindex="-1">
     <div class="modal-dialog">
@@ -58,9 +59,9 @@
     </div>
 </div>
 @endsection
-
 @section('scripts')
 <script>
+    
 (function whenJQueryReady(fn) {
     if (typeof $ !== 'undefined') { fn(); } else { setTimeout(function () { whenJQueryReady(fn); }, 30); }
 })(function () {

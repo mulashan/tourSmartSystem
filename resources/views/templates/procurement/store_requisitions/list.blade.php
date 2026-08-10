@@ -8,20 +8,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search store requisitions...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle" style="min-width: 1100px;">
+                <table class="table table-hover" data-datatable style="min-width: 1100px;" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
                             <th>Order Number</th><th>Order Date</th><th>Store Ordering</th>
@@ -58,10 +46,6 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $items->count() }} records</span>
             </div>
         </div>
     </div>

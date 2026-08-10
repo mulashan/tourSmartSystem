@@ -8,20 +8,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search previous orders...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" data-datatable data-export-name="previous-orders" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
                             <th>Order #</th><th>Date</th><th>Prepared By</th><th>Approved By</th>
@@ -46,12 +34,11 @@
                                 </td>
                                 <td class="text-end">
                                     <a href="{{ route('storage_supplies.store_ordering.preview', $item->id) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i> Preview
+                                        Preview
                                     </a>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="text-center text-muted py-4">No previous orders.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

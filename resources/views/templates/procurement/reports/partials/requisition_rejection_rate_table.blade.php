@@ -1,7 +1,7 @@
 {{-- partials/requisition_rejection_rate_table.blade.php --}}
 <p class="text-muted small">Rejection rate = rejected ÷ (rejected + ordered). Requisitions still pending procurement action aren't counted in the rate.</p>
 <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover" data-datatable data-export-name="requisition-rejection-rate-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Requesting Store</th><th>Total Approved Requisitions</th><th>Rejected</th><th>Processed (Rejected + Ordered)</th><th>Rejection Rate</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $r)
@@ -14,7 +14,6 @@
                     <td>{{ $r['rejection_rate'] }}%</td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="text-center text-muted">No requisitions in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

@@ -6,9 +6,23 @@ $(function () {
     const categoryModal = new bootstrap.Modal(document.getElementById('categoryQuickAddModal'));
 
     function loadItems(search) {
-        $.get('/storage-supplies/items/list', { search: search || '' })
-            .done(html => wrapper.html(html))
-            .fail(() => wrapper.html('<div class="text-danger p-4">Failed to load items.</div>'));
+        $.get('/storage-supplies/items/list', {
+            search: search || ''
+        })
+        .done(function (html) {
+            wrapper.html(html);
+            if (window.DataTableInit) {
+                window.DataTableInit.initAll(wrapper[0]);
+            }
+        })
+        .fail(function (xhr) {
+            console.error('Failed to load items:', xhr);
+            wrapper.html(
+                '<div class="text-danger p-4">' +
+                'Failed to load items.' +
+                '</div>'
+            );
+        });
     }
 
     loadItems();

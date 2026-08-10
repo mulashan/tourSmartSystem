@@ -56,7 +56,7 @@
     </div>
     <div class="col-md-8">
     <div class="table-responsive">
-        <table class="table table-hover" id="requisitionItemsTable" style="min-width: 900px;">
+        <table class="table table-hover" id="requisitionItemsTable" data-enhance-table data-export-name="new-orders" style="min-width: 900px;" >
             <thead>
                 <tr>
                     <th style="min-width:60px;">S/N</th>
@@ -91,4 +91,5 @@
 </script>
 <script src="{{ asset('assets/js/item-picker.js') }}"></script>
 <script src="{{ asset('assets/js/store-ordering.js') }}"></script>
+<script src="{{ asset('assets/js/table-toolkit.js') }}"></script>
 @endsection

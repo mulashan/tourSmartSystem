@@ -14,7 +14,7 @@ class LocalPurchaseOrder extends Model
         'store_requisition_id', 'supplier_id', 'created_by_user_id', 'procurement_subdepartment_id',
         'currency_type', 'requisition_description', 'order_date', 'status', 'rejection_reason',
         'vat_charges', 'labor_charges', 'transport_charges', 'freight_charges', 'bank_charges', 'other_charges',
-        'submitted_by_user_id', 'submitted_at', 'approved_by_user_id', 'approved_at',
+        'submitted_by_user_id', 'submitted_at', 'approved_by_user_id', 'approved_at','cancelled_by_user_id', 'cancelled_at', 'cancel_reason',
     ];
 
     public function storeRequisition()
@@ -66,5 +66,10 @@ class LocalPurchaseOrder extends Model
     public function grn()
     {
         return $this->hasOne(GrnPurchaseOrder::class, 'local_purchase_order_id');
+    }
+
+    public function cancelledBy()
+    {
+        return $this->belongsTo(User::class, 'cancelled_by_user_id');
     }
 }

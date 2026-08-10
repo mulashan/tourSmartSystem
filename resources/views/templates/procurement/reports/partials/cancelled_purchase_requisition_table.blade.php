@@ -1,7 +1,7 @@
 {{-- partials/cancelled_purchase_requisition_table.blade.php --}}
 <p class="text-muted small">Only requisitions rejected on or after this tracking was added will appear here — earlier rejections weren't attributed to a Procurement store.</p>
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1400px;">
+    <table class="table table-hover" data-datatable data-export-name="cancelled-requisition-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Store Order Requisition No.</th><th>Purchase Requisition No.</th><th>Status</th>
@@ -27,7 +27,6 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="11" class="text-center text-muted">No cancelled requisitions in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

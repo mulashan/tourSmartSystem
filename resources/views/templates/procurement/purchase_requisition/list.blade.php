@@ -7,20 +7,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search purchase requisitions...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover" data-datatable data-export-name="purchase-requisition-list" data-fixed-columns>
                     <thead class="table-light">
                         <tr><th>LPO #</th><th>Store Requisition</th><th>Supplier</th><th>Created By</th><th class="text-end">Action</th></tr>
                     </thead>
@@ -33,19 +21,40 @@
                                 <td>{{ $lpo->createdBy->name ?? '—' }}</td>
                                 <td class="text-end">
                                     <a href="{{ route('procurement.purchase_requisition.edit', $lpo->local_purchase_order_id) }}" class="btn btn-sm btn-info text-white">Continue Editing</a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger js-cancel-lpo" data-id="{{ $lpo->local_purchase_order_id }}">Cancel LPO</button>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="text-center text-muted py-4">No draft Purchase Orders.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $items->count() }} records</span>
-            </div>
         </div>
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+$('.js-cancel-lpo').on('click', function () {
+    const id = $(this).data('id');
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Cancel this Purchase Order?',
+        input: 'text',
+        inputLabel: 'Reason for cancellation',
+        showCancelButton: true,
+        confirmButtonText: 'Cancel LPO',
+        inputValidator: v => !v ? 'A reason is required' : undefined,
+    }).then(result => {
+        if (! result.isConfirmed) return;
+
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+        $.post(`/procurement/purchase-requisition/${id}/cancel`, { reason: result.value })
+            .done(() => Swal.fire({ icon: 'success', title: 'Cancelled', timer: 1200, showConfirmButton: false }).then(() => location.reload()))
+            .fail(xhr => Swal.fire({ icon: 'error', title: 'Failed', text: xhr.responseJSON?.message || 'Something went wrong.' }));
+    });
+});
+</script>
 @endsection

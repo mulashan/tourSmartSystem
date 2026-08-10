@@ -7,20 +7,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search purchase orders...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle" style="min-width:1200px;">
+                <table class="table table-hover align-middle" style="min-width:1200px;" data-datatable data-export-name="purchasing-orders" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
                             <th>S/N</th><th>Store Order Requisition No.</th><th>Purchase Requisition No.</th>
@@ -45,16 +33,13 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="10" class="text-center text-muted py-4">No approved Purchase Orders awaiting GRN.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $lpos->count() }} records</span>
-            </div>
         </div>
     </div>
 </section>
+@endsection
+@section('scripts')
 @endsection

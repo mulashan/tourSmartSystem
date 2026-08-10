@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="expiring-items-report" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Item Name</th><th>Batch Number</th><th>UoM</th><th>Balance</th><th>Expiry Date</th><th>Days to Expiry</th></tr></thead>
         <tbody>
             @forelse($rows as $i => $b)
@@ -14,7 +14,6 @@
                     <td>{{ $daysLeft < 0 ? 'Expired' : $daysLeft . ' days' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="text-center text-muted">No batches expiring in this window.</td></tr>
             @endforelse
         </tbody>
     </table>

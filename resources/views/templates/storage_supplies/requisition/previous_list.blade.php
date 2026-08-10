@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Previous Requisition</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="previous-requisitions" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Store Issuing</th><th>Officer</th><th>Approved By</th><th>Approved At</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $req)
@@ -19,8 +20,8 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="6" class="text-center text-muted">No approved requisitions yet.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection

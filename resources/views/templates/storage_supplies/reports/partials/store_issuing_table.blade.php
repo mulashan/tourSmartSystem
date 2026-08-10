@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1400px;">
+<table class="table table-hover" data-datatable data-export-name="batch-management-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Item Name</th><th>Store Requesting</th><th>Store Issued</th><th>Requisition No.</th><th>Issue No.</th>
@@ -23,7 +23,6 @@
                     <td>{{ $r['receiving_officer'] }}</td>
                 </tr>
             @empty
-                <tr><td colspan="14" class="text-center text-muted">No issues in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

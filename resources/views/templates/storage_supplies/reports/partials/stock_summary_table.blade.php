@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1200px;">
+<table class="table table-hover" data-datatable data-export-name="stock-summary-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Item Name</th><th>Item Code</th><th>UoM</th><th>Open Balance</th>
@@ -24,7 +24,6 @@
                     <td>{{ number_format($r['stock_value'], 2) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="12" class="text-center text-muted">No items found.</td></tr>
             @endforelse
         </tbody>
     </table>

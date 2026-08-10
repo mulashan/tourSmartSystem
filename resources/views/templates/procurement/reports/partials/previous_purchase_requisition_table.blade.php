@@ -1,6 +1,6 @@
 {{-- partials/previous_purchase_requisition_table.blade.php --}}
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1300px;">
+    <table class="table table-hover" data-datatable data-export-name="store-requisition-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Store Requisition No.</th><th>Purchase Requisition No.</th><th>GRN No.</th>
@@ -24,7 +24,6 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="10" class="text-center text-muted">No purchase requisitions in this period.</td></tr>
             @endforelse
         </tbody>
     </table>

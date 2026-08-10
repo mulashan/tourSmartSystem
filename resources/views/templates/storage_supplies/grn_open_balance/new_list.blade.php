@@ -9,7 +9,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:900px;">
+    <table class="table table-hover" style="min-width:900px;" data-datatable data-export-name="Draft-physical-balance-list" data-fixed-columns>
         <thead><tr><th>S/N</th><th>Creation Date</th><th>Description</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
         <tbody>
             @forelse($items as $i => $grn)
@@ -25,7 +25,6 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="5" class="text-center text-muted">No draft entries yet.</td></tr>
             @endforelse
         </tbody>
     </table>

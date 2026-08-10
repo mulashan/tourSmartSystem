@@ -19,8 +19,13 @@
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/niceadmin-local.css') }}">
+    <!-- Datatable css -->
+    <link rel="stylesheet" href="{{ asset('assets/datatables/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/datatables/css/buttons.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/datatables/css/responsive.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/datatables/css/fixedColumns.bootstrap5.min.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @yield('styles')
+    @yield('styles')       
 </head>
 <body class="nice-dashboard-body">
     <div class="demo-bar">
@@ -221,6 +226,41 @@
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/niceadmin-local.js') }}"></script>
+    //this is for session
+    <script>
+        window.sessionTimeoutMinutes = {{ session('logged_in') ? (int) session('active_branch_session_timeout', 30) : 0 }};
+    </script>
+    <script src="{{ asset('assets/js/session-timeout.js') }}"></script>
+    <!-- Data table scripts -->
+    {{-- DataTables Core --}}
+    <script src="{{ asset('assets/datatables/js/dataTables.min.js') }}"></script>
+    {{-- Bootstrap 5 --}}
+    <script src="{{ asset('assets/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
+    {{-- ========================= --}}
+    {{-- Buttons --}}
+    {{-- ========================= --}}
+    <script src="{{ asset('assets/datatables/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/datatables/js/buttons.bootstrap5.min.js') }}"></script>
+    {{-- Excel --}}
+    <script src="{{ asset('assets/datatables/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('assets/datatables/js/buttons.html5.min.js') }}"></script>
+    {{-- PDF --}}
+    <script src="{{ asset('assets/datatables/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/datatables/js/vfs_fonts.js') }}"></script>
+    {{-- Print --}}
+    <script src="{{ asset('assets/datatables/js/buttons.print.min.js') }}"></script>
+    {{-- ========================= --}}
+    {{-- Responsive --}}
+    {{-- ========================= --}}
+    {{-- CORE Responsive MUST come first --}}
+    <script src="{{ asset('assets/datatables/js/dataTables.responsive.min.js') }}"></script>
+    {{-- Bootstrap 5 Responsive integration --}}
+    <script src="{{ asset('assets/datatables/js/responsive.bootstrap5.min.js') }}"></script>
+    {{-- CORE FixedColumns MUST come first --}}
+    <script src="{{ asset('assets/datatables/js/dataTables.fixedColumns.min.js') }}"></script>
+    {{-- Bootstrap 5 integration --}}
+    <script src="{{ asset('assets/datatables/js/fixedColumns.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatable-init.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

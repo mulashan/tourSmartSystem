@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+<table class="table table-hover" data-datatable data-export-name="batch-management-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Item Name</th><th>Folio No.</th>
@@ -15,7 +15,6 @@
                     @foreach($stores as $store)<td>{{ $r['per_store'][$store->Subdepartment_ID] ?? 0 }}</td>@endforeach
                 </tr>
             @empty
-                <tr><td colspan="{{ 3 + $stores->count() }}" class="text-center text-muted">No data found.</td></tr>
             @endforelse
         </tbody>
     </table>

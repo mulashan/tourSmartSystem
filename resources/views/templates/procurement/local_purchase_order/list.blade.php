@@ -7,20 +7,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search local purchase orders...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover" data-datatable data-export-name="Complete-lpo-list" data-fixed-columns>
                     <thead class="table-light"><tr><th>LPO #</th><th>Supplier</th><th>Approved By</th><th>Approved At</th><th class="text-end">Action</th></tr></thead>
                     <tbody>
                         @forelse($items as $lpo)
@@ -34,14 +22,9 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="text-center text-muted py-4">No approved Local Purchase Orders.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $items->count() }} records</span>
             </div>
         </div>
     </div>

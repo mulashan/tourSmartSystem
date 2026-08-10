@@ -5,7 +5,7 @@
 <div class="settings-panel-head"><h2>Approve GRN — Without Purchase Order</h2></div>
 
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1100px;">
+    <table class="table table-hover" style="min-width:1100px;" data-datatable data-export-name="Approve-GRN-without-PO" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>Delivery Date</th><th>Store Requesting</th><th>Supplier</th>
@@ -28,7 +28,6 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-muted">No GRNs pending approval.</td></tr>
             @endforelse
         </tbody>
     </table>
@@ -53,6 +52,7 @@
 @endsection
 
 @section('scripts')
+
 <script>
 (function whenJQueryReady(fn) {
     if (typeof $ !== 'undefined') { fn(); } else { setTimeout(function () { whenJQueryReady(fn); }, 30); }

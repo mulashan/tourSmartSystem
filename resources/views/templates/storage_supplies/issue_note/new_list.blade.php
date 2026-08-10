@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>New Issue Note — Approved Requisitions Awaiting Issue</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="new-issue-note" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Requisition No.</th><th>Store Requesting</th><th>Officer</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $req)
@@ -22,4 +23,5 @@
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection

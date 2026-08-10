@@ -4,7 +4,8 @@
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
 <div class="settings-panel-head"><h2>Approve Return</h2></div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="return-approve-list" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Document No.</th><th>Store Receiving</th><th>Posted By</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $r)
@@ -19,7 +20,6 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="5" class="text-center text-muted">No returns pending approval.</td></tr>
         @endforelse
     </tbody>
 </table>

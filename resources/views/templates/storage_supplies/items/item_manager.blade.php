@@ -16,8 +16,6 @@
     </div>
 </div>
 
-<input type="text" class="form-control mb-3" id="js-item-search" placeholder="Search by product name or code">
-
 <div id="item-table-wrapper">
     <div class="text-muted p-4">Loading...</div>
 </div>

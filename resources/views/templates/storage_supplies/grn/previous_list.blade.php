@@ -7,20 +7,8 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search previous GRNs...">
-                    </div>
-                </div>
-                <div class="col-lg-8 text-end">
-                    <button class="btn btn-outline-success"><i class="bi bi-download"></i> Export</button>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover align-middle" style="min-width:1300px;">
+                <table class="table table-hover align-middle" style="min-width:1300px;" data-datatable data-export-name="Previous-orders" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
                             <th>S/N</th><th>LPO No.</th><th>Order No.</th><th>Order Created By</th><th>Delivery Date</th>
@@ -48,15 +36,10 @@
                                     <a href="{{ route('storage_supplies.grn.preview', $grn->Grn_Purchase_Order_ID) }}" target="_blank" class="btn btn-sm btn-outline-primary">Preview</a>
                                 </td>
                             </tr>
-                        @empty
-                            <tr><td colspan="11" class="text-center text-muted py-4">No approved GRNs yet.</td></tr>
+                            @empty
                         @endforelse
                     </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $items->count() }} records</span>
             </div>
         </div>
     </div>

@@ -8,7 +8,8 @@
     <a href="{{ route('storage_supplies.service_use.new') }}" class="btn btn-info text-white"><i class="bi bi-plus-lg"></i> New Service Use</a>
 </div>
 
-<table class="table table-hover">
+<div class="table-responsive">
+<table class="table table-hover" data-datatable data-export-name="previous-service-use-list" data-fixed-columns>
     <thead><tr><th>S/N</th><th>Service Use No.</th><th>Service Use Date</th><th>Store</th><th>Service Use Narration</th><th>Created By</th><th class="text-end">Action</th></tr></thead>
     <tbody>
         @forelse($items as $i => $su)
@@ -24,8 +25,8 @@
                 </td>
             </tr>
         @empty
-            <tr><td colspan="7" class="text-center text-muted">No service use records yet.</td></tr>
         @endforelse
     </tbody>
 </table>
+</div>
 @endsection

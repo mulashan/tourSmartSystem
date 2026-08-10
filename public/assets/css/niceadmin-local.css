@@ -3356,3 +3356,29 @@ body.dark-theme .theme-toggle {
 .active-branch-change:hover {
     text-decoration: underline;
 }
+
+/* Target all tables that use your datatable initializer */
+table[data-datatable] {
+    /* Change the font type */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    
+    /* Change the font size */
+    font-size: 16px; 
+    
+    /* Ensure borders don't double up */
+    border-collapse: collapse !important; 
+}
+
+/* Force dark/custom borders on the headers and cells */
+table[data-datatable] th,
+table[data-datatable] td {
+    border: 1px solid #dee2e6; /* Standard Bootstrap border color */
+    padding: 10px; /* Optional: adds a bit more breathing room to text */
+}
+
+/* Optional: Make the table header text bold and a bit larger */
+table[data-datatable] thead th {
+    font-weight: 600;
+    font-size: 18px;
+    background-color: #f8f9fa; /* Light gray background for headers */
+}

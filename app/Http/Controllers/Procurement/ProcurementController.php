@@ -321,4 +321,43 @@ class ProcurementController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function cancelDraft(Request $request, LocalPurchaseOrder $localPurchaseOrder): JsonResponse
+    {
+        abort_unless($localPurchaseOrder->status === 'draft', 403, 'Only draft Purchase Orders can be cancelled.');
+        abort_unless($localPurchaseOrder->procurement_subdepartment_id === session('active_subdepartment_id'), 403);
+
+        $data = $request->validate(['reason' => 'required|string|max:255']);
+
+        $localPurchaseOrder->load('items', 'storeRequisition');
+
+        DB::transaction(function () use ($localPurchaseOrder, $data) {
+            $localPurchaseOrder->update([
+                'status' => 'cancelled',
+                'cancelled_by_user_id' => session('user_id'),
+                'cancelled_at' => now(),
+                'cancel_reason' => $data['reason'],
+            ]);
+
+            $storeRequisition = $localPurchaseOrder->storeRequisition;
+
+            if ($storeRequisition) {
+                $orderedItemIds = $localPurchaseOrder->items->pluck('Item_ID')->filter();
+
+                $storeRequisition->items()
+                    ->whereIn('item_id', $orderedItemIds)
+                    ->update(['procurement_status' => 'rejected', 'rejection_reason' => $data['reason']]);
+
+                $storeRequisition->update([
+                    'procurement_status' => 'rejected',
+                    'rejection_reason' => $data['reason'],
+                    'procurement_subdepartment_id' => session('active_subdepartment_id'),
+                    'cancelled_by_user_id' => session('user_id'),
+                    'cancelled_at' => now(),
+                ]);
+            }
+        });
+
+        return response()->json(['success' => true]);
+    }
 }

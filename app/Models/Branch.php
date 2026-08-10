@@ -21,6 +21,7 @@ class Branch extends Model
         'token_date',
         'BannerLink',
         'Company_ID',
+        'session_timeout_minutes',
     ];
 
     protected $casts = [

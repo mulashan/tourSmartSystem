@@ -1,6 +1,6 @@
 {{-- partials/received_grn_table.blade.php --}}
 <div class="table-responsive">
-    <table class="table table-hover" style="min-width:1400px;">
+    <table class="table table-hover" data-datatable data-export-name="received-GRN-report" data-fixed-columns>
         <thead>
             <tr>
                 <th>S/N</th><th>LPO No.</th><th>Order No.</th><th>Order Created By</th><th>Delivery Date</th>
@@ -25,7 +25,6 @@
                     <td class="text-end"><a href="{{ $r['preview_url'] }}" target="_blank" class="btn btn-sm btn-outline-primary">Preview</a></td>
                 </tr>
             @empty
-                <tr><td colspan="12" class="text-center text-muted">No GRNs in this period.</td></tr>
             @endforelse
         </tbody>
     </table>
