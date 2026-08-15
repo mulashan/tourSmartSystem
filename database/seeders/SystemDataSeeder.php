@@ -241,6 +241,39 @@ class SystemDataSeeder extends Seeder
             ['key' => 'procurement.reports.requisition-rejection-rate', 'label' => 'Requisition Rejection Rate', 'icon' => null, 'url' => 'procurement/reports/requisition-rejection-rate', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
             ['key' => 'procurement.reports.top-suppliers-by-spend', 'label' => 'Top Suppliers by Spend', 'icon' => null, 'url' => 'procurement/reports/top-suppliers-by-spend', 'parent' => 'Procurement.setup', 'parent2' => 'procurement.reports.group'],
 
+            //Fleet Master
+            ['key' => 'fleet.setup', 'label' => 'Fleet Master', 'icon' => 'bi-truck', 'url' => null, 'parent' => null, 'collapse' => 1],
+            ['key' => 'fleet.dashboard', 'label' => 'Dashboard', 'icon' => null, 'url' => 'fleet/dashboard', 'parent' => 'fleet.setup'],
+            ['key' => 'fleet.vehicles', 'label' => 'Vehicles', 'icon' => null, 'url' => 'fleet/vehicles', 'parent' => 'fleet.setup'],
+            ['key' => 'fleet.insurance', 'label' => 'Vehicle Insurance', 'icon' => null, 'url' => 'fleet/insurance', 'parent' => 'fleet.setup'],
+            ['key' => 'fleet.maintenance', 'label' => 'Maintenance Order', 'icon' => null, 'url' => 'fleet/maintenance', 'parent' => 'fleet.setup'],
+
+            ['key' => 'fleet.itineraries.group', 'label' => 'Itineraries', 'icon' => null, 'url' => null, 'parent' => 'fleet.setup', 'collapse' => 1],
+            ['key' => 'fleet.itineraries.new', 'label' => 'New Itinerary', 'icon' => null, 'url' => 'fleet/itineraries/new', 'parent' => 'fleet.setup', 'parent2' => 'fleet.itineraries.group'],
+            ['key' => 'fleet.itineraries.approve', 'label' => 'Approve Itineraries', 'icon' => null, 'url' => 'fleet/itineraries/approve', 'parent' => 'fleet.setup', 'parent2' => 'fleet.itineraries.group'],
+            ['key' => 'fleet.itineraries.assign', 'label' => 'Assign Vehicle & Driver', 'icon' => null, 'url' => 'fleet/itineraries/assign', 'parent' => 'fleet.setup', 'parent2' => 'fleet.itineraries.group'],
+            ['key' => 'fleet.itineraries.active', 'label' => 'Active Trips', 'icon' => null, 'url' => 'fleet/itineraries/active', 'parent' => 'fleet.setup', 'parent2' => 'fleet.itineraries.group'],
+
+            ['key' => 'fleet.fuel.group', 'label' => 'Fuel Assignment', 'icon' => null, 'url' => null, 'parent' => 'fleet.setup', 'collapse' => 1],
+            ['key' => 'fleet.fuel.assign', 'label' => 'Assign Itinerary Fuel', 'icon' => null, 'url' => 'fleet/fuel/assign', 'parent' => 'fleet.setup', 'parent2' => 'fleet.fuel.group'],
+            ['key' => 'fleet.fuel.issue', 'label' => 'Issue Itinerary Fuel', 'icon' => null, 'url' => 'fleet/fuel/issue', 'parent' => 'fleet.setup', 'parent2' => 'fleet.fuel.group'],
+            ['key' => 'fleet.fuel.history', 'label' => 'Fuel History', 'icon' => null, 'url' => 'fleet/fuel/history', 'parent' => 'fleet.setup', 'parent2' => 'fleet.fuel.group'],
+            ['key' => 'fleet.fuel.open-orders', 'label' => 'Emergency / Open Fuel Order', 'icon' => null, 'url' => 'fleet/fuel/open-orders', 'parent' => 'fleet.setup', 'parent2' => 'fleet.fuel.group'],
+            ['key' => 'fleet.fuel.reconciliation', 'label' => 'Fuel Reconciliation', 'icon' => null, 'url' => 'fleet/fuel/reconciliation', 'parent' => 'fleet.setup', 'parent2' => 'fleet.fuel.group'],
+
+            ['key' => 'fleet.gate-pass.group', 'label' => 'Gate Pass', 'icon' => null, 'url' => null, 'parent' => 'fleet.setup', 'collapse' => 1],
+             ['key' => 'fleet.gate-pass.generate', 'label' => 'Generate Gate Pass', 'icon' => null, 'url' => 'fleet/gate-pass/generate', 'parent' => 'fleet.setup', 'parent2' => 'fleet.gate-pass.group'],
+             ['key' => 'fleet.gate-pass.generatede', 'label' => 'Generated Gate Passes', 'icon' => null, 'url' => 'fleet/gate-pass/generated', 'parent' => 'fleet.setup', 'parent2' => 'fleet.gate-pass.group'],
+
+            ['key' => 'fleet.incidents', 'label' => 'Accidents & Road Fines', 'icon' => null, 'url' => 'fleet/incidents', 'parent' => 'fleet.setup'],
+
+            ['key' => 'fleet.reports.group', 'label' => 'Reports', 'icon' => null, 'url' => null, 'parent' => 'fleet.setup', 'collapse' => 1],
+            ['key' => 'fleet.reports.vehicle-utilization', 'label' => 'Vehicle Utilization', 'icon' => null, 'url' => 'fleet/reports/vehicle-utilization', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.fuel-consumption', 'label' => 'Fuel Consumption', 'icon' => null, 'url' => 'fleet/reports/fuel-consumption', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.trip-history', 'label' => 'Trip History', 'icon' => null, 'url' => 'fleet/reports/trip-history', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.insurance-expiry', 'label' => 'Insurance Expiry', 'icon' => null, 'url' => 'fleet/reports/insurance-expiry', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.maintenance-history', 'label' => 'Maintenance History', 'icon' => null, 'url' => 'fleet/reports/maintenance-history', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.incidents', 'label' => 'Accidents & Fines', 'icon' => null, 'url' => 'fleet/reports/incidents', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
 
         ];
 

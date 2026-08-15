@@ -24,6 +24,41 @@ return [
             'type' => 'item_category',
             'singular' => 'Item Category',
         ],
+        'ownership-types' => [
+            'label' => 'Car Ownership Type', 
+            'type' => 'ownership_type', 
+            'singular' => 'Ownership Type'
+            ],
+        'fleet-locations' => [
+            'label' => 'Fleet Current Location / Station', 
+            'type' => 'fleet_location', 
+            'singular' => 'Location'
+            ],
+        'insurance-types' => [
+            'label' => 'Insurance Type', 
+            'type' => 'insurance_type', 
+            'singular' => 'Insurance Type'
+            ],
+        'insurance-coverages' => [
+            'label' => 'Insurance Coverage', 
+            'type' => 'insurance_coverage', 
+            'singular' => 'Coverage'
+            ],
+        'destinations' => [
+            'label' => 'Fleet Destinations', 
+            'type' => 'destination', 
+            'singular' => 'Destination'
+            ],
+        'fuel-sources' => [
+            'label' => 'Fuel Sources', 
+            'type' => 'fuel_source', 
+            'singular' => 'Fuel Source'
+            ],
+        'employee-professionals' => [
+            'label' => 'Employee Professionals',
+            'type' => 'employee-professional',
+            'singular' => 'Employee Professionals'
+        ]
     ],
 
     // Categories with real relationships — each needs its own table/controller.

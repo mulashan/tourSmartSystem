@@ -40,3 +40,5 @@ Add Laravel routes matching these URLs or adjust the template URLs:
 - `company/load-content-view/{year}`
 
 Keep public assets under Laravel's `public/` folder so calls like `asset('assets/css/style.min.css')` resolve correctly.
+
+php artisan storage:link ==> this is to make public/storage files accessible, when they return 403 

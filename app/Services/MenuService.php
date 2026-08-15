@@ -328,6 +328,15 @@ class MenuService
             $counts['Procurement.setup'] = $storeRequisitions + $drafts + $pendingApproval;
         }
 
+        if ($module === 'fleet') {
+            $expiringOrExpired = \App\Models\VehicleInsurance::whereIn('id', function ($q) {
+                $q->selectRaw('MAX(id)')->from('tbl_vehicle_insurance')->groupBy('vehicle_id');
+            })->where('expire_date', '<=', now()->addDays(30)->toDateString())->count();
+
+            $counts['fleet.insurance'] = $expiringOrExpired;
+            $counts['fleet.setup'] = ($counts['fleet.setup'] ?? 0) + $expiringOrExpired;
+        }
+
         return $counts;
     }
 

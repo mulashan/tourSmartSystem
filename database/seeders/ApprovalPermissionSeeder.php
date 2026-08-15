@@ -65,6 +65,11 @@ class ApprovalPermissionSeeder extends Seeder
                 'label' => 'Return Outward Approval', 
                 'description' => 'Approve items returned to suppliers, deducting them from store stock.'
             ],
+            [
+                'key' => 'itinerary_approval', 
+                'label' => 'Itinerary Approval', 
+                'description' => 'Approve fleet itineraries before vehicle/driver assignment.'
+            ],
         ];
 
         foreach ($permissions as $permission) {

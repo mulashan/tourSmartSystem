@@ -6,7 +6,6 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
 use App\Http\Middleware\EnsureActiveSubdepartment;
-use App\Http\Middleware\ClearSubdepartmentOnModuleExit;
 use App\Http\Middleware\EnsureSessionNotExpired;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -22,7 +21,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'active.subdepartment' => ClearSubdepartmentOnModuleExit::class,
             'active.subdepartment' => EnsureActiveSubdepartment::class,
         ]);
     })
