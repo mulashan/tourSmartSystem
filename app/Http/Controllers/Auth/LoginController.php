@@ -168,6 +168,7 @@ class LoginController extends Controller
             'privilege_id'      => $user->privilege_id,
             'allowed_menu_keys' => $allowedMenuKeys,
             'permission_bypass' => $isAdmin || ! $hasAnyMenuPermissions,
+            'subdepartment_by_module' => [],
         ]);
 
         return redirect($redirect ?: '/dashboard');

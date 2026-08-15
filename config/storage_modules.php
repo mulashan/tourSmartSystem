@@ -13,4 +13,10 @@ return [
         'prefix' => 'procurement',
         'default_route' => 'procurement.store_requisitions.index',
     ],
+    'fleet' => [
+    'nature' => 'Fleet Management',
+    'active' => 'fleet.dashboard',
+    'prefix' => 'fleet',
+    'default_route' => 'fleet.dashboard',
+],
 ];

@@ -45,6 +45,7 @@ class SubdepartmentSessionController extends Controller
         $request->session()->put([
             'active_subdepartment_id' => (int) $request->subdepartment_id,
             'active_subdepartment_module' => $module,
+            "subdepartment_by_module.{$module}" => (int) $request->subdepartment_id,
         ]);
 
         $intended = $request->session()->pull('url.intended');

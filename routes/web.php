@@ -43,6 +43,15 @@ use App\Http\Controllers\StorageSupplies\ReportController;
 use App\Http\Controllers\StorageSupplies\ServiceUseController;
 use App\Http\Controllers\Procurement\ProcurementReportController;
 use App\Http\Controllers\Settings\SessionTimeoutController;
+use App\Http\Controllers\Fleet\FleetDashboardController;
+use App\Http\Controllers\Fleet\VehicleController;
+use App\Http\Controllers\Fleet\VehicleInsuranceController;
+use App\Http\Controllers\Fleet\MaintenanceOrderController;
+use App\Http\Controllers\Fleet\ItineraryController;
+use App\Http\Controllers\Fleet\FuelController;
+use App\Http\Controllers\Fleet\GatePassController;
+use App\Http\Controllers\Fleet\FleetIncidentController;
+use App\Http\Controllers\Fleet\FleetReportController;
 
 Route::get('/', [PageController::class, 'home']);
 Route::get('/login', [PageController::class, 'login'])->name('login');
@@ -461,6 +470,107 @@ Route::prefix('users/{user}')->name('users.')->whereNumber('user')->group(functi
     Route::post('/workshop-permissions', [UserWorkspaceController::class, 'updateWorkshopPermissions'])->name('workshop_permissions.update');
 });
 
+//Fleet Controller 
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet')->name('fleet.')->group(function () {
+    Route::get('/dashboard', [FleetDashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/vehicles')->name('fleet.vehicles.')->group(function () {
+    Route::get('/', [VehicleController::class, 'index'])->name('index');
+    Route::get('/create', [VehicleController::class, 'create'])->name('create');
+    Route::post('/', [VehicleController::class, 'store'])->name('store');
+    Route::get('/{vehicle}', [VehicleController::class, 'show'])->name('show');
+    Route::get('/{vehicle}/edit', [VehicleController::class, 'edit'])->name('edit');
+    Route::put('/{vehicle}', [VehicleController::class, 'update'])->name('update');
+    Route::post('/{vehicle}/assign-driver', [VehicleController::class, 'assignDriver'])->name('assign_driver');
+    Route::post('/{vehicle}/rental-agreement', [VehicleController::class, 'storeRentalAgreement'])->name('rental_agreement');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/insurance')->name('fleet.insurance.')->group(function () {
+    Route::get('/', [VehicleInsuranceController::class, 'index'])->name('index');
+    Route::get('/{vehicle}/create', [VehicleInsuranceController::class, 'create'])->name('create');
+    Route::post('/{vehicle}', [VehicleInsuranceController::class, 'store'])->name('store');
+    Route::get('/{vehicle}/history', [VehicleInsuranceController::class, 'history'])->name('history');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/maintenance')->name('fleet.maintenance.')->group(function () {
+    Route::get('/', [MaintenanceOrderController::class, 'index'])->name('index');
+    Route::post('/', [MaintenanceOrderController::class, 'store'])->name('store');
+    Route::post('/{order}/complete', [MaintenanceOrderController::class, 'complete'])->name('complete');
+    Route::post('/{order}/cancel', [MaintenanceOrderController::class, 'cancel'])->name('cancel');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/itineraries')->name('fleet.itineraries.')->group(function () {
+    Route::get('/new', [ItineraryController::class, 'newList'])->name('new');
+    Route::get('/create', [ItineraryController::class, 'create'])->name('create');
+    Route::post('/', [ItineraryController::class, 'store'])->name('store');
+    Route::get('/approve', [ItineraryController::class, 'approveList'])->name('approve');
+    Route::post('/{itinerary}/approve', [ItineraryController::class, 'approve'])->name('approve_submit');
+    Route::get('/assign', [ItineraryController::class, 'assignList'])->name('assign');
+    Route::post('/{itinerary}/assign', [ItineraryController::class, 'assign'])->name('assign_submit');
+    Route::get('/active', [ItineraryController::class, 'activeList'])->name('active');
+    Route::post('/{itinerary}/ready', [ItineraryController::class, 'markReady'])->name('ready');
+    Route::post('/{itinerary}/in-progress', [ItineraryController::class, 'markInProgress'])->name('in_progress');
+    Route::post('/{itinerary}/complete', [ItineraryController::class, 'markComplete'])->name('complete');
+    Route::post('/{itinerary}/close', [ItineraryController::class, 'close'])->name('close');
+    Route::post('/{itinerary}/cancel', [ItineraryController::class, 'cancel'])->name('cancel');
+    Route::get('/{itinerary}/preview', [ItineraryController::class, 'preview'])->name('preview');
+    Route::post('/{itinerary}/reassign', [ItineraryController::class, 'reassign'])->name('reassign');
+    Route::post('/{itinerary}/legs', [ItineraryController::class, 'addLeg'])->name('add_leg');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/fuel')->name('fleet.fuel.')->group(function () {
+    Route::get('/assign', [FuelController::class, 'assignQueue'])->name('assign');
+    Route::post('/assign/{itinerary}', [FuelController::class, 'assignTripFuel'])->name('assign_submit');
+    Route::get('/issue', [FuelController::class, 'issueQueue'])->name('issue');
+    Route::post('/issue/{fuel}', [FuelController::class, 'issueTripFuel'])->name('issue_submit');
+    Route::get('/history', [FuelController::class, 'history'])->name('history');
+
+    Route::get('/open-orders', [FuelController::class, 'openOrderList'])->name('open_orders');
+    Route::post('/open-orders', [FuelController::class, 'openOrder'])->name('open_order_store');
+    Route::post('/open-orders/{order}/items', [FuelController::class, 'addOpenOrderItem'])->name('open_order_add_item');
+    Route::post('/open-orders/{order}/close', [FuelController::class, 'closeOpenOrder'])->name('open_order_close');
+    Route::get('/open-orders/{order}', [FuelController::class, 'showOpenOrder'])->name('open_order_show');
+
+    Route::get('/reconciliation', [FuelController::class, 'reconciliation'])->name('reconciliation');
+});
+
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/gate-pass')->name('fleet.gate_pass.')->group(function () {
+    Route::get('/generate', [GatePassController::class, 'generateList'])->name('generate_list');
+    Route::get('/generated', [GatePassController::class, 'generatedList'])->name('generated_list');
+    Route::post('/{itinerary}/generate', [GatePassController::class, 'generate'])->name('generate');
+    Route::get('/{gatePass}/preview', [GatePassController::class, 'preview'])->name('preview');
+    Route::post('/{gatePass}/mark-printed', [GatePassController::class, 'mark_printed'])->name('mark_printed');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/incidents')->name('fleet.incidents.')->group(function () {
+    Route::get('/', [FleetIncidentController::class, 'index'])->name('index');
+    Route::post('/', [FleetIncidentController::class, 'store'])->name('store');
+    Route::post('/{incident}/close', [FleetIncidentController::class, 'close'])->name('close');
+    Route::get('/{incident}', [FleetIncidentController::class, 'show'])->name('show');
+});
+
+Route::middleware('active.subdepartment:fleet')->prefix('fleet/reports')->name('fleet.reports.')->group(function () {
+    Route::get('/vehicle-utilization', [FleetReportController::class, 'vehicleUtilization'])->name('vehicle_utilization');
+    Route::get('/vehicle-utilization/data', [FleetReportController::class, 'vehicleUtilizationData'])->name('vehicle_utilization_data');
+
+    Route::get('/fuel-consumption', [FleetReportController::class, 'fuelConsumption'])->name('fuel_consumption');
+    Route::get('/fuel-consumption/data', [FleetReportController::class, 'fuelConsumptionData'])->name('fuel_consumption_data');
+
+    Route::get('/trip-history', [FleetReportController::class, 'tripHistory'])->name('trip_history');
+    Route::get('/trip-history/data', [FleetReportController::class, 'tripHistoryData'])->name('trip_history_data');
+
+    Route::get('/insurance-expiry', [FleetReportController::class, 'insuranceExpiry'])->name('insurance_expiry');
+    Route::get('/insurance-expiry/data', [FleetReportController::class, 'insuranceExpiryData'])->name('insurance_expiry_data');
+
+    Route::get('/maintenance-history', [FleetReportController::class, 'maintenanceHistory'])->name('maintenance_history');
+    Route::get('/maintenance-history/data', [FleetReportController::class, 'maintenanceHistoryData'])->name('maintenance_history_data');
+
+    Route::get('/incidents', [FleetReportController::class, 'incidentsReport'])->name('incidents');
+    Route::get('/incidents/data', [FleetReportController::class, 'incidentsReportData'])->name('incidents_data');
+});
 /* end of syliverius */
 
 Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.list');
