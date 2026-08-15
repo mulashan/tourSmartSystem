@@ -72,38 +72,36 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" data-datatable data-export-name="Recent-Workshop-Job-Cards" data-page-length="50" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
+                            <th>S/N</th>
                             <th>Job Card</th>
                             <th>Customer</th>
                             <th>Vehicle</th>
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Opened</th>
-                            <th>Actions</th>
+                            <th class="text-end no-export">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($recentJobs as $job)
+                        @foreach($recentJobs as $i => $job)
                             <tr>
+                                <td>{{ $i + 1 }}</td>
                                 <td><strong>{{ $job->job_no }}</strong></td>
                                 <td>{{ $job->customer->name }}</td>
                                 <td>{{ $job->vehicle->registration_no }}</td>
                                 <td>{{ ucfirst($job->priority) }}</td>
                                 <td>@include('templates.workshop.partials.status-badge', ['status' => $job->status])</td>
                                 <td>{{ optional($job->opened_date)->format('d M Y') }}</td>
-                                <td>
+                                <td class="text-end">
                                     <a href="{{ route('workshop.job-cards.show', $job) }}" class="btn btn-sm btn-outline-primary" title="Open Job Card">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-4">No workshop jobs found.</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -9,7 +9,17 @@ class RepairOrder extends Model
 {
     use TracksWorkshopUsers;
 
-    protected $fillable = ['job_card_id', 'repair_type', 'description', 'estimated_hours', 'estimated_cost', 'status'];
+    protected $fillable = [
+        'job_card_id',
+        'repair_type',
+        'description',
+        'maintenance_location',
+        'vendor_name',
+        'external_cost',
+        'estimated_hours',
+        'estimated_cost',
+        'status',
+    ];
 
     public function jobCard()
     {

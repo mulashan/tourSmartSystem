@@ -6,7 +6,7 @@
 <div class="pagetitle d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1>User Workspace</h1>
-        <p class="text-muted mb-0">Manage user profile, branches, sub departments and approval permissions.</p>
+        <p class="text-muted mb-0">Manage user profile, branches, sub departments, approval permissions and workshop permissions.</p>
     </div>
     <a href="{{ route('users.list') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Users</a>
 </div>

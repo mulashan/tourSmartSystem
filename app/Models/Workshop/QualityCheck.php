@@ -32,4 +32,9 @@ class QualityCheck extends Model
         'lights_working' => 'boolean',
         'complaint_resolved' => 'boolean',
     ];
+
+    public function jobCard()
+    {
+        return $this->belongsTo(JobCard::class);
+    }
 }

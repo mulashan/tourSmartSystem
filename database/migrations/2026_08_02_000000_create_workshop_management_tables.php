@@ -202,11 +202,15 @@ return new class extends Migration
         $menus = [
             ['key' => 'workshop.setup', 'label' => 'Workshop Management', 'icon' => 'bi-tools', 'url' => null, 'parent' => null, 'collapse' => 1],
             ['key' => 'workshop.dashboard', 'label' => 'Dashboard', 'icon' => null, 'url' => 'workshop/dashboard', 'parent' => 'workshop.setup'],
-            ['key' => 'workshop.job-cards', 'label' => 'Job Cards', 'icon' => null, 'url' => 'workshop/job-cards', 'parent' => 'workshop.setup'],
-            ['key' => 'workshop.open-jobs', 'label' => 'Open Jobs', 'icon' => null, 'url' => 'workshop/job-cards?status=open', 'parent' => 'workshop.setup'],
-            ['key' => 'workshop.completed-jobs', 'label' => 'Completed Jobs', 'icon' => null, 'url' => 'workshop/job-cards?status=completed', 'parent' => 'workshop.setup'],
-            ['key' => 'workshop.closed-jobs', 'label' => 'Closed Jobs', 'icon' => null, 'url' => 'workshop/job-cards?status=closed', 'parent' => 'workshop.setup'],
-            ['key' => 'workshop.invoices', 'label' => 'Invoices', 'icon' => null, 'url' => 'workshop/job-cards?status=invoiced', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-card', 'label' => 'Job Card', 'icon' => null, 'url' => 'workshop/workflow-management/job-card', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.vehicle-inspection', 'label' => 'Vehicle Inspection', 'icon' => null, 'url' => 'workshop/workflow-management/vehicle-inspection', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.diagnosis', 'label' => 'Diagnosis', 'icon' => null, 'url' => 'workshop/workflow-management/diagnosis', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.repair-maintenance', 'label' => 'Repair & Maintenance', 'icon' => null, 'url' => 'workshop/workflow-management/repair-maintenance', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.spare-parts-usage', 'label' => 'Spare Parts Usage', 'icon' => null, 'url' => 'workshop/workflow-management/spare-parts-usage', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.labour-management', 'label' => 'Labour Management', 'icon' => null, 'url' => 'workshop/workflow-management/labour-management', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-completion', 'label' => 'Job Completion', 'icon' => null, 'url' => 'workshop/workflow-management/job-completion', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.quality-check', 'label' => 'Quality Check', 'icon' => null, 'url' => 'workshop/workflow-management/quality-check', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-history', 'label' => 'Job History', 'icon' => null, 'url' => 'workshop/workflow-management/job-history', 'parent' => 'workshop.setup'],
             ['key' => 'workshop.reports', 'label' => 'Reports', 'icon' => null, 'url' => 'workshop/dashboard', 'parent' => 'workshop.setup'],
         ];
 
@@ -215,6 +219,7 @@ return new class extends Migration
 
         foreach ($menus as $menu) {
             $parentId = $menu['parent'] ? ($ids[$menu['parent']] ?? DB::table('tbl_menus')->where('name', $menu['parent'])->value('module_id')) : null;
+            $parentId2 = !empty($menu['parent2']) ? ($ids[$menu['parent2']] ?? DB::table('tbl_menus')->where('name', $menu['parent2'])->value('module_id')) : null;
             $existingId = DB::table('tbl_menus')->where('name', $menu['key'])->value('module_id');
             $data = [
                 'name' => $menu['key'],
@@ -230,7 +235,7 @@ return new class extends Migration
             ];
 
             if (Schema::hasColumn('tbl_menus', 'parent_id2')) {
-                $data['parent_id2'] = null;
+                $data['parent_id2'] = $parentId2;
             }
 
             if ($existingId) {

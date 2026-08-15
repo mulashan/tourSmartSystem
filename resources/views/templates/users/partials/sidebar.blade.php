@@ -5,6 +5,7 @@
         'assign-subdepartment' => 'Assign Sub Department',
         'assign-approval-permission' => 'Assign Approval Permission',
         'assign-system-permission' => 'System Permissions',
+        'assign-workshop-permission' => 'Workshop Permissions',
     ] as $key => $label)
         <a href="{{ route('users.show', [$user, $key]) }}" data-tab="{{ $key }}" class="list-group-item list-group-item-action js-user-tab {{ $tab === $key ? 'active' : '' }}">
             {{ $label }}

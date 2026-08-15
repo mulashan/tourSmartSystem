@@ -17,4 +17,9 @@ class LabourEntry extends Model
     {
         return $this->belongsTo(Mechanic::class);
     }
+
+    public function jobCard()
+    {
+        return $this->belongsTo(JobCard::class);
+    }
 }

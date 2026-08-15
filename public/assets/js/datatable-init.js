@@ -96,6 +96,9 @@
         const exportName = table.dataset.exportName || 'export';
         const pageLength = parseInt(table.dataset.pageLength) || 25;
         const useFixedColumns = table.dataset.fixedColumns !== undefined;
+        const exportColumns = ':visible:not(.no-export)';
+        const exportColumnCount = table.querySelectorAll('thead th:not(.no-export)').length;
+        const pdfOrientation = table.dataset.pdfOrientation || (exportColumnCount > 6 ? 'landscape' : 'portrait');
         
         const options = {
             responsive: false,
@@ -124,11 +127,10 @@
                 text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
                 className: 'btn btn-danger btn-sm me-2',
                 title: exportName,
-                orientation: 'portrait',
+                orientation: pdfOrientation,
                 pageSize: 'A4',
-                // Exclude action/button columns if you have any (optional, e.g., exclude last column)
                 exportOptions: {
-                    columns: ':visible' 
+                    columns: exportColumns
                 },
                 customize: function (doc) {
                     // 1. Center and format Document Title
@@ -198,6 +200,9 @@
                 text: '<i class="bi bi-file-earmark-excel"></i> Excel',
                 className: 'btn btn-info btn-sm me-2',
                 title: exportName,
+                exportOptions: {
+                    columns: exportColumns
+                },
                 customize: function (xlsx) {
                     const sheet = xlsx.xl.worksheets['sheet1.xml'];
 
@@ -220,7 +225,10 @@
                 extend: 'csvHtml5',
                 text: '<i class="bi bi-filetype-csv"></i> CSV',
                 className: 'btn btn-success btn-sm',
-                title: exportName
+                title: exportName,
+                exportOptions: {
+                    columns: exportColumns
+                }
             }
         ]
         };

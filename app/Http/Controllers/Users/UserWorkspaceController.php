@@ -16,10 +16,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use App\Models\UserTypeMenuPermission;
 use App\Models\UserMenuPermission;
+use App\Models\UserWorkshopPermission;
 
 class UserWorkspaceController extends Controller
 {
-    private array $tabs = ['edit-employee', 'assign-branch', 'assign-subdepartment', 'assign-approval-permission', 'assign-system-permission'];
+    private array $tabs = ['edit-employee', 'assign-branch', 'assign-subdepartment', 'assign-approval-permission', 'assign-system-permission', 'assign-workshop-permission'];
 
     public function show(User $user, string $tab = 'edit-employee'): View|RedirectResponse
     {
@@ -107,6 +108,15 @@ class UserWorkspaceController extends Controller
                 'menuGroups' => $this->permissionMenus(),
                 'groupGrantedKeys' => $groupGrantedKeys,
                 'individualGrantedKeys' => $individualGrantedKeys,
+            ];
+        }
+
+        if ($tab === 'assign-workshop-permission') {
+            $user->load('workshopPermissions');
+
+            return [
+                'permissions' => $this->workshopPermissions(),
+                'assignedKeys' => $user->workshopPermissions->pluck('permission_key')->all(),
             ];
         }
 
@@ -209,5 +219,78 @@ class UserWorkspaceController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function updateWorkshopPermissions(Request $request, User $user): JsonResponse
+    {
+        $keys = $request->validate(['permission_keys' => 'array'])['permission_keys'] ?? [];
+        $allowedKeys = collect($this->workshopPermissions())->pluck('key')->all();
+        $keys = collect($keys)->intersect($allowedKeys)->values()->all();
+
+        $existingPermissions = UserWorkshopPermission::where('user_id', $user->id);
+
+        empty($keys)
+            ? $existingPermissions->delete()
+            : $existingPermissions->whereNotIn('permission_key', $keys)->delete();
+
+        foreach ($keys as $key) {
+            UserWorkshopPermission::updateOrCreate(
+                ['user_id' => $user->id, 'permission_key' => $key],
+                ['permission_key' => $key]
+            );
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    private function workshopPermissions(): array
+    {
+        return [
+            [
+                'key' => 'repair_order',
+                'label' => 'Repair Order',
+                'description' => 'Create and manage repair orders for workshop job cards.',
+            ],
+            [
+                'key' => 'diagnosis',
+                'label' => 'Diagnosis',
+                'description' => 'Record vehicle diagnosis findings and recommendations.',
+            ],
+            [
+                'key' => 'assign_mechanics',
+                'label' => 'Assign Mechanics',
+                'description' => 'Assign mechanics and track mechanic work progress.',
+            ],
+            [
+                'key' => 'record_labour',
+                'label' => 'Record Labour',
+                'description' => 'Record labour hours, rates and work done.',
+            ],
+            [
+                'key' => 'issue_spare_parts',
+                'label' => 'Issue Spare Parts',
+                'description' => 'Issue spare parts from store stock to workshop jobs.',
+            ],
+            [
+                'key' => 'complete_repair',
+                'label' => 'Complete Repair',
+                'description' => 'Mark workshop repairs as completed and ready for inspection.',
+            ],
+            [
+                'key' => 'quality_inspection',
+                'label' => 'Quality Inspection',
+                'description' => 'Inspect completed repairs and approve or return them for rework.',
+            ],
+            [
+                'key' => 'generate_invoice',
+                'label' => 'Generate Invoice',
+                'description' => 'Generate workshop invoices from labour and parts totals.',
+            ],
+            [
+                'key' => 'close_job_card',
+                'label' => 'Close Job Card',
+                'description' => 'Close invoiced workshop job cards.',
+            ],
+        ];
     }
 }

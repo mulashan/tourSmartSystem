@@ -32,4 +32,9 @@ class PartUsed extends Model
     {
         return $this->belongsTo(Subdepartment::class, 'subdepartment_id', 'Subdepartment_ID');
     }
+
+    public function jobCard()
+    {
+        return $this->belongsTo(JobCard::class);
+    }
 }
