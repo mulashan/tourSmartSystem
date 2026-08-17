@@ -59,6 +59,11 @@ class JobCard extends Model
         return $this->hasOne(Diagnosis::class);
     }
 
+    public function vehicleInspections()
+    {
+        return $this->hasMany(VehicleInspection::class);
+    }
+
     public function mechanicAssignments()
     {
         return $this->hasMany(JobMechanic::class);

@@ -74,4 +74,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserMenuPermission::class);
     }
+
+    public function workshopPermissions()
+    {
+        return $this->hasMany(UserWorkshopPermission::class);
+    }
+
+    public function hasWorkshopPermission(string $key): bool
+    {
+        return $this->workshopPermissions()->where('permission_key', $key)->exists();
+    }
 }

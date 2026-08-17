@@ -73,6 +73,9 @@ Route::get('/dashboard', [PageController::class, 'dashboard']);
 
 Route::prefix('workshop')->name('workshop.')->group(function () {
     Route::get('/dashboard', [WorkshopController::class, 'dashboard'])->name('dashboard');
+    Route::get('/workflow-management', [WorkshopController::class, 'workflowManagement'])->name('workflow-management');
+    Route::get('/workflow-management/{process}', [WorkshopController::class, 'workflowManagementProcess'])->name('workflow-management.process');
+    Route::post('/workflow-management/{process}', [WorkshopController::class, 'storeWorkflowProcess'])->name('workflow-management.process.store');
     Route::get('/job-cards', [WorkshopController::class, 'index'])->name('job-cards.index');
     Route::post('/job-cards', [WorkshopController::class, 'storeJobCard'])->name('job-cards.store');
     Route::get('/job-cards/{jobCard}', [WorkshopController::class, 'show'])->name('job-cards.show');
@@ -464,6 +467,7 @@ Route::prefix('users/{user}')->name('users.')->whereNumber('user')->group(functi
 
     Route::post('/approval-permissions', [UserWorkspaceController::class, 'updateApprovalPermissions'])->name('approval_permissions.update');
     Route::post('/system-permissions', [UserWorkspaceController::class, 'updateMenuPermissions'])->name('system_permissions.update');
+    Route::post('/workshop-permissions', [UserWorkspaceController::class, 'updateWorkshopPermissions'])->name('workshop_permissions.update');
 });
 
 //Fleet Controller 

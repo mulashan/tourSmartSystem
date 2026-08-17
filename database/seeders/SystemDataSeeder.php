@@ -222,6 +222,20 @@ class SystemDataSeeder extends Seeder
 
 
             //procuremet
+            ['key' => 'workshop.setup', 'label' => 'Workshop Management', 'icon' => 'bi-tools', 'url' => null, 'parent' => null, 'collapse' => 1],
+            ['key' => 'workshop.dashboard', 'label' => 'Dashboard', 'icon' => null, 'url' => 'workshop/dashboard', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-card', 'label' => 'Job Card', 'icon' => null, 'url' => 'workshop/workflow-management/job-card', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.vehicle-inspection', 'label' => 'Vehicle Inspection', 'icon' => null, 'url' => 'workshop/workflow-management/vehicle-inspection', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.diagnosis', 'label' => 'Diagnosis', 'icon' => null, 'url' => 'workshop/workflow-management/diagnosis', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.repair-maintenance', 'label' => 'Repair & Maintenance', 'icon' => null, 'url' => 'workshop/workflow-management/repair-maintenance', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.spare-parts-usage', 'label' => 'Spare Parts Usage', 'icon' => null, 'url' => 'workshop/workflow-management/spare-parts-usage', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.labour-management', 'label' => 'Labour Management', 'icon' => null, 'url' => 'workshop/workflow-management/labour-management', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-completion', 'label' => 'Job Completion', 'icon' => null, 'url' => 'workshop/workflow-management/job-completion', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.quality-check', 'label' => 'Quality Check', 'icon' => null, 'url' => 'workshop/workflow-management/quality-check', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.workflow.job-history', 'label' => 'Job History', 'icon' => null, 'url' => 'workshop/workflow-management/job-history', 'parent' => 'workshop.setup'],
+            ['key' => 'workshop.reports', 'label' => 'Reports', 'icon' => null, 'url' => 'workshop/dashboard', 'parent' => 'workshop.setup'],
+
+            //procuremet
             ['key' => 'Procurement.setup', 'label' => 'Procurements', 'icon' => 'bi-cart-check', 'url' => null, 'parent' => null, 'collapse' => 1],
             ['key' => 'Procurement.store-order-requisition', 'label' => 'Store Order Requisitions', 'icon' => null, 'url' => 'procurement/store-requisitions', 'parent' => 'Procurement.setup'],
             ['key' => 'procurement.purchase-requisition', 'label' => 'Purchase Requisition', 'icon' => null, 'url' => 'procurement/purchase-requisition', 'parent' => 'Procurement.setup'],

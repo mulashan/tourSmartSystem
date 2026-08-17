@@ -14,4 +14,9 @@ class JobCompletion extends Model
     protected $fillable = ['job_card_id', 'completion_notes', 'completed_by', 'completed_date', 'vehicle_tested', 'ready_for_inspection'];
 
     protected $casts = ['completed_date' => 'date', 'vehicle_tested' => 'boolean', 'ready_for_inspection' => 'boolean'];
+
+    public function jobCard()
+    {
+        return $this->belongsTo(JobCard::class);
+    }
 }

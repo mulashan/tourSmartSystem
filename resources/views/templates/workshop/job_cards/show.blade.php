@@ -4,6 +4,10 @@
 @php
     $labourTotal = $jobCard->labourEntries->sum('amount');
     $partsTotal = $jobCard->partsUsed->sum('total');
+    $firstVisibleWorkflowStep = collect($workflowAccess)
+        ->filter(fn ($access) => $access['visible'] ?? false)
+        ->keys()
+        ->first() ?? 1;
 @endphp
 
 <div class="pagetitle d-flex justify-content-between align-items-center mb-4">
@@ -36,8 +40,9 @@
                     $stepNumber = $index + 1;
                     $stepAccess = $workflowAccess[$stepNumber] ?? ['unlocked' => true, 'message' => null];
                 @endphp
+                @continue(! ($stepAccess['visible'] ?? true))
                 <a href="#workshop-step-{{ $stepNumber }}"
-                   class="settings-nav-link {{ $loop->first ? 'active' : '' }} {{ $stepAccess['unlocked'] ? '' : 'disabled' }}"
+                   class="settings-nav-link {{ $stepNumber === $firstVisibleWorkflowStep ? 'active' : '' }} {{ $stepAccess['unlocked'] ? '' : 'disabled' }}"
                    data-workshop-tab="{{ $stepNumber }}"
                    data-workshop-locked="{{ $stepAccess['unlocked'] ? 'false' : 'true' }}"
                    @if(! $stepAccess['unlocked']) aria-disabled="true" tabindex="-1" title="{{ $stepAccess['message'] }}" @endif>
@@ -85,7 +90,7 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-12" id="workshop-step-2" data-workshop-panel="2">
+        <div class="col-lg-12 {{ ! ($workflowAccess[2]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-2" data-workshop-panel="2">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -93,14 +98,20 @@
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#repairOrderModal"><i class="bi bi-plus-circle"></i> Add</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light"><tr><th>Type</th><th>Hours</th><th>Cost</th><th>Status</th></tr></thead>
+                        <table class="table table-hover align-middle" data-datatable data-export-name="{{ $jobCard->job_no }}-Repair-Orders" data-page-length="50">
+                            <thead class="table-light"><tr><th>S/N</th><th>Type</th><th>Location</th><th>Vendor</th><th>Hours</th><th>External Cost</th><th>Status</th></tr></thead>
                             <tbody>
-                                @forelse($jobCard->repairOrders as $order)
-                                    <tr><td><strong>{{ $order->repair_type }}</strong><div class="text-muted small">{{ $order->description }}</div></td><td>{{ $order->estimated_hours }}</td><td>{{ number_format($order->estimated_cost, 2) }}</td><td>{{ ucfirst($order->status) }}</td></tr>
-                                @empty
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No repair orders.</td></tr>
-                                @endforelse
+                                @foreach($jobCard->repairOrders as $i => $order)
+                                    <tr>
+                                        <td>{{ $i + 1 }}</td>
+                                        <td><strong>{{ $order->repair_type }}</strong><div class="text-muted small">{{ $order->description }}</div></td>
+                                        <td>{{ ($order->maintenance_location ?? 'in_house') === 'outside' ? 'Outside Workshop' : 'In-house Workshop' }}</td>
+                                        <td>{{ $order->vendor_name ?: '-' }}</td>
+                                        <td>{{ $order->estimated_hours }}</td>
+                                        <td>{{ ($order->maintenance_location ?? 'in_house') === 'outside' ? number_format($order->external_cost ?? $order->estimated_cost, 2) : '-' }}</td>
+                                        <td>{{ ucfirst($order->status) }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -108,7 +119,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-3" data-workshop-panel="3">
+        <div class="col-lg-12 {{ ! ($workflowAccess[3]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-3" data-workshop-panel="3">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -130,7 +141,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-4" data-workshop-panel="4">
+        <div class="col-lg-12 {{ ! ($workflowAccess[4]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-4" data-workshop-panel="4">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -138,14 +149,12 @@
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#mechanicModal"><i class="bi bi-person-plus"></i> Assign</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light"><tr><th>Mechanic</th><th>Role</th><th>Hours</th><th>%</th><th>Status</th></tr></thead>
+                        <table class="table table-hover align-middle" data-datatable data-export-name="{{ $jobCard->job_no }}-Mechanics-Assignment" data-page-length="50">
+                            <thead class="table-light"><tr><th>S/N</th><th>Mechanic</th><th>Role</th><th>Hours</th><th>%</th><th>Status</th></tr></thead>
                             <tbody>
-                                @forelse($jobCard->mechanicAssignments as $assignment)
-                                    <tr><td>{{ $assignment->mechanic->display_name }}</td><td>{{ $assignment->role ?: '-' }}</td><td>{{ $assignment->hours_worked }}</td><td>{{ $assignment->completion_percent }}%</td><td>{{ ucfirst($assignment->status) }}</td></tr>
-                                @empty
-                                    <tr><td colspan="5" class="text-center text-muted py-3">No mechanics assigned.</td></tr>
-                                @endforelse
+                                @foreach($jobCard->mechanicAssignments as $i => $assignment)
+                                    <tr><td>{{ $i + 1 }}</td><td>{{ $assignment->mechanic->display_name }}</td><td>{{ $assignment->role ?: '-' }}</td><td>{{ $assignment->hours_worked }}</td><td>{{ $assignment->completion_percent }}%</td><td>{{ ucfirst($assignment->status) }}</td></tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -153,7 +162,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-5" data-workshop-panel="5">
+        <div class="col-lg-12 {{ ! ($workflowAccess[5]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-5" data-workshop-panel="5">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -161,14 +170,12 @@
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#labourModal"><i class="bi bi-clock-history"></i> Add</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light"><tr><th>Mechanic</th><th>Work</th><th>Hours</th><th>Amount</th></tr></thead>
+                        <table class="table table-hover align-middle" data-datatable data-export-name="{{ $jobCard->job_no }}-Labour-Entries" data-page-length="50">
+                            <thead class="table-light"><tr><th>S/N</th><th>Mechanic</th><th>Work</th><th>Hours</th><th>Amount</th></tr></thead>
                             <tbody>
-                                @forelse($jobCard->labourEntries as $entry)
-                                    <tr><td>{{ $entry->mechanic->display_name }}</td><td>{{ $entry->work_done }}</td><td>{{ $entry->hours }}</td><td>{{ number_format($entry->amount, 2) }}</td></tr>
-                                @empty
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No labour entries.</td></tr>
-                                @endforelse
+                                @foreach($jobCard->labourEntries as $i => $entry)
+                                    <tr><td>{{ $i + 1 }}</td><td>{{ $entry->mechanic->display_name }}</td><td>{{ $entry->work_done }}</td><td>{{ $entry->hours }}</td><td>{{ number_format($entry->amount, 2) }}</td></tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -176,7 +183,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-6" data-workshop-panel="6">
+        <div class="col-lg-12 {{ ! ($workflowAccess[6]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-6" data-workshop-panel="6">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -184,14 +191,12 @@
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#partModal"><i class="bi bi-box-seam"></i> Issue</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light"><tr><th>Part</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+                        <table class="table table-hover align-middle" data-datatable data-export-name="{{ $jobCard->job_no }}-Parts-Used" data-page-length="50">
+                            <thead class="table-light"><tr><th>S/N</th><th>Part</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
                             <tbody>
-                                @forelse($jobCard->partsUsed as $part)
-                                    <tr><td>{{ $part->part->product_name }}</td><td>{{ $part->quantity }}</td><td>{{ number_format($part->unit_price, 2) }}</td><td>{{ number_format($part->total, 2) }}</td></tr>
-                                @empty
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No parts issued.</td></tr>
-                                @endforelse
+                                @foreach($jobCard->partsUsed as $i => $part)
+                                    <tr><td>{{ $i + 1 }}</td><td>{{ $part->part->product_name }}</td><td>{{ $part->quantity }}</td><td>{{ number_format($part->unit_price, 2) }}</td><td>{{ number_format($part->total, 2) }}</td></tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -199,7 +204,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-7" data-workshop-panel="7">
+        <div class="col-lg-12 {{ ! ($workflowAccess[7]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-7" data-workshop-panel="7">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -224,7 +229,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-8" data-workshop-panel="8">
+        <div class="col-lg-12 {{ ! ($workflowAccess[8]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-8" data-workshop-panel="8">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -253,7 +258,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-9" data-workshop-panel="9">
+        <div class="col-lg-12 {{ ! ($workflowAccess[9]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-9" data-workshop-panel="9">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -278,7 +283,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12" id="workshop-step-10" data-workshop-panel="10">
+        <div class="col-lg-12 {{ ! ($workflowAccess[10]['visible'] ?? true) ? 'd-none' : '' }}" id="workshop-step-10" data-workshop-panel="10">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -307,8 +312,16 @@
             <div class="modal-header"><h5 class="modal-title">Add Repair Order</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body"><div class="row g-3">
                 <div class="col-md-6"><label class="form-label">Repair Type</label><input class="form-control" name="repair_type" required></div>
+                <div class="col-md-3">
+                    <label class="form-label">Maintenance Location</label>
+                    <select class="form-select" name="maintenance_location" id="repairMaintenanceLocation" required>
+                        <option value="in_house">In-house Workshop</option>
+                        <option value="outside">Outside Workshop / Vendor</option>
+                    </select>
+                </div>
                 <div class="col-md-3"><label class="form-label">Estimated Hours</label><input type="number" step="0.01" class="form-control" name="estimated_hours" value="0"></div>
-                <div class="col-md-3"><label class="form-label">Estimated Cost</label><input type="number" step="0.01" class="form-control" name="estimated_cost" value="0"></div>
+                <div class="col-md-6 external-workshop-fields d-none"><label class="form-label">Vendor Name</label><input class="form-control" name="vendor_name" id="repairVendorName"></div>
+                <div class="col-md-3 external-workshop-fields d-none"><label class="form-label">External Workshop Cost</label><input type="number" step="0.01" min="0" class="form-control" name="external_cost" id="repairExternalCost" value="0"></div>
                 <div class="col-md-4"><label class="form-label">Status</label><select class="form-select" name="status"><option value="open">Open</option><option value="in_progress">In Progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
                 <div class="col-12"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="3"></textarea></div>
             </div></div>
@@ -466,6 +479,10 @@
                 panel.classList.toggle('d-none', panel.dataset.workshopPanel !== selectedStep);
             });
 
+            if (window.jQuery && $.fn.dataTable) {
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            }
+
             localStorage.setItem(storageKey, selectedStep);
         };
 
@@ -486,6 +503,27 @@
                 showPanel(step);
             });
         });
+
+        const repairMaintenanceLocation = document.getElementById('repairMaintenanceLocation');
+        const repairExternalFields = Array.from(document.querySelectorAll('.external-workshop-fields'));
+
+        const toggleRepairExternalFields = () => {
+            const isOutsideWorkshop = repairMaintenanceLocation?.value === 'outside';
+
+            repairExternalFields.forEach((field) => {
+                field.classList.toggle('d-none', !isOutsideWorkshop);
+                field.querySelectorAll('input, select, textarea').forEach((input) => {
+                    input.required = isOutsideWorkshop;
+
+                    if (!isOutsideWorkshop) {
+                        input.value = input.type === 'number' ? '0' : '';
+                    }
+                });
+            });
+        };
+
+        repairMaintenanceLocation?.addEventListener('change', toggleRepairExternalFields);
+        toggleRepairExternalFields();
 
         showPanel(stepFromHash() || localStorage.getItem(storageKey) || '1');
     });

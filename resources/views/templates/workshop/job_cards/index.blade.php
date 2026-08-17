@@ -26,14 +26,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row mt-3 mb-4">
-                <div class="col-lg-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search job cards...">
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
+                <div class="col-lg-3 ms-auto">
                     <select class="form-select" onchange="if (this.value) window.location = this.value">
                         <option value="{{ route('workshop.job-cards.index') }}">All Statuses</option>
                         <option value="{{ route('workshop.job-cards.index', ['status' => 'open']) }}" @selected($statusFilter === 'open')>Open Jobs</option>
@@ -44,19 +37,13 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div class="col-lg-5 text-end">
-                    <button class="btn btn-outline-success">
-                        <i class="bi bi-download"></i> Export
-                    </button>
-                </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" data-datatable data-export-name="Workshop-Job-Cards" data-page-length="50" data-fixed-columns>
                     <thead class="table-light">
                         <tr>
-                            <th width="50"><input type="checkbox"></th>
+                            <th>S/N</th>
                             <th>Job Card</th>
                             <th>Customer</th>
                             <th>Vehicle</th>
@@ -64,13 +51,13 @@
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Expected</th>
-                            <th>Actions</th>
+                            <th class="text-end no-export">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($jobCards as $job)
+                        @foreach($jobCards as $i => $job)
                             <tr>
-                                <td><input type="checkbox"></td>
+                                <td>{{ $i + 1 }}</td>
                                 <td><strong>{{ $job->job_no }}</strong></td>
                                 <td>{{ $job->customer->name }}</td>
                                 <td>
@@ -81,7 +68,7 @@
                                 <td><span class="badge bg-light text-dark">{{ ucfirst($job->priority) }}</span></td>
                                 <td>@include('templates.workshop.partials.status-badge', ['status' => $job->status])</td>
                                 <td>{{ optional($job->expected_completion)->format('d M Y') ?: '-' }}</td>
-                                <td>
+                                <td class="text-end">
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ route('workshop.job-cards.show', $job) }}" class="btn btn-sm btn-outline-primary" title="Manage Job Card">
                                             <i class="bi bi-pencil-square"></i>
@@ -89,17 +76,9 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center text-muted py-4">No job cards found.</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-muted">Showing {{ $jobCards->count() }} job cards</span>
             </div>
         </div>
     </div>
@@ -117,74 +96,17 @@
 
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Customer Mode</label>
-                            <select class="form-select" name="customer_mode">
-                                <option value="new">New Customer</option>
-                                <option value="existing">Existing Customer</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3" id="existingCustomerField">
-                            <label class="form-label">Existing Customer</label>
-                            <select class="form-select" name="customer_id">
-                                <option value="">Select Customer</option>
-                                @foreach($customers as $customer)
-                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Customer Name</label>
-                            <input type="text" class="form-control" name="customer_name">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Phone</label>
-                            <input type="text" class="form-control" name="customer_phone">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="customer_email">
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label">Address</label>
-                            <input type="text" class="form-control" name="customer_address">
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label">Vehicle Mode</label>
-                            <select class="form-select" name="vehicle_mode">
-                                <option value="new">New Vehicle</option>
-                                <option value="existing">Existing Vehicle</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3" id="existingVehicleField">
-                            <label class="form-label">Existing Vehicle</label>
-                            <select class="form-select" name="vehicle_id">
+                        <div class="col-md-6">
+                            <label class="form-label">Vehicle</label>
+                            <select class="form-select" name="vehicle_id" required>
                                 <option value="">Select Vehicle</option>
                                 @foreach($vehicles as $vehicle)
-                                    <option value="{{ $vehicle->id }}">{{ $vehicle->registration_no }} - {{ $vehicle->customer->name }}</option>
+                                    <option value="{{ $vehicle->id }}">
+                                        {{ $vehicle->registration_no }} - {{ $vehicle->customer->name }}
+                                        {{ trim(($vehicle->make ?? '') . ' ' . ($vehicle->model ?? '')) ? ' - ' . trim(($vehicle->make ?? '') . ' ' . ($vehicle->model ?? '')) : '' }}
+                                    </option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Registration No</label>
-                            <input type="text" class="form-control" name="registration_no">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Make</label>
-                            <input type="text" class="form-control" name="make">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Model</label>
-                            <input type="text" class="form-control" name="model">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Color</label>
-                            <input type="text" class="form-control" name="color">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">VIN</label>
-                            <input type="text" class="form-control" name="vin">
                         </div>
 
                         <div class="col-md-3">
@@ -240,46 +162,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('#addJobCardModal form');
-
-    if (!form) {
-        return;
-    }
-
-    const customerMode = form.querySelector('[name="customer_mode"]');
-    const customerField = document.getElementById('existingCustomerField');
-    const customerSelect = form.querySelector('[name="customer_id"]');
-    const vehicleMode = form.querySelector('[name="vehicle_mode"]');
-    const vehicleField = document.getElementById('existingVehicleField');
-    const vehicleSelect = form.querySelector('[name="vehicle_id"]');
-
-    function toggleField(modeSelect, field, fieldSelect) {
-        const isExisting = modeSelect.value === 'existing';
-
-        field.classList.toggle('d-none', !isExisting);
-
-        if (!isExisting) {
-            fieldSelect.value = '';
-        }
-    }
-
-    function toggleCustomerField() {
-        toggleField(customerMode, customerField, customerSelect);
-    }
-
-    function toggleVehicleField() {
-        toggleField(vehicleMode, vehicleField, vehicleSelect);
-    }
-
-    customerMode.addEventListener('change', toggleCustomerField);
-    vehicleMode.addEventListener('change', toggleVehicleField);
-    toggleCustomerField();
-    toggleVehicleField();
-});
-</script>
 @endsection
