@@ -42,7 +42,7 @@ class FuelController extends Controller
             ->get()
             ->map(fn ($i) => ['type' => 'main', 'itinerary' => $i, 'leg' => null]);
 
-        $legsNeeding = ItineraryLeg::whereHas('itinerary', fn ($q) => $q->where('subdepartment_id', $subdepartmentId)->whereIn('status', ['assigned', 'ready', 'in_progress']))
+        $legsNeeding = ItineraryLeg::whereHas('itinerary', fn ($q) => $q->where('subdepartment_id', $subdepartmentId)->whereIn('status', ['assigned', 'ready', 'in_progress', 'completed']))
             ->whereDoesntHave('fuel')
             ->with('itinerary')
             ->get()
@@ -59,6 +59,8 @@ class FuelController extends Controller
         abort_unless($itinerary->subdepartment_id === session('active_subdepartment_id'), 403);
         abort_unless($itinerary->vehicle_id, 422, 'This itinerary has no vehicle assigned yet.');
 
+        $vehicle = $itinerary->vehicle;
+
         $data = $request->validate([
             'leg_id' => 'nullable|integer|exists:tbl_itinerary_legs,id',
             'fuel_source_id' => 'required|integer|exists:tbl_lookups,id',
@@ -74,22 +76,37 @@ class FuelController extends Controller
             abort_unless($leg->itinerary_id === $itinerary->id, 422, 'Leg does not belong to this itinerary.');
         }
 
-        $record = ItineraryFuel::create([
-            'itinerary_id' => $itinerary->id,
-            'leg_id' => $data['leg_id'] ?? null,
-            'vehicle_id' => $itinerary->vehicle_id,
-            'driver_employee_id' => $itinerary->driver_employee_id,
-            'fuel_source_id' => $data['fuel_source_id'],
-            'fuel_type' => $data['fuel_type'],
-            'quantity_assigned' => $data['quantity_assigned'],
-            'unit_price' => $data['unit_price'],
-            'total_amount' => $data['quantity_assigned'] * $data['unit_price'],
-            'odometer_reading' => $data['odometer_reading'] ?? null,
-            'remarks' => $data['remarks'] ?? null,
-            'status' => 'assigned',
-            'assigned_by_user_id' => session('user_id'),
-            'assigned_at' => now(),
-        ]);
+        // Only the main trip records odometer at fuel time (legs don't collect it per your earlier instruction).
+        if (empty($data['leg_id']) && isset($data['odometer_reading']) && $vehicle) {
+            if ($data['odometer_reading'] < $vehicle->current_odometer) {
+                return response()->json(['message' => "Odometer reading cannot be below the vehicle's current reading ({$vehicle->current_odometer})."], 422);
+            }
+        }
+
+        $record = DB::transaction(function () use ($data, $itinerary, $vehicle) {
+            $record = ItineraryFuel::create([
+                'itinerary_id' => $itinerary->id,
+                'leg_id' => $data['leg_id'] ?? null,
+                'vehicle_id' => $itinerary->vehicle_id,
+                'driver_employee_id' => $itinerary->driver_employee_id,
+                'fuel_source_id' => $data['fuel_source_id'],
+                'fuel_type' => $data['fuel_type'],
+                'quantity_assigned' => $data['quantity_assigned'],
+                'unit_price' => $data['unit_price'],
+                'total_amount' => $data['quantity_assigned'] * $data['unit_price'],
+                'odometer_reading' => $data['odometer_reading'] ?? null,
+                'remarks' => $data['remarks'] ?? null,
+                'status' => 'assigned',
+                'assigned_by_user_id' => session('user_id'),
+                'assigned_at' => now(),
+            ]);
+
+            if (empty($data['leg_id']) && isset($data['odometer_reading']) && $vehicle) {
+                $vehicle->update(['current_odometer' => $data['odometer_reading']]);
+            }
+
+            return $record;
+        });
 
         return response()->json(['success' => true, 'id' => $record->id]);
     }

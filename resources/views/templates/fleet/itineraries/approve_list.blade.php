@@ -40,10 +40,17 @@
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
         const modal = new bootstrap.Modal(document.getElementById('approveModal'));
         $('.js-approve').on('click', function () { $('#approveId').val($(this).data('id')); $('#approveForm')[0].reset(); $('#approveFormError').text(''); modal.show(); });
+
         $('#approveForm').on('submit', function (e) {
             e.preventDefault();
             $.post(`/fleet/itineraries/${$('#approveId').val()}/approve`, { username: $('#approveUsername').val(), password: $('#approvePassword').val() })
-                .done(() => Swal.fire({ icon: 'success', title: 'Approved', timer: 1200, showConfirmButton: false }).then(() => location.reload()))
+                .done(response => {
+                    Swal.fire({ icon: 'success', title: 'Approved', timer: 1200, showConfirmButton: false }).then(() => {
+                        window.location.href = response.can_assign
+                            ? '{{ route("fleet.itineraries.assign") }}'
+                            : '{{ url()->current() }}';
+                    });
+                })
                 .fail(xhr => $('#approveFormError').text(xhr.responseJSON?.message || 'Approval failed.'));
         });
     });

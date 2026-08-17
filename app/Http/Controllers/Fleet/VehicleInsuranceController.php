@@ -41,6 +41,7 @@ class VehicleInsuranceController extends Controller
             'vehicle' => $vehicle,
             'insuranceTypes' => Lookup::ofType('insurance_type')->orderBy('name')->get(),
             'coverages' => Lookup::ofType('insurance_coverage')->orderBy('name')->get(),
+            'insuranceCompanies' => Lookup::ofType('insurance_company')->orderBy('name')->get(),
         ]);
     }
 

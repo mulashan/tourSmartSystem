@@ -16,7 +16,8 @@
     <div class="col-md-3"><strong>Make/Model:</strong><br>{{ trim("{$vehicle->make} {$vehicle->model}") ?: '—' }}</div>
     <div class="col-md-2"><strong>Year:</strong><br>{{ $vehicle->year ?? '—' }}</div>
     <div class="col-md-2"><strong>Status:</strong><br>{{ ucwords(str_replace('_', ' ', $vehicle->status)) }}</div>
-    <div class="col-md-2"><strong>Odometer:</strong><br>{{ number_format($vehicle->current_odometer) }} km</div>
+    <div class="col-md-2"><strong>Purchase Odometer:</strong><br>{{ number_format($vehicle->purchase_odometer) ?? 0 }} km</div>
+    <div class="col-md-2"><strong>Current Odometer:</strong><br>{{ number_format($vehicle->current_odometer) }} km</div>
     <div class="col-md-3"><strong>Location:</strong><br>{{ $vehicle->currentLocation->name ?? '—' }}</div>
 
     <div class="col-md-3"><strong>Ownership:</strong><br>{{ $vehicle->ownershipType->name ?? '—' }}</div>
@@ -111,6 +112,47 @@
                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
             </form>
         </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    <a href="{{ route('fleet.incidents.index', ['vehicle_id' => $vehicle->id]) }}" class="btn btn-outline-danger btn-sm">View Accidents & Fines</a>
+    <a href="{{ route('fleet.insurance.history', $vehicle->id) }}" class="btn btn-outline-secondary btn-sm">View Insurance History</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">Trips & Legs Covered</div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0" data-datatable data-export-name="vehicle-trip-history">
+            <thead><tr><th>Trip / Leg</th><th>Start Date</th><th>End Date</th><th>Start</th><th>Destination</th><th>Odometer Start</th><th>Odometer End</th><th>Driver</th></tr></thead>
+            <tbody>
+                @forelse($trips as $trip)
+                    <tr class="table-light">
+                        <td><strong>{{ $trip->trip_number }}</strong></td>
+                        <td>{{ $trip->start_date }}</td>
+                        <td>{{ $trip->end_date }}</td>
+                        <td>{{ $trip->start_point }}</td>
+                        <td>{{ $trip->destination }}</td>
+                        <td>{{ $trip->gatePass->odometer_reading ?? '—' }}</td>
+                        <td>{{ $trip->return_odometer ?? '—' }}</td>
+                        <td>{{ $trip->driver->Employee_Name ?? '—' }}</td>
+                    </tr>
+                    @foreach($trip->legs as $leg)
+                        <tr>
+                            <td class="ps-4">↳ Leg {{ $leg->leg_number }}</td>
+                            <td>{{ $leg->leg_date ?? '—' }}</td>
+                            <td>—</td>
+                            <td>{{ $leg->start_point }}</td>
+                            <td>{{ $leg->destination }}</td>
+                            <td>{{ $leg->fuel->odometer_reading ?? '—' }} <span class="text-muted small">(at fuel issue)</span></td>
+                            <td>_</td>
+                            <td>{{ $trip->driver->Employee_Name ?? '—' }}</td>
+                        </tr>
+                    @endforeach
+                @empty
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

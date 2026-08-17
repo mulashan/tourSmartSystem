@@ -47,7 +47,8 @@ $(function () {
     });
 
     panel.on('click', '.js-add-lookup', function () {
-        $('#lookupModalLabel').text('Add Item');
+        const label = $(this).closest('.settings-panel-head').find('h2').text().trim();
+        $('#lookupModalLabel').text(label ? `Add New ${label.replace(/s$/, '')}` : 'Add Item');
         $('#lookupForm')[0].reset();
         $('#lookupId, #lookupFormError').val('').text('');
         $('#lookupKey').val($(this).data('key'));
@@ -55,7 +56,8 @@ $(function () {
     });
 
     panel.on('click', '.js-edit-lookup', function () {
-        $('#lookupModalLabel').text('Edit Item');
+        const label = $(this).closest('.settings-panel-head').find('h2').text().trim();
+        $('#lookupModalLabel').text(label ? `Edit ${label.replace(/s$/, '')}` : 'Edit Item');
         $('#lookupId').val($(this).data('id'));
         $('#lookupKey').val($(this).data('key'));
         $('#lookupName').val($(this).data('name'));

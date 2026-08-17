@@ -28,7 +28,9 @@ class GatePassController extends Controller
         return $this->nicePage('templates.fleet.gate_pass.generated_list', 'fleet.gate-pass.generated', [
             'issued' => GatePass::with(['itinerary', 'vehicle', 'driver'])
                 ->whereHas('itinerary', fn ($q) => $q->where('subdepartment_id', session('active_subdepartment_id')))
-                ->orderByDesc('id')->get(),
+                ->orderByDesc('id')
+                ->limit(1000)
+                ->get(),
         ]);
     }
 

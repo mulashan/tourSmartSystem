@@ -3382,3 +3382,14 @@ table[data-datatable] thead th {
     font-size: 18px;
     background-color: #f8f9fa; /* Light gray background for headers */
 }
+
+.settings-shell {
+    align-items: flex-start; /* prevents the sidebar from stretching to match panel height */
+}
+
+.settings-sidebar {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}

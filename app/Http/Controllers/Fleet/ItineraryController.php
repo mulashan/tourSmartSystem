@@ -115,14 +115,29 @@ class ItineraryController extends Controller
 
         $itinerary->update(['status' => 'approved', 'approved_by_user_id' => $approver->id, 'approved_at' => now()]);
 
-        return response()->json(['success' => true]);
+        // The person actually submitting the credentials is who we check for Assign access —
+        // not necessarily the person clicking the button (matches the re-auth pattern elsewhere).
+        $canAssign = $this->menuKeyAllowed($approver, 'fleet.itineraries.assign');
+
+        return response()->json(['success' => true, 'itinerary_id' => $itinerary->id, 'can_assign' => $canAssign]);
+    }
+
+    private function menuKeyAllowed(User $user, string $menuKey): bool
+    {
+        if ($user->privilege_id) {
+            $viaRole = \App\Models\UserTypeMenuPermission::where('privilege_id', $user->privilege_id)
+                ->where('menu_key', $menuKey)->where('can_access', true)->exists();
+            if ($viaRole) return true;
+        }
+
+        return $user->menuPermissions()->where('menu_key', $menuKey)->where('can_access', true)->exists();
     }
 
     public function assignList(): View
     {
         return $this->nicePage('templates.fleet.itineraries.assign_list', 'fleet.itineraries.assign', [
             'itineraries' => Itinerary::where('subdepartment_id', session('active_subdepartment_id'))->where('status', 'approved')->orderByDesc('id')->get(),
-            'vehicles' => Vehicle::where('subdepartment_id', session('active_subdepartment_id'))->where('status', 'available')->orderBy('registration_no')->get(),
+            'vehicles' => Vehicle::with('assignedDriver')->where('subdepartment_id', session('active_subdepartment_id'))->where('status', 'available')->orderBy('registration_no')->get(),
             'drivers' => $this->driverOptions(),
         ]);
     }
@@ -157,12 +172,16 @@ class ItineraryController extends Controller
 
     public function activeList(): View
     {
+        $activeSubId = session('active_subdepartment_id');
+
         return $this->nicePage('templates.fleet.itineraries.active_list', 'fleet.itineraries.active', [
             'itineraries' => Itinerary::with(['vehicle', 'driver', 'gatePass'])
-                ->where('subdepartment_id', session('active_subdepartment_id'))
+                ->where('subdepartment_id', $activeSubId)
                 ->whereIn('status', ['assigned', 'ready', 'in_progress', 'completed'])
                 ->orderByDesc('id')->get(),
-            'vehicles' => Vehicle::where('subdepartment_id', session('active_subdepartment_id'))->orderBy('registration_no')->get(),
+            'vehicles' => Vehicle::with('assignedDriver')->where('subdepartment_id', $activeSubId)
+                ->where(fn ($q) => $q->where('status', 'available')->orWhereHas('itineraries', fn ($q2) => $q2->whereIn('status', ['assigned', 'ready', 'in_progress'])))
+                ->orderBy('registration_no')->get(),
             'drivers' => $this->driverOptions(),
             'destinations' => Lookup::ofType('destination')->orderBy('name')->get(),
         ]);
@@ -218,13 +237,19 @@ class ItineraryController extends Controller
 
         $data = $request->validate(['return_odometer' => 'required|integer|min:0']);
 
-        DB::transaction(function () use ($itinerary, $data) {
+        $vehicle = $itinerary->vehicle;
+
+        if ($vehicle && $data['return_odometer'] < $vehicle->current_odometer) {
+            return response()->json(['message' => "Return odometer cannot be below the vehicle's current reading ({$vehicle->current_odometer})."], 422);
+        }
+
+        DB::transaction(function () use ($itinerary, $data, $vehicle) {
             $itinerary->update([
                 'status' => 'closed', 'return_odometer' => $data['return_odometer'],
                 'closed_by_user_id' => session('user_id'), 'closed_at' => now(),
             ]);
 
-            $itinerary->vehicle?->update(['status' => 'available', 'current_odometer' => $data['return_odometer']]);
+            $vehicle?->update(['status' => 'available', 'current_odometer' => $data['return_odometer']]);
         });
 
         return response()->json(['success' => true]);
@@ -261,7 +286,7 @@ class ItineraryController extends Controller
 
     public function reassign(Request $request, Itinerary $itinerary): JsonResponse
     {
-        abort_unless(in_array($itinerary->status, ['assigned', 'ready', 'in_progress'], true), 403, 'This trip cannot be reassigned at its current stage.');
+        abort_unless(in_array($itinerary->status, ['assigned', 'ready'], true), 403, 'This trip cannot be reassigned at its current stage.');
         abort_unless($itinerary->subdepartment_id === session('active_subdepartment_id'), 403);
 
         $data = $request->validate([
@@ -297,7 +322,7 @@ class ItineraryController extends Controller
 
     public function addLeg(Request $request, Itinerary $itinerary): JsonResponse
     {
-        abort_unless($itinerary->status === 'in_progress', 403, 'Legs can only be added while the trip is in progress.');
+        abort_unless($itinerary->status === 'completed', 403, 'A leg can only be added after the main trip is completed (fuel issued, gate pass printed).');
         abort_unless($itinerary->subdepartment_id === session('active_subdepartment_id'), 403);
 
         $data = $request->validate([
@@ -309,7 +334,7 @@ class ItineraryController extends Controller
 
         $nextLegNumber = ($itinerary->legs()->max('leg_number') ?? 0) + 1;
 
-        $leg = ItineraryLeg::create([
+        ItineraryLeg::create([
             'itinerary_id' => $itinerary->id,
             'leg_number' => $nextLegNumber,
             'start_point' => $data['start_point'],
@@ -318,6 +343,6 @@ class ItineraryController extends Controller
             'notes' => $data['notes'] ?? null,
         ]);
 
-        return response()->json(['success' => true, 'leg_id' => $leg->id]);
+        return response()->json(['success' => true]);
     }
 }

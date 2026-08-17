@@ -13,7 +13,6 @@
                     <td>{{ number_format($r->actual_cost ?? $r->estimated_cost ?? 0, 2) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="text-center text-muted">No incidents found for these filters.</td></tr>
             @endforelse
         </tbody>
     </table>

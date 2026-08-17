@@ -10,10 +10,9 @@
         @forelse($eligible as $i)
             <tr>
                 <td>{{ $i->trip_number }}</td><td>{{ $i->vehicle->registration_no ?? '—' }}</td><td>{{ $i->driver->Employee_Name ?? '—' }}</td>
-                <td class="text-end"><button class="btn btn-sm btn-info text-white js-generate" data-id="{{ $i->id }}">Generate Gate Pass</button></td>
+                <td class="text-end"><button class="btn btn-sm btn-info text-white js-generate" data-id="{{ $i->id }}" data-end-date="{{ $i->end_date }}">Generate Gate Pass</button></td>
             </tr>
         @empty
-            <tr><td colspan="4" class="text-center text-muted">No trips currently eligible (fuel must be issued first).</td></tr>
         @endforelse
     </tbody>
 </table>
@@ -24,7 +23,7 @@
         <div class="modal-body">
             <input type="hidden" id="generateItineraryId">
             <div class="alert alert-info small">Generating this Gate Pass will mark the trip as <strong>Completed</strong>.</div>
-            <div class="mb-3"><label class="form-label">Expected Return</label><input type="datetime-local" id="expectedReturn" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Expected Return</label><input type="date" id="expectedReturn" class="form-control"></div>
             <div class="mb-3"><label class="form-label">Fuel Level</label><input type="text" id="fuelLevel" class="form-control" placeholder="e.g. Full, 3/4"></div>
             <div class="mb-3"><label class="form-label">Passengers/Tourists</label><input type="text" id="passengers" class="form-control"></div>
             <div class="text-danger small" id="generateFormError"></div>
@@ -41,7 +40,14 @@
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
         const modal = new bootstrap.Modal(document.getElementById('generateModal'));
 
-        $('.js-generate').on('click', function () { $('#generateItineraryId').val($(this).data('id')); $('#generateForm')[0].reset(); $('#generateFormError').text(''); modal.show(); });
+        //$('.js-generate').on('click', function () { $('#generateItineraryId').val($(this).data('id')); $('#generateForm')[0].reset(); $('#generateFormError').text(''); modal.show(); });
+        $('.js-generate').on('click', function () {
+            $('#generateItineraryId').val($(this).data('id'));
+            $('#generateForm')[0].reset();
+            $('#expectedReturn').val($(this).data('end-date'));
+            $('#generateFormError').text('');
+            modal.show();
+        });
 
         $('#generateForm').on('submit', function (e) {
             e.preventDefault();

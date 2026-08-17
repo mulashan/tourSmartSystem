@@ -58,7 +58,12 @@ return [
             'label' => 'Employee Professionals',
             'type' => 'employee-professional',
             'singular' => 'Employee Professionals'
-        ]
+        ],
+        'insurance-companies' => [
+            'label' => 'Insurance Companies', 
+            'type' => 'insurance_company', 
+            'singular' => 'Insurance Company'
+        ],
     ],
 
     // Categories with real relationships — each needs its own table/controller.

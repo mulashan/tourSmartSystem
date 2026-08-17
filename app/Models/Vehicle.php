@@ -12,7 +12,7 @@ class Vehicle extends Model
     protected $fillable = [
         'vehicle_code', 'registration_no', 'vehicle_type', 'make', 'model', 'year', 'chassis_no', 'engine_no',
         'color', 'seating_capacity', 'fuel_type', 'ownership_type_id', 'owner', 'current_location_id',
-        'current_odometer', 'status', 'assigned_driver_employee_id', 'is_active', 'subdepartment_id', 'created_by_user_id',
+        'current_odometer', 'status', 'assigned_driver_employee_id', 'is_active', 'subdepartment_id', 'created_by_user_id','purchase_odometer',
     ];
 
     protected $casts = ['is_active' => 'boolean'];
@@ -25,4 +25,5 @@ class Vehicle extends Model
     public function rentalAgreements() { return $this->hasMany(VehicleRentalAgreement::class, 'vehicle_id')->orderByDesc('start_date'); }
     public function driverHistory() { return $this->hasMany(VehicleDriverHistory::class, 'vehicle_id')->orderByDesc('assigned_at'); }
     public function insurances() { return $this->hasMany(VehicleInsurance::class); }
+    public function itineraries() { return $this->hasMany(Itinerary::class); }
 }

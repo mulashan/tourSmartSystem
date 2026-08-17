@@ -274,6 +274,13 @@ class SystemDataSeeder extends Seeder
             ['key' => 'fleet.reports.insurance-expiry', 'label' => 'Insurance Expiry', 'icon' => null, 'url' => 'fleet/reports/insurance-expiry', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
             ['key' => 'fleet.reports.maintenance-history', 'label' => 'Maintenance History', 'icon' => null, 'url' => 'fleet/reports/maintenance-history', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
             ['key' => 'fleet.reports.incidents', 'label' => 'Accidents & Fines', 'icon' => null, 'url' => 'fleet/reports/incidents', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.fuel-by-station', 'label' => 'Fuel by Petrol Station', 'icon' => null, 'url' => 'fleet/reports/fuel-by-station', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.cost-per-km', 'label' => 'Cost per Kilomete', 'icon' => null, 'url' => 'fleet/reports/cost-per-km', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.driver-performance', 'label' => 'Driver Performance', 'icon' => null, 'url' => 'fleet/reports/driver-performance', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.odometer-anomaly', 'label' => 'Odometer Anomaly', 'icon' => null, 'url' => 'fleet/reports/odometer-anomaly', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.maintenance-due', 'label' => 'Predictive Maintenance Due', 'icon' => null, 'url' => 'fleet/reports/maintenance-due', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.vehicle-downtime', 'label' => 'Vehicle Downtime', 'icon' => null, 'url' => 'fleet/reports/vehicle-downtime', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
+            ['key' => 'fleet.reports.destination-frequency', 'label' => 'Destination Frequency', 'icon' => null, 'url' => 'fleet/reports/destination-frequency', 'parent' => 'fleet.setup', 'parent2' => 'fleet.reports.group'],
 
         ];
 

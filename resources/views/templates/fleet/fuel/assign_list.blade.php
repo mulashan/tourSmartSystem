@@ -32,7 +32,7 @@
                 <div class="col-md-6"><label class="form-label">Fuel Type *</label><select id="fuelType" class="form-select" required><option value="Petrol">Petrol</option><option value="Diesel">Diesel</option></select></div>
                 <div class="col-md-4"><label class="form-label">Quantity *</label><input type="number" step="0.01" id="fuelQty" class="form-control" required></div>
                 <div class="col-md-4"><label class="form-label">Unit Price *</label><input type="number" step="0.01" id="fuelPrice" class="form-control" required></div>
-                <div class="col-md-4"><label class="form-label">Odometer</label><input type="number" id="fuelOdometer" class="form-control"></div>
+                <div class="col-md-4" id="fuelOdometerWrap"><label class="form-label">Odometer</label><input type="number" id="fuelOdometer" class="form-control"></div>
                 <div class="col-12"><label class="form-label">Remarks</label><input type="text" id="fuelRemarks" class="form-control"></div>
             </div>
             <div class="text-danger small mt-2" id="assignFuelFormError"></div>
@@ -54,6 +54,11 @@
             $('#fuelLegId').val($(this).data('leg-id'));
             $('#assignFuelForm')[0].reset();
             $('#assignFuelFormError').text('');
+
+            const isLeg = !! $(this).data('leg-id');
+            $('#fuelOdometerWrap').toggleClass('d-none', isLeg);
+            if (isLeg) $('#fuelOdometer').val('');
+
             modal.show();
         });
 

@@ -25,7 +25,9 @@
                 <label class="form-label">Vehicle *</label>
                 <select id="assignVehicle" class="form-select" required>
                     <option value="">Select...</option>
-                    @foreach($vehicles as $v)<option value="{{ $v->id }}">{{ $v->registration_no }} — {{ $v->make }} {{ $v->model }}</option>@endforeach
+                    @foreach($vehicles as $v)
+                        <option value="{{ $v->id }}" data-driver="{{ $v->assigned_driver_employee_id }}">{{ $v->registration_no }} — {{ $v->make }} {{ $v->model }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="mb-3">
@@ -49,13 +51,21 @@
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
         const modal = new bootstrap.Modal(document.getElementById('assignModal'));
         $('.js-open-assign').on('click', function () { $('#assignItineraryId').val($(this).data('id')); $('#assignForm')[0].reset(); $('#assignFormError').text(''); modal.show(); });
+        
         $('#assignForm').on('submit', function (e) {
             e.preventDefault();
             $.post(`/fleet/itineraries/${$('#assignItineraryId').val()}/assign`, { vehicle_id: $('#assignVehicle').val(), driver_employee_id: $('#assignDriver').val() })
-                .done(() => Swal.fire({ icon: 'success', title: 'Assigned', timer: 1200, showConfirmButton: false }).then(() => location.reload()))
+                .done(() => Swal.fire({ icon: 'success', title: 'Assigned', timer: 1200, showConfirmButton: false }).then(() => {
+                    window.location.href = '{{ route("fleet.itineraries.active") }}';
+                }))
                 .fail(xhr => $('#assignFormError').text(xhr.responseJSON?.message || 'Assignment failed.'));
         });
     });
+});
+
+$('#assignVehicle').on('change', function () {
+    const driverId = $(this).find(':selected').data('driver');
+    $('#assignDriver').val(driverId || '');
 });
 </script>
 @endsection

@@ -13,7 +13,13 @@
         <div class="card-header">New Insurance Record — {{ $vehicle->registration_no }}</div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-4"><label class="form-label">Insurance Company *</label><input type="text" name="insurance_company" class="form-control" required></div>
+                <div class="col-md-4">
+                    <label class="form-label">Insurance Company *</label>
+                    <select name="insurance_company" class="form-select" required>
+                        <option value="">Select...</option>
+                        @foreach($insuranceCompanies as $c)<option value="{{ $c->name }}">{{ $c->name }}</option>@endforeach
+                    </select>
+                </div>
                 <div class="col-md-4"><label class="form-label">Policy Number *</label><input type="text" name="policy_number" class="form-control" required></div>
                 <div class="col-md-4">
                     <label class="form-label">Insurance Type *</label>

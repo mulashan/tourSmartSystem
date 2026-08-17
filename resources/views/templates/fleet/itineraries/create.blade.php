@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="card mb-3">
+    <!--div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>Itinerary Legs (optional — used to allocate fuel per leg)</span>
             <button type="button" class="btn btn-sm btn-dark" id="js-add-leg">Add Leg</button>
@@ -48,7 +48,7 @@
                 <tbody><tr class="js-empty-row"><td colspan="6" class="text-center text-muted">No legs added</td></tr></tbody>
             </table>
         </div>
-    </div>
+    </div-->
 
     <div class="text-end">
         <a href="{{ route('fleet.itineraries.new') }}" class="btn btn-secondary">Cancel</a>

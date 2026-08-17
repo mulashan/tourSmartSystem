@@ -90,6 +90,7 @@ class VehicleController extends Controller
                 'owner' => $data['owner'] ?? null,
                 'current_location_id' => $data['current_location_id'] ?? null,
                 'current_odometer' => $data['current_odometer'] ?? 0,
+                'purchase_odometer' => $data['current_odometer'] ?? 0,
                 'status' => $data['status'],
                 'assigned_driver_employee_id' => $data['assigned_driver_employee_id'] ?? null,
                 'is_active' => $request->boolean('is_active', true),
@@ -134,9 +135,15 @@ class VehicleController extends Controller
 
         $vehicle->load(['ownershipType', 'currentLocation', 'assignedDriver', 'rentalAgreements.createdBy', 'driverHistory.employee', 'driverHistory.assignedBy']);
 
+        $trips = \App\Models\Itinerary::with(['driver', 'gatePass', 'legs.fuel'])
+            ->where('vehicle_id', $vehicle->id)
+            ->whereIn('status', ['completed', 'closed'])
+            ->orderByDesc('id')->get();
+
         return $this->nicePage('templates.fleet.vehicles.show', 'fleet.vehicles', [
             'vehicle' => $vehicle,
             'drivers' => $this->driverOptions(),
+            'trips' => $trips,
         ]);
     }
 
@@ -233,7 +240,13 @@ class VehicleController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        if (isset($data['current_odometer']) && $data['current_odometer'] < $vehicle->current_odometer) {
+            return back()->withErrors(['current_odometer' => "Odometer cannot be set below the last recorded reading ({$vehicle->current_odometer})."])->withInput();
+        }
+
+        //$data['is_active'] = $request->boolean('is_active', true);
         $data['is_active'] = $request->boolean('is_active', true);
+       // $vehicle->update($data);
 
         DB::transaction(function () use ($vehicle, $data) {
             if ((int) ($data['assigned_driver_employee_id'] ?? 0) !== (int) ($vehicle->assigned_driver_employee_id ?? 0)) {

@@ -2,7 +2,10 @@
 
 @section('content')
 @include('templates.storage_supplies.partials.active_subdepartment_bar')
-<div class="settings-panel-head"><h2>Accidents & Road Fines</h2><button class="btn btn-info text-white" id="js-add-incident">Add Record</button></div>
+<div class="settings-panel-head">
+    <h2>Accidents & Road Fines @if($filteredVehicleId) — {{ $vehicles->firstWhere('id', $filteredVehicleId)->registration_no ?? '' }} @endif</h2>
+    <button class="btn btn-info text-white" id="js-add-incident">Add Record</button>
+</div>
 
 <table class="table table-hover" data-datatable data-export-name="incidents">
     <thead><tr><th>Type</th><th>Vehicle</th><th>Driver</th><th>Date</th><th>Est. Cost</th><th>Actual Cost</th><th>Status</th><th class="text-end">Action</th></tr></thead>
@@ -19,7 +22,6 @@
                 <td class="text-end"><a href="{{ route('fleet.incidents.show', $i->id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
             </tr>
         @empty
-            <tr><td colspan="8" class="text-center text-muted">No incidents recorded.</td></tr>
         @endforelse
     </tbody>
 </table>

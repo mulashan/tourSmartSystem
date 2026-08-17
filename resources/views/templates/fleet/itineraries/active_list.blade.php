@@ -15,12 +15,16 @@
                 <td class="text-end">
                     @if($i->status === 'assigned')<button class="btn btn-sm btn-dark js-ready" data-id="{{ $i->id }}">Mark Ready</button>@endif
                     @if($i->status === 'ready')<button class="btn btn-sm btn-primary js-in-progress" data-id="{{ $i->id }}">Start Trip</button>@endif
+                    
                     @if($i->status === 'in_progress' && ! $i->gatePass)
-                        <button class="btn btn-sm btn-success js-generate-gp" data-id="{{ $i->id }}">Generate Gate Pass</button>
-                        <button class="btn btn-sm btn-outline-dark js-add-leg" data-id="{{ $i->id }}">Add Leg</button>
+                        <button class="btn btn-sm btn-success js-generate-gp" data-id="{{ $i->id }}" data-end-date="{{ $i->end_date }}">Generate Gate Pass</button>
                     @endif
-                    @if($i->status === 'completed')<button class="btn btn-sm btn-success js-close" data-id="{{ $i->id }}">Close Trip</button>@endif
-                    @if(in_array($i->status, ['assigned', 'ready', 'in_progress']))<button class="btn btn-sm btn-outline-warning js-reassign" data-id="{{ $i->id }}">Reassign</button>@endif
+                    @if($i->status === 'completed')
+                        <button class="btn btn-sm btn-success js-close" data-id="{{ $i->id }}">Close Trip</button>
+                        <button class="btn btn-sm btn-outline-dark js-add-leg" data-id="{{ $i->id }}">Add Leg (Reroute)</button>
+                    @endif
+
+                    @if(in_array($i->status, ['assigned', 'ready']))<button class="btn btn-sm btn-outline-warning js-reassign" data-id="{{ $i->id }}">Reassign</button>@endif
                     @if(in_array($i->status, ['assigned', 'ready']))<button class="btn btn-sm btn-outline-danger js-cancel" data-id="{{ $i->id }}">Cancel</button>@endif
                     <a href="{{ route('fleet.itineraries.preview', $i->id) }}" target="_blank" class="btn btn-sm btn-outline-primary">Preview</a>
                 </td>
@@ -89,8 +93,8 @@
         <div class="modal-body">
             <input type="hidden" id="gpItineraryId">
             <div class="alert alert-info small">Generating this Gate Pass will mark the trip as <strong>Completed</strong>.</div>
-            <div class="mb-3"><label class="form-label">Expected Return</label><input type="datetime-local" id="gpExpectedReturn" class="form-control"></div>
-            <div class="mb-3"><label class="form-label">Fuel Level</label><input type="text" id="gpFuelLevel" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Expected Return</label><input type="date" id="gpExpectedReturn" class="form-control"></div>
+            <div class="mb-3"><label class="form-label">Fuel Level</label><input type="text" id="gpFuelLevel" class="form-control" placeholder="e.g. Full, 3/4"></div>
             <div class="mb-3"><label class="form-label">Passengers/Tourists</label><input type="text" id="gpPassengers" class="form-control"></div>
             <div class="text-danger small" id="generateGpFormError"></div>
         </div>
@@ -139,7 +143,14 @@
                 .fail(xhr => $('#closeTripFormError').text(xhr.responseJSON?.message || 'Something went wrong.'));
         });
 
-        $('.js-generate-gp').on('click', function () { $('#gpItineraryId').val($(this).data('id')); $('#generateGpForm')[0].reset(); $('#generateGpFormError').text(''); generateGpModal.show(); });
+        //$('.js-generate-gp').on('click', function () { $('#gpItineraryId').val($(this).data('id')); $('#generateGpForm')[0].reset(); $('#generateGpFormError').text(''); generateGpModal.show(); });
+        $('.js-generate-gp').on('click', function () {
+            $('#gpItineraryId').val($(this).data('id'));
+            $('#generateGpForm')[0].reset();
+            $('#gpExpectedReturn').val($(this).data('end-date'));
+            $('#generateGpFormError').text('');
+            generateGpModal.show();
+        });
         $('#generateGpForm').on('submit', function (e) {
             e.preventDefault();
             $.post(`/fleet/gate-pass/${$('#gpItineraryId').val()}/generate`, { expected_return: $('#gpExpectedReturn').val(), fuel_level: $('#gpFuelLevel').val(), passengers: $('#gpPassengers').val() })

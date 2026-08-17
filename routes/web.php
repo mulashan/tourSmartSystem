@@ -538,7 +538,7 @@ Route::middleware('active.subdepartment:fleet')->prefix('fleet/gate-pass')->name
     Route::get('/generated', [GatePassController::class, 'generatedList'])->name('generated_list');
     Route::post('/{itinerary}/generate', [GatePassController::class, 'generate'])->name('generate');
     Route::get('/{gatePass}/preview', [GatePassController::class, 'preview'])->name('preview');
-    Route::post('/{gatePass}/mark-printed', [GatePassController::class, 'mark_printed'])->name('mark_printed');
+    Route::post('/{gatePass}/mark-printed', [GatePassController::class, 'markPrinted'])->name('mark_printed');
 });
 
 Route::middleware('active.subdepartment:fleet')->prefix('fleet/incidents')->name('fleet.incidents.')->group(function () {
@@ -566,6 +566,27 @@ Route::middleware('active.subdepartment:fleet')->prefix('fleet/reports')->name('
 
     Route::get('/incidents', [FleetReportController::class, 'incidentsReport'])->name('incidents');
     Route::get('/incidents/data', [FleetReportController::class, 'incidentsReportData'])->name('incidents_data');
+
+    Route::get('/fuel-by-station', [FleetReportController::class, 'fuelByStation'])->name('fuel_by_station');
+    Route::get('/fuel-by-station/data', [FleetReportController::class, 'fuelByStationData'])->name('fuel_by_station_data');
+
+    Route::get('/cost-per-km', [FleetReportController::class, 'costPerKm'])->name('cost_per_km');
+    Route::get('/cost-per-km/data', [FleetReportController::class, 'costPerKmData'])->name('cost_per_km_data');
+
+    Route::get('/driver-performance', [FleetReportController::class, 'driverPerformance'])->name('driver_performance');
+    Route::get('/driver-performance/data', [FleetReportController::class, 'driverPerformanceData'])->name('driver_performance_data');
+
+    Route::get('/odometer-anomaly', [FleetReportController::class, 'odometerAnomaly'])->name('odometer_anomaly');
+    Route::get('/odometer-anomaly/data', [FleetReportController::class, 'odometerAnomalyData'])->name('odometer_anomaly_data');
+
+    Route::get('/maintenance-due', [FleetReportController::class, 'maintenanceDue'])->name('maintenance_due');
+    Route::get('/maintenance-due/data', [FleetReportController::class, 'maintenanceDueData'])->name('maintenance_due_data');
+
+    Route::get('/vehicle-downtime', [FleetReportController::class, 'vehicleDowntime'])->name('vehicle_downtime');
+    Route::get('/vehicle-downtime/data', [FleetReportController::class, 'vehicleDowntimeData'])->name('vehicle_downtime_data');
+
+    Route::get('/destination-frequency', [FleetReportController::class, 'destinationFrequency'])->name('destination_frequency');
+    Route::get('/destination-frequency/data', [FleetReportController::class, 'destinationFrequencyData'])->name('destination_frequency_data');
 });
 /* end of syliverius */
 

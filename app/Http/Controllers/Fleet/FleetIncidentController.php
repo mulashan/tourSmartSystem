@@ -13,13 +13,17 @@ use Illuminate\View\View;
 
 class FleetIncidentController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $vehicleId = $request->query('vehicle_id');
+
         return $this->nicePage('templates.fleet.incidents.index', 'fleet.incidents', [
             'incidents' => FleetIncident::with(['vehicle', 'driver', 'createdBy'])
                 ->where('subdepartment_id', session('active_subdepartment_id'))
+                ->when($vehicleId, fn ($q, $id) => $q->where('vehicle_id', $id))
                 ->orderByDesc('id')->get(),
             'vehicles' => Vehicle::where('subdepartment_id', session('active_subdepartment_id'))->orderBy('registration_no')->get(),
+            'filteredVehicleId' => $vehicleId,
         ]);
     }
 
